@@ -60,8 +60,8 @@
 	  <None Remove="Resources\Images\apple.png" />
 	  <None Remove="Resources\Images\book.png" />
 	  <None Remove="Resources\Images\diamondsword.png" />
-	  <None Remove="Resources\Images\flowers_rose.png" />
 	  <None Remove="Resources\Images\gold_ingot.png" />
+	  <None Remove="Resources\Images\rose.png" />
 	  <None Remove="Resources\Images\sign.png" />
 	  <None Remove="Resources\Images\stonehoe.png" />
 	</ItemGroup>

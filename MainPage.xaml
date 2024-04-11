@@ -3,20 +3,79 @@
     x:Class="MauiCustomControls.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Controls">
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
+    xmlns:local="clr-namespace:MauiCustomControls"
+    x:DataType="local:MainPage">
 
-    <ScrollView BackgroundColor="LightYellow">
-        <VerticalStackLayout
-            Padding="10"
-            Spacing="10">
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
-            <controls:MenuItem />
+    <ScrollView BackgroundColor="Gainsboro">
+        <VerticalStackLayout>
+
+            <Label>Full width in a StackLayout</Label>
+            <VerticalStackLayout
+                Padding="10"
+                BackgroundColor="LightYellow"
+                Spacing="4">
+                <controls:MenuItem
+                    Icon="steelpick.png"
+                    Label="Mine" />
+                <controls:MenuItem
+                    Icon="stonehoe.png"
+                    Label="Farm" />
+                <controls:MenuItem
+                    Icon="diamondsword.png"
+                    Label="Fight" />
+                <controls:MenuItem
+                    Icon="gold_ingot.png"
+                    Label="Shop" />
+                <controls:MenuItem
+                    Icon="rose.png"
+                    Label="Love" />
+                <controls:MenuItem
+                    Icon="sign.png"
+                    Label="Share" />
+                <controls:MenuItem
+                    Icon="book.png"
+                    Label="Learn" />
+                <controls:MenuItem
+                    Icon="apple.png"
+                    Label="Eat" />
+            </VerticalStackLayout>
+
+            <Label>Autosized width in a Grid</Label>
+            <Grid
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="*">
+                <VerticalStackLayout
+                    Padding="10"
+                    BackgroundColor="LightYellow"
+                    Spacing="4">
+                    <controls:MenuItem
+                        Icon="apple.png"
+                        Label="Eat" />
+                    <controls:MenuItem
+                        Icon="stonehoe.png"
+                        Label="Farm" />
+                    <controls:MenuItem
+                        Icon="book.png"
+                        Label="Learn" />
+                    <controls:MenuItem
+                        Icon="steelpick.png"
+                        Label="Mine" />
+                    <controls:MenuItem
+                        Icon="gold_ingot.png"
+                        Label="Shop" />
+                    <controls:MenuItem
+                        Icon="diamondsword.png"
+                        Label="Fight" />
+                    <controls:MenuItem
+                        Icon="rose.png"
+                        Label="Love" />
+                    <controls:MenuItem
+                        Icon="sign.png"
+                        Label="Share" />
+                </VerticalStackLayout>
+            </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 

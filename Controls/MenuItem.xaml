@@ -3,9 +3,14 @@
     x:Class="MauiCustomControls.Controls.MenuItem"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
+    x:DataType="controls:MenuItem"
     BackgroundColor="MistyRose">
-    <HorizontalStackLayout Spacing="10">
+    <HorizontalStackLayout
+        Padding="3"
+        Spacing="10">
         <Image
+            x:Name="TheIcon"
             HeightRequest="20"
             HorizontalOptions="Center"
             Source="steelpick.png"
@@ -13,7 +18,7 @@
             WidthRequest="20" />
         <Label
             HorizontalOptions="Center"
-            Text="Menu Item"
+            Text="{Binding Label}"
             VerticalOptions="Center" />
     </HorizontalStackLayout>
 </ContentView>
