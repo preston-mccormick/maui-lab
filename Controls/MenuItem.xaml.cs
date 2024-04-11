@@ -1,4 +1,6 @@
 
+using System.ComponentModel;
+
 namespace MauiCustomControls.Controls;
 
 public partial class MenuItem : ContentView
@@ -15,27 +17,19 @@ public partial class MenuItem : ContentView
         set => SetValue(LabelProperty, value);
     }
 
-    public string Icon
+    [TypeConverter(typeof(ImageSourceConverter))]
+    public ImageSource Icon
     {
-        get => (string)GetValue(IconProperty);
+        get => (ImageSource)GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
-
-    private static readonly BindableProperty IconProperty = BindableProperty.Create(
+    
+    public static readonly BindableProperty IconProperty = BindableProperty.Create(
         nameof(Icon),
-        typeof(string),
+        typeof(ImageSource),
         typeof(MenuItem),
-        string.Empty,
-        propertyChanged: OnIconSet
+        default(ImageSource)
     );
-
-    private static void OnIconSet(BindableObject bindable, object oldValue, object newValue)
-    {
-        if (bindable is MenuItem menuItem)
-        {
-            menuItem.TheIcon.Source = ImageSource.FromFile(menuItem.Icon);
-        }
-    }
 
     public static readonly BindableProperty LabelProperty = BindableProperty.Create(
         nameof(Label),

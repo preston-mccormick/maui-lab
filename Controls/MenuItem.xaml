@@ -10,10 +10,9 @@
         Padding="3"
         Spacing="10">
         <Image
-            x:Name="TheIcon"
             HeightRequest="20"
             HorizontalOptions="Center"
-            Source="steelpick.png"
+            Source="{Binding Icon}"
             VerticalOptions="Center"
             WidthRequest="20" />
         <Label
