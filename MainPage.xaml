@@ -7,23 +7,25 @@
     xmlns:local="clr-namespace:MauiCustomControls"
     x:DataType="local:MainPage">
 
-    <VerticalStackLayout
+    <FlexLayout
         Padding="20"
-        Spacing="10"
-        VerticalOptions="Start">
+        AlignContent="SpaceEvenly"
+        AlignItems="Start"
+        JustifyContent="SpaceEvenly"
+        Wrap="Wrap">
 
         <Button
             Command="{Binding ShowAlertCommand}"
-            HorizontalOptions="Center"
-            Text="Show Alert" />
+            Text="Show Alert"
+            VerticalOptions="Center" />
         <Button
             Command="{Binding ShowActionSheetCommand}"
-            HorizontalOptions="Center"
-            Text="Show ActionSheet" />
+            Text="Show ActionSheet"
+            VerticalOptions="Center" />
         <Button
             Command="{Binding ShowPromptCommand}"
-            HorizontalOptions="Center"
-            Text="Show Prompt" />
-    </VerticalStackLayout>
+            Text="Show Prompt"
+            VerticalOptions="Center" />
+    </FlexLayout>
 
 </ContentPage>
