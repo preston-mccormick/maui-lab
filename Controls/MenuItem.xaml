@@ -4,11 +4,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:MauiCustomControls.Controls"
-    x:DataType="controls:MenuItem"
-    BackgroundColor="MistyRose">
+    x:DataType="controls:MenuItem">
     <HorizontalStackLayout
         Padding="3"
         Spacing="10">
+        <HorizontalStackLayout.GestureRecognizers>
+            <TapGestureRecognizer
+                Command="{Binding TapCommand}"
+                NumberOfTapsRequired="1" />
+            <PointerGestureRecognizer
+                PointerEntered="OnPointerEntered"
+                PointerExited="OnPointerExited"
+                PointerPressedCommand="{Binding TapCommand}" />
+        </HorizontalStackLayout.GestureRecognizers>
         <Image
             HeightRequest="20"
             HorizontalOptions="Center"
@@ -17,7 +25,7 @@
             WidthRequest="20" />
         <Label
             HorizontalOptions="Center"
-            Text="{Binding Label}"
+            Text="{Binding Text}"
             VerticalOptions="Center" />
     </HorizontalStackLayout>
 </ContentView>

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace MauiCustomControls.Controls;
 
@@ -11,12 +12,30 @@ public partial class MenuItem : ContentView
         default(ImageSource)
     );
 
-    public static readonly BindableProperty LabelProperty = BindableProperty.Create(
-        nameof(Label),
+    public static readonly BindableProperty TextProperty = BindableProperty.Create(
+        nameof(Text),
         typeof(string),
         typeof(MenuItem),
         string.Empty
     );
+
+    public static readonly BindableProperty TapCommandProperty = BindableProperty.Create(
+        nameof(TapCommand), typeof(ICommand), typeof(MenuItem), null);
+
+    public static readonly BindableProperty TapCommandParameterProperty = BindableProperty.Create(
+        nameof(TapCommandParameter), typeof(object), typeof(MenuItem), null);
+
+    public ICommand TapCommand
+    {
+        get => (ICommand)GetValue(TapCommandProperty);
+        set => SetValue(TapCommandProperty, value);
+    }
+
+    public object TapCommandParameter
+    {
+        get => GetValue(TapCommandParameterProperty);
+        set => SetValue(TapCommandParameterProperty, value);
+    }
 
     [TypeConverter(typeof(ImageSourceConverter))]
     public ImageSource Icon
@@ -25,15 +44,36 @@ public partial class MenuItem : ContentView
         set => SetValue(IconProperty, value);
     }
 
-    public string Label
+    public string Text
     {
-        get => (string)GetValue(LabelProperty);
-        set => SetValue(LabelProperty, value);
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
     }
 
     public MenuItem()
     {
         InitializeComponent();
         BindingContext = this;
+    }
+
+    private void OnPointerEntered(object sender, EventArgs e)
+    {
+        if (Application.Current?.PlatformAppTheme == AppTheme.Dark)
+        {
+            BackgroundColor = Colors.DarkBlue;
+        }
+        else
+        {
+            BackgroundColor = Colors.AliceBlue;
+        }
+    }
+    private void OnPointerExited(object sender, EventArgs e)
+    {
+        BackgroundColor = null;
+    }
+
+    private void OnPointerEntered(object sender, PointerEventArgs e)
+    {
+
     }
 }

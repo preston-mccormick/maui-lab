@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiCustomControls.MenuButtonPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
+    Title="ButtonWithMenuPage">
+    <VerticalStackLayout
+        Padding="8,100,8,8"
+        Spacing="8"
+        VerticalOptions="Start">
+        <Button
+            Clicked="OnButtonClicked"
+            HorizontalOptions="Center"
+            Text="Menu" />
+        <Border
+            x:Name="Menu"
+            HorizontalOptions="Center"
+            IsVisible="False">
+            <VerticalStackLayout
+                Padding="10"
+                Spacing="4">
+                <controls:MenuItem
+                    Icon="steelpick.png"
+                    TapCommand="{Binding MyCommand}"
+                    Text="Mine" />
+                <controls:MenuItem
+                    Icon="stonehoe.png"
+                    Text="Farm" />
+                <controls:MenuItem
+                    Icon="diamondsword.png"
+                    Text="Fight" />
+                <controls:MenuItem
+                    Icon="gold_ingot.png"
+                    Text="Shop" />
+                <controls:MenuItem
+                    Icon="rose.png"
+                    Text="Love" />
+                <controls:MenuItem
+                    Icon="sign.png"
+                    Text="Share" />
+                <controls:MenuItem
+                    Icon="book.png"
+                    Text="Learn" />
+                <controls:MenuItem
+                    Icon="apple.png"
+                    Text="Eat" />
+            </VerticalStackLayout>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>

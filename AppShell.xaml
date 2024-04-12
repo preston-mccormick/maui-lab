@@ -4,13 +4,14 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MauiCustomControls"
-    Title="MauiCustomControls"
-    BackgroundColor="LightCyan"
-    Shell.FlyoutBehavior="Disabled">
-
+    Title="MAUI Custom Control Lab"
+    Shell.FlyoutBehavior="Flyout">
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-
+    <ShellContent
+        Title="Menu Button"
+        ContentTemplate="{DataTemplate local:MenuButtonPage}"
+        Route="MenuButton" />
 </Shell>

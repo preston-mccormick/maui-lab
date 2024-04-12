@@ -7,76 +7,23 @@
     xmlns:local="clr-namespace:MauiCustomControls"
     x:DataType="local:MainPage">
 
-    <ScrollView BackgroundColor="Gainsboro">
-        <VerticalStackLayout>
+    <VerticalStackLayout
+        Padding="20"
+        Spacing="10"
+        VerticalOptions="Start">
 
-            <Label>Full width in a StackLayout</Label>
-            <VerticalStackLayout
-                Padding="10"
-                BackgroundColor="LightYellow"
-                Spacing="4">
-                <controls:MenuItem
-                    Icon="steelpick.png"
-                    Label="Mine" />
-                <controls:MenuItem
-                    Icon="stonehoe.png"
-                    Label="Farm" />
-                <controls:MenuItem
-                    Icon="diamondsword.png"
-                    Label="Fight" />
-                <controls:MenuItem
-                    Icon="gold_ingot.png"
-                    Label="Shop" />
-                <controls:MenuItem
-                    Icon="rose.png"
-                    Label="Love" />
-                <controls:MenuItem
-                    Icon="sign.png"
-                    Label="Share" />
-                <controls:MenuItem
-                    Icon="book.png"
-                    Label="Learn" />
-                <controls:MenuItem
-                    Icon="apple.png"
-                    Label="Eat" />
-            </VerticalStackLayout>
-
-            <Label>Autosized width in a Grid</Label>
-            <Grid
-                ColumnDefinitions="Auto,*"
-                RowDefinitions="*">
-                <VerticalStackLayout
-                    Padding="10"
-                    BackgroundColor="LightYellow"
-                    Spacing="4">
-                    <controls:MenuItem
-                        Icon="apple.png"
-                        Label="Eat" />
-                    <controls:MenuItem
-                        Icon="stonehoe.png"
-                        Label="Farm" />
-                    <controls:MenuItem
-                        Icon="book.png"
-                        Label="Learn" />
-                    <controls:MenuItem
-                        Icon="steelpick.png"
-                        Label="Mine" />
-                    <controls:MenuItem
-                        Icon="gold_ingot.png"
-                        Label="Shop" />
-                    <controls:MenuItem
-                        Icon="diamondsword.png"
-                        Label="Fight" />
-                    <controls:MenuItem
-                        Icon="rose.png"
-                        Label="Love" />
-                    <controls:MenuItem
-                        Icon="sign.png"
-                        Label="Share" />
-                </VerticalStackLayout>
-            </Grid>
-
-        </VerticalStackLayout>
-    </ScrollView>
+        <Button
+            Command="{Binding ShowAlertCommand}"
+            HorizontalOptions="Center"
+            Text="Show Alert" />
+        <Button
+            Command="{Binding ShowActionSheetCommand}"
+            HorizontalOptions="Center"
+            Text="Show ActionSheet" />
+        <Button
+            Command="{Binding ShowPromptCommand}"
+            HorizontalOptions="Center"
+            Text="Show Prompt" />
+    </VerticalStackLayout>
 
 </ContentPage>

@@ -73,12 +73,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="MenuButtonPage.xaml.cs">
+	    <DependentUpon>MenuButtonPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Controls\MenuButton.xaml.cs">
+	    <DependentUpon>MenuButton.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Controls\MenuButton.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MenuButtonPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\MenuItem.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
