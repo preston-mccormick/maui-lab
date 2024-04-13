@@ -14,4 +14,8 @@
         Title="Menu Button"
         ContentTemplate="{DataTemplate pages:MenuButtonPage}"
         Route="MenuButton" />
+    <ShellContent
+        Title="Popup Menu Button"
+        ContentTemplate="{DataTemplate pages:PopupMenuPage}"
+        Route="PopupMenu" />
 </Shell>

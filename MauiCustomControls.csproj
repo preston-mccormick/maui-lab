@@ -85,8 +85,8 @@
 	  <Compile Update="Views\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\PopupButtonPage.xaml.cs">
-	    <DependentUpon>PopupButtonPage.xaml</DependentUpon>
+	  <Compile Update="Pages\PopupMenuPage.xaml.cs">
+	    <DependentUpon>PopupMenuPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\MenuPopup.xaml.cs">
 	    <DependentUpon>MenuPopup.xaml</DependentUpon>
@@ -103,7 +103,7 @@
 	  <MauiXaml Update="Views\MenuItem.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\PopupButtonPage.xaml">
+	  <MauiXaml Update="Pages\PopupMenuPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MenuPopup.xaml">
@@ -113,6 +113,10 @@
 
 	<ItemGroup>
 	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\" />
 	</ItemGroup>
 
 </Project>

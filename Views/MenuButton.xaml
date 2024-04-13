@@ -3,27 +3,28 @@
     x:Class="MauiCustomControls.Views.MenuButton"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Views">
+    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    x:DataType="views:MenuButton">
     <VerticalStackLayout Spacing="5">
         <Button
             HorizontalOptions="Start"
-            Text="{Binding Text}}" />
+            Text="{Binding Text}" />
         <!--  Context Menu  -->
         <VerticalStackLayout
             HorizontalOptions="Start"
             IsVisible="{Binding IsMenuVisible}">
-            <controls:MenuItem
+            <views:MenuItem
                 Icon="steelpick.png"
-                TapCommand="{Binding MenuItemCommand}"
+                TapCommand="{Binding MenuItemTappedCommand}"
                 TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
                 Text="Mine" />
-            <controls:MenuItem
+            <views:MenuItem
                 Icon="stonehoe.png"
-                TapCommand="{Binding MenuItemCommand}"
+                TapCommand="{Binding MenuItemTappedCommand}"
                 Text="Farm" />
-            <controls:MenuItem
+            <views:MenuItem
                 Icon="diamondsword.png"
-                TapCommand="{Binding MenuItemCommand}"
+                TapCommand="{Binding MenuItemTappedCommand}"
                 Text="Fight" />
         </VerticalStackLayout>
 

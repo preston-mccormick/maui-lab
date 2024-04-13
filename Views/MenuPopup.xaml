@@ -1,11 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup
     x:Class="MauiCustomControls.Views.MenuPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
-
-    <VerticalStackLayout>
-        <Label Text="This is a very important message! Do you agree?" />
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:views="clr-namespace:MauiCustomControls.Views">
+    <VerticalStackLayout
+        Padding="10"
+        Spacing="4">
+        <views:MenuItem
+            Icon="steelpick.png"
+            Text="Mine" />
+        <views:MenuItem
+            Icon="stonehoe.png"
+            Text="Farm" />
+        <views:MenuItem
+            Icon="diamondsword.png"
+            Text="Fight" />
+        <views:MenuItem
+            Icon="gold_ingot.png"
+            Text="Shop" />
+        <views:MenuItem
+            Icon="rose.png"
+            Text="Love" />
+        <views:MenuItem
+            Icon="sign.png"
+            Text="Share" />
+        <views:MenuItem
+            Icon="book.png"
+            Text="Learn" />
+        <views:MenuItem
+            Icon="apple.png"
+            Text="Eat" />
     </VerticalStackLayout>
-
 </toolkit:Popup>
