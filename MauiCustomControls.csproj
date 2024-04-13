@@ -67,33 +67,52 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="8.0.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="MenuButtonPage.xaml.cs">
+	  <Compile Update="Pages\MenuButtonPage.xaml.cs">
 	    <DependentUpon>MenuButtonPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Controls\MenuButton.xaml.cs">
+	  <Compile Update="Views\MenuButton.xaml.cs">
 	    <DependentUpon>MenuButton.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Controls\MenuItem.xaml.cs">
+	  <Compile Update="Views\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\PopupButtonPage.xaml.cs">
+	    <DependentUpon>PopupButtonPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\MenuPopup.xaml.cs">
+	    <DependentUpon>MenuPopup.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Controls\MenuButton.xaml">
+	  <MauiXaml Update="Views\MenuButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="MenuButtonPage.xaml">
+	  <MauiXaml Update="Pages\MenuButtonPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Controls\MenuItem.xaml">
+	  <MauiXaml Update="Views\MenuItem.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\PopupButtonPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MenuPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
 	</ItemGroup>
 
 </Project>

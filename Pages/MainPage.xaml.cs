@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
 
-namespace MauiCustomControls;
+namespace MauiCustomControls.Pages;
 
 public partial class MainPage : ContentPage
 {

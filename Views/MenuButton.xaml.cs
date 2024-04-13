@@ -1,4 +1,4 @@
-namespace MauiCustomControls.Controls;
+namespace MauiCustomControls.Views;
 
 public partial class MenuButton : ContentView
 {
