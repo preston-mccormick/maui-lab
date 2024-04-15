@@ -2,9 +2,9 @@ using System.Windows.Input;
 
 namespace MauiCustomControls.Pages;
 
-public partial class DialogsPage : ContentPage
+public partial class Dialogs : ContentPage
 {
-	public DialogsPage()
+	public Dialogs()
 	{
 		InitializeComponent();
         BindingContext = this;

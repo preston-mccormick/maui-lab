@@ -8,18 +8,18 @@
     Shell.FlyoutBehavior="Locked">
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate pages:MainPage}"
+        ContentTemplate="{DataTemplate pages:Home}"
         Route="Home" />
     <ShellContent
         Title="Dialogs"
-        ContentTemplate="{DataTemplate pages:DialogsPage}"
+        ContentTemplate="{DataTemplate pages:Dialogs}"
         Route="Dialogs" />
     <ShellContent
         Title="Menu Button"
-        ContentTemplate="{DataTemplate pages:MenuButtonPage}"
+        ContentTemplate="{DataTemplate pages:MenuButton}"
         Route="MenuButton" />
     <ShellContent
         Title="Popup Menu Button"
-        ContentTemplate="{DataTemplate pages:PopupMenuPage}"
+        ContentTemplate="{DataTemplate pages:PopupMenu}"
         Route="PopupMenu" />
 </Shell>

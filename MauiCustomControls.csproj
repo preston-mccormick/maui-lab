@@ -77,8 +77,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\MenuButtonPage.xaml.cs">
-	    <DependentUpon>MenuButtonPage.xaml</DependentUpon>
+	  <Compile Update="Pages\Dialogs.xaml.cs">
+	    <DependentUpon>Dialogs.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\MenuButton.xaml.cs">
+	    <DependentUpon>MenuButton.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\MenuButton.xaml.cs">
 	    <DependentUpon>MenuButton.xaml</DependentUpon>
@@ -86,8 +89,8 @@
 	  <Compile Update="Views\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\PopupMenuPage.xaml.cs">
-	    <DependentUpon>PopupMenuPage.xaml</DependentUpon>
+	  <Compile Update="Pages\PopupMenu.xaml.cs">
+	    <DependentUpon>PopupMenu.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\MenuPopup.xaml.cs">
 	    <DependentUpon>MenuPopup.xaml</DependentUpon>
@@ -95,19 +98,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\DialogsPage.xaml">
+	  <MauiXaml Update="Pages\Dialogs.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MenuButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\MenuButtonPage.xaml">
+	  <MauiXaml Update="Pages\MenuButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MenuItem.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\PopupMenuPage.xaml">
+	  <MauiXaml Update="Pages\PopupMenu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MenuPopup.xaml">

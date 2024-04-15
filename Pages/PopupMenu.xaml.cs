@@ -3,9 +3,9 @@ using CommunityToolkit.Maui.Views;
 
 namespace MauiCustomControls.Pages;
 
-public partial class PopupMenuPage : ContentPage
+public partial class PopupMenu : ContentPage
 {
-    public PopupMenuPage()
+    public PopupMenu()
     {
         InitializeComponent();
     }

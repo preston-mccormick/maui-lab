@@ -1,8 +1,8 @@
 namespace MauiCustomControls.Pages;
 
-public partial class MenuButtonPage : ContentPage
+public partial class MenuButton : ContentPage
 {
-	public MenuButtonPage()
+	public MenuButton()
 	{
 		InitializeComponent();
 	}
