@@ -5,12 +5,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
     Title="Home"
-    Padding="10,100">
+    Padding="30,110">
     <Grid>
-        <Label
-            FontSize="48"
-            HorizontalOptions="Center"
-            Text="MAUI Lab"
-            VerticalOptions="Start" />
+        <VerticalStackLayout>
+            <Label
+                Margin="0,0,0,-20"
+                FontSize="30"
+                Text="Welcome to"
+                TextColor="{StaticResource Primary}"
+                VerticalTextAlignment="Center" />
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Spacing="8"
+                VerticalOptions="Start">
+                <Label
+                    FontSize="75"
+                    Text="MAUI Lab"
+                    TextColor="{StaticResource Secondary}"
+                    VerticalTextAlignment="Center" />
+                <Image
+                    HeightRequest="150"
+                    Source="chemistry_flask.png"
+                    WidthRequest="150" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>
