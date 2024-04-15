@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiCustomControls.Views.BindableMenu"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    BindingContext="{Binding Source={RelativeSource Self}}">
+    <VerticalStackLayout
+        x:Name="Menu"
+        Padding="10"
+        BackgroundColor="DimGray"
+        BindableLayout.ItemsSource="{Binding Path=Items}"
+        Spacing="4">
+        <BindableLayout.ItemTemplate>
+            <DataTemplate>
+                <views:MenuItem
+                    Icon="{Binding Icon}"
+                    TapCommand="{Binding TapCommand}"
+                    Text="{Binding Text}" />
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+</ContentView>

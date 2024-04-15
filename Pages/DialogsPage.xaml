@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="MauiCustomControls.Pages.Dialogs"
+    x:Class="MauiCustomControls.Pages.DialogsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
     Title="Dialogs"
-    x:DataType="pages:Dialogs">
+    Padding="30"
+    x:DataType="pages:DialogsPage"
+    BindingContext="{Binding Source={RelativeSource Self}}">
     <FlexLayout
-        Margin="0,0,0,100"
-        Padding="20"
-        AlignContent="SpaceEvenly"
+        AlignContent="Start"
         AlignItems="Start"
         JustifyContent="SpaceEvenly"
         Wrap="Wrap">

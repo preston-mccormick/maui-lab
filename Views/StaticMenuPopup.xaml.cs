@@ -2,12 +2,10 @@ using CommunityToolkit.Maui.Views;
 
 namespace MauiCustomControls.Views;
 
-public partial class MenuPopup : Popup
+public partial class StaticMenuPopup : Popup
 {
-	public MenuPopup()
+	public StaticMenuPopup()
 	{
 		InitializeComponent();
-
-		//this.Size = new Size(300,300);
 	}
 }

@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
-    Title="MAUI Custom Control Lab"
+    Title="MAUI Lab"
     Shell.FlyoutBehavior="Locked">
     <ShellContent
         Title="Home"
@@ -12,14 +12,10 @@
         Route="Home" />
     <ShellContent
         Title="Dialogs"
-        ContentTemplate="{DataTemplate pages:Dialogs}"
+        ContentTemplate="{DataTemplate pages:DialogsPage}"
         Route="Dialogs" />
     <ShellContent
         Title="Menu Button"
-        ContentTemplate="{DataTemplate pages:MenuButton}"
-        Route="MenuButton" />
-    <ShellContent
-        Title="Popup Menu Button"
-        ContentTemplate="{DataTemplate pages:PopupMenu}"
+        ContentTemplate="{DataTemplate pages:MenuButtonPage}"
         Route="PopupMenu" />
 </Shell>

@@ -11,11 +11,11 @@
         <HorizontalStackLayout.GestureRecognizers>
             <TapGestureRecognizer
                 Command="{Binding TapCommand}"
+                CommandParameter="{Binding TapCommandParameter}"
                 NumberOfTapsRequired="1" />
             <PointerGestureRecognizer
                 PointerEntered="OnPointerEntered"
-                PointerExited="OnPointerExited"
-                PointerPressedCommand="{Binding TapCommand}" />
+                PointerExited="OnPointerExited" />
         </HorizontalStackLayout.GestureRecognizers>
         <Image
             HeightRequest="20"

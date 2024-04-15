@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiCustomControls.Pages.MenuButtonPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MauiCustomControls.Pages"
+    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    xmlns:vm="clr-namespace:MauiCustomControls.ViewModels"
+    Title="Menu Button"
+    Padding="30"
+    x:DataType="vm:MenuButtonViewModel">
+
+    <Grid RowDefinitions="*,0">
+        <FlexLayout
+            AlignContent="Start"
+            AlignItems="Start"
+            Direction="Row"
+            JustifyContent="SpaceEvenly"
+            Wrap="Wrap">
+
+            <views:MenuButton
+                HorizontalOptions="Center"
+                Text="MenuButton"
+                VerticalOptions="Start" />
+
+            <VerticalStackLayout
+                VerticalOptions="Start"
+                WidthRequest="250">
+                <Button
+                    Clicked="BindButtonClicked"
+                    HorizontalOptions="Center"
+                    Text="BindableMenu"
+                    VerticalOptions="Center" />
+                <views:BindableMenu
+                    x:Name="Menu1"
+                    BindingContext="{Binding .}"
+                    HorizontalOptions="Center"
+                    IsVisible="False"
+                    Items="{Binding Items}"
+                    VerticalOptions="End" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout VerticalOptions="Start">
+                <Button
+                    Clicked="OnButtonClicked"
+                    HorizontalOptions="Center"
+                    Text="MenuItem" />
+                <Border
+                    x:Name="Menu2"
+                    HorizontalOptions="Center"
+                    IsVisible="False">
+                    <VerticalStackLayout
+                        Padding="10"
+                        BackgroundColor="DimGray"
+                        Spacing="4">
+                        <views:MenuItem
+                            Icon="steelpick.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Mine" />
+                        <views:MenuItem
+                            Icon="stonehoe.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Farm" />
+                        <views:MenuItem
+                            Icon="diamondsword.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Fight" />
+                        <views:MenuItem
+                            Icon="gold_ingot.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Shop" />
+                        <views:MenuItem
+                            Icon="rose.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Love" />
+                        <views:MenuItem
+                            Icon="sign.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Share" />
+                        <views:MenuItem
+                            Icon="book.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Learn" />
+                        <views:MenuItem
+                            Icon="apple.png"
+                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
+                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            Text="Eat" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+        </FlexLayout>
+    </Grid>
+</ContentPage>

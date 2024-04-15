@@ -1,37 +1,18 @@
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel;
+using System.Windows.Input;
+
 namespace MauiCustomControls.Views;
 
 public partial class MenuButton : ContentView
 {
-	public MenuButton()
-	{
-		InitializeComponent();
-		BindingContext = this;
-	}
-
-	private async Task OnButtonClicked()
-    {
-        IsMenuVisible = !IsMenuVisible;
-        await Task.Delay(1000);
-        IsMenuVisible = false;
-    }
-
-    public bool IsMenuVisible
-    {
-        get => (bool)GetValue(MenuIsVisibleProperty);
-        set => SetValue(MenuIsVisibleProperty, value);
-    }
-
-    public static readonly BindableProperty MenuIsVisibleProperty = BindableProperty.Create(
-        nameof(IsMenuVisible),
-        typeof(bool),
-        typeof(MenuButton),
-        false);
-
-	public string Text
-    {
-        get => (string)GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
-    }
+    public static readonly BindableProperty IconProperty = BindableProperty.Create(
+        nameof(Icon),
+        typeof(ImageSource),
+        typeof(MenuItem),
+        default(ImageSource)
+    );
 
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
         nameof(Text),
@@ -39,10 +20,44 @@ public partial class MenuButton : ContentView
         typeof(MenuButton),
         string.Empty);
 
-    public Command MenuItemTappedCommand => new Command<string>(async (item) =>
+    [TypeConverter(typeof(ImageSourceConverter))]
+    public ImageSource Icon
     {
-        IsMenuVisible = false;
-        await Task.Delay(1000);
-        await Shell.Current.CurrentPage.DisplayAlert("Menu Item Tapped", item, "OK");
-    });
+        get => (ImageSource)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public string Text
+    {
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
+
+    public MenuButton()
+    {
+        InitializeComponent();
+        BindingContext = this;
+    }
+
+    private void ButtonClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button) return;
+        if (App.Current?.MainPage is not Page page) return;
+
+        ViewModels.MenuItemViewModel[] items = [
+            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
+            new ViewModels.MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
+            new ViewModels.MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
+            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
+            new ViewModels.MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
+            new ViewModels.MenuItemViewModel() { Text = "Eat", Icon = "apple.png" }];
+
+        BindableMenu menu = new(items);
+        var popup = new Popup()
+        {
+            Anchor = button,
+            Content = menu
+        };
+        page.ShowPopup(popup);
+    }
 }
