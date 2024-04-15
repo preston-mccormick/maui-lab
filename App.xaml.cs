@@ -12,8 +12,8 @@ public partial class App : Application
     protected override Window CreateWindow(IActivationState activationState)
     {
         Window window = base.CreateWindow(activationState);
-        window.Width = 600;
-        window.Height = 600;
+        window.Width = 1250;
+        window.Height = 750;
         return window;
     }
 

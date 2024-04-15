@@ -4,27 +4,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
+    Padding="10,100"
     x:DataType="pages:MainPage">
-
-    <FlexLayout
-        Padding="20"
-        AlignContent="SpaceEvenly"
-        AlignItems="Start"
-        JustifyContent="SpaceEvenly"
-        Wrap="Wrap">
-
-        <Button
-            Command="{Binding ShowAlertCommand}"
-            Text="Show Alert"
-            VerticalOptions="Center" />
-        <Button
-            Command="{Binding ShowActionSheetCommand}"
-            Text="Show ActionSheet"
-            VerticalOptions="Center" />
-        <Button
-            Command="{Binding ShowPromptCommand}"
-            Text="Show Prompt"
-            VerticalOptions="Center" />
-    </FlexLayout>
-
+    <Grid>
+        <Label
+            FontSize="48"
+            HorizontalOptions="Center"
+            Text="MAUI Lab"
+            VerticalOptions="Start" />
+    </Grid>
 </ContentPage>

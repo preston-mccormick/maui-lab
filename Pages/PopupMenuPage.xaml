@@ -4,9 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:MauiCustomControls.Views"
-    Title="Popup Menu">
+    Title="Popup Menu"
+    Padding="10,100">
     <VerticalStackLayout
-        Padding="8,100,8,8"
         Spacing="8"
         VerticalOptions="Start">
         <Button

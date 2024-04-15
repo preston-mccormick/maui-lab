@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiCustomControls.Pages.DialogsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MauiCustomControls.Pages"
+    Title="DialogsPage"
+    x:DataType="pages:DialogsPage">
+    <FlexLayout
+        Margin="0,0,0,100"
+        Padding="20"
+        AlignContent="SpaceEvenly"
+        AlignItems="Start"
+        JustifyContent="SpaceEvenly"
+        Wrap="Wrap">
+
+        <Button
+            Command="{Binding ShowAlertCommand}"
+            Text="Show Alert"
+            VerticalOptions="Center" />
+        <Button
+            Command="{Binding ShowActionSheetCommand}"
+            Text="Show ActionSheet"
+            VerticalOptions="Center" />
+        <Button
+            Command="{Binding ShowPromptCommand}"
+            Text="Show Prompt"
+            VerticalOptions="Center" />
+    </FlexLayout>
+
+</ContentPage>
