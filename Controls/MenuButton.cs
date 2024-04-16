@@ -1,18 +1,10 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using System.Collections;
-using System.ComponentModel;
 
 namespace MauiCustomControls.Controls;
 
-public partial class MenuButton : ContentView
+public class MenuButton : Button
 {
-    public static readonly BindableProperty IconProperty = BindableProperty.Create(
-        nameof(Icon),
-        typeof(ImageSource),
-        typeof(MenuItem),
-        default(ImageSource)
-    );
-
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(
         nameof(Items),
         typeof(IEnumerable),
@@ -20,41 +12,18 @@ public partial class MenuButton : ContentView
         null
     );
 
-    public static readonly BindableProperty TextProperty = BindableProperty.Create(
-        nameof(Text),
-        typeof(string),
-        typeof(MenuButton),
-        string.Empty
-    );
-
-    [TypeConverter(typeof(ImageSourceConverter))]
-    public ImageSource? Icon
-    {
-        get => GetValue(IconProperty) as ImageSource;
-        set => SetValue(IconProperty, value);
-    }
-
     public IEnumerable? Items
     {
         get => GetValue(ItemsProperty) as IEnumerable;
         set => SetValue(ItemsProperty, value);
     }
 
-    public string? Text
+    public MenuButton() : base()
     {
-        get => (string)GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        Clicked += ButtonClicked;
     }
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public MenuButton()
-    {
-        InitializeComponent();
-    }
-
-    private void ButtonClicked(object sender, EventArgs e)
+    private void ButtonClicked(object? sender, EventArgs e)
     {
         if (sender is not View view)
         {

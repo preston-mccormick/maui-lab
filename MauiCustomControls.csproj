@@ -78,9 +78,6 @@
 	  <Compile Update="Pages\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Controls\MenuButton.xaml.cs">
-	    <DependentUpon>MenuButton.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
@@ -97,9 +94,6 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Pages\DialogsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Controls\MenuButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\MenuItem.xaml">
