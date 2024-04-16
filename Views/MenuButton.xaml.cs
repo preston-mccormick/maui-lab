@@ -31,9 +31,9 @@ public partial class MenuButton : ContentView
     );
 
     [TypeConverter(typeof(ImageSourceConverter))]
-    public ImageSource Icon
+    public ImageSource? Icon
     {
-        get => (ImageSource)GetValue(IconProperty);
+        get => GetValue(IconProperty) as ImageSource;
         set => SetValue(IconProperty, value);
     }
 

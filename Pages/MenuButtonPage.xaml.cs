@@ -22,27 +22,30 @@ public partial class MenuButtonPage : ContentPage
         var viewModel = new MenuButtonViewModel("Bound Menu", items);
 
         BindingContext = viewModel;
+
+        Menu2.BeforeItemTap = () => Menu2.IsVisible = false;
     }
 
-    #region Bindable Menu ProtoType
+    #region Menu ProtoType
 
     private void BindableMenuButtonClicked(object sender, EventArgs e)
     {
-        Menu1.IsVisible = !Menu1.IsVisible;
+        Menu2.IsVisible = !Menu2.IsVisible;
     }
 
     #endregion
 
-    #region Menu Item Prototype
+    #region MenuItem Prototype
 
     public ICommand MenuItemCommand => new AsyncRelayCommand<string>(async (item) =>
     {
+        Menu1.IsVisible = false;
         await DisplayAlert("Menu Item Tapped", item, "OK");
     });
 
-    private void MenuItemButtonClicked(object sender, EventArgs e)
+    private void MenuButtonClicked(object sender, EventArgs e)
     {
-        Menu2.IsVisible = !Menu2.IsVisible;
+        Menu1.IsVisible = !Menu1.IsVisible;
     }
 
     #endregion

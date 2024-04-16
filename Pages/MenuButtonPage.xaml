@@ -6,6 +6,7 @@
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
     xmlns:views="clr-namespace:MauiCustomControls.Views"
     xmlns:vm="clr-namespace:MauiCustomControls.ViewModels"
+    x:Name="This"
     Title="Menu Button"
     Padding="30"
     x:DataType="vm:MenuButtonViewModel">
@@ -18,23 +19,25 @@
             JustifyContent="SpaceEvenly"
             Wrap="Wrap">
 
+            <!--  Completed MenuButton control with a popup action menu  -->
             <views:MenuButton
                 BindingContext="{Binding .}"
                 HorizontalOptions="Center"
                 Items="{Binding Items}"
-                Text="MenuButton"
+                Text="MenuButton Control"
                 VerticalOptions="Start" />
 
+            <!--  Proof of Concept for bindable a Menu control  -->
             <VerticalStackLayout
                 VerticalOptions="Start"
                 WidthRequest="250">
                 <Button
                     Clicked="BindableMenuButtonClicked"
                     HorizontalOptions="Center"
-                    Text="BindableMenu"
+                    Text="Menu Prototype"
                     VerticalOptions="Center" />
                 <views:Menu
-                    x:Name="Menu1"
+                    x:Name="Menu2"
                     BindingContext="{Binding .}"
                     HorizontalOptions="Center"
                     IsVisible="False"
@@ -42,13 +45,14 @@
                     VerticalOptions="End" />
             </VerticalStackLayout>
 
+            <!--  Test MenuItem control with hard coded Text and Icon  -->
             <VerticalStackLayout VerticalOptions="Start">
                 <Button
-                    Clicked="MenuItemButtonClicked"
+                    Clicked="MenuButtonClicked"
                     HorizontalOptions="Center"
-                    Text="MenuItem" />
+                    Text="MenuItem Prototype" />
                 <Border
-                    x:Name="Menu2"
+                    x:Name="Menu1"
                     HorizontalOptions="Center"
                     IsVisible="False">
                     <VerticalStackLayout
@@ -57,22 +61,20 @@
                         Spacing="4">
                         <views:MenuItem
                             Icon="steelpick.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Mine" />
                         <views:MenuItem
                             Icon="stonehoe.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Farm" />
                         <views:MenuItem
                             Icon="diamondsword.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
+                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Fight" />
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
+
         </FlexLayout>
     </Grid>
 </ContentPage>

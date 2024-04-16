@@ -104,6 +104,9 @@ public partial class MenuItem : ContentView
     public MenuItem()
     {
         InitializeComponent();
+
+        // For when it's not bound to a ViewModel
+        BindingContext = this;
     }
 
     /// <summary>
