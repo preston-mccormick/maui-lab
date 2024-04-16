@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace MauiCustomControls.Views;
+namespace MauiCustomControls.Controls;
 
 public partial class Menu : ContentView
 {

@@ -4,32 +4,32 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:views="clr-namespace:MauiCustomControls.Views">
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls">
     <VerticalStackLayout
         Padding="10"
         Spacing="4">
-        <views:MenuItem
+        <controls:MenuItem
             Icon="steelpick.png"
             Text="Mine" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="stonehoe.png"
             Text="Farm" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="diamondsword.png"
             Text="Fight" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="gold_ingot.png"
             Text="Shop" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="rose.png"
             Text="Love" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="sign.png"
             Text="Share" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="book.png"
             Text="Learn" />
-        <views:MenuItem
+        <controls:MenuItem
             Icon="apple.png"
             Text="Eat" />
     </VerticalStackLayout>

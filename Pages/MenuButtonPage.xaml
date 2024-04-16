@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiCustomControls.Pages"
-    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
     xmlns:vm="clr-namespace:MauiCustomControls.ViewModels"
     x:Name="This"
     Title="Menu Button"
@@ -20,7 +20,7 @@
             Wrap="Wrap">
 
             <!--  Completed MenuButton control with a popup action menu  -->
-            <views:MenuButton
+            <controls:MenuButton
                 BindingContext="{Binding .}"
                 HorizontalOptions="Center"
                 Items="{Binding Items}"
@@ -36,7 +36,7 @@
                     HorizontalOptions="Center"
                     Text="Menu Prototype"
                     VerticalOptions="Center" />
-                <views:Menu
+                <controls:Menu
                     x:Name="Menu2"
                     BindingContext="{Binding .}"
                     HorizontalOptions="Center"
@@ -59,15 +59,15 @@
                         Padding="10"
                         BackgroundColor="DimGray"
                         Spacing="4">
-                        <views:MenuItem
+                        <controls:MenuItem
                             Icon="steelpick.png"
                             TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Mine" />
-                        <views:MenuItem
+                        <controls:MenuItem
                             Icon="stonehoe.png"
                             TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Farm" />
-                        <views:MenuItem
+                        <controls:MenuItem
                             Icon="diamondsword.png"
                             TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                             Text="Fight" />

@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace MauiCustomControls.Views;
+namespace MauiCustomControls.Controls;
 
 public partial class MenuItem : ContentView
 {

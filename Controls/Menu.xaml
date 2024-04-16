@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-    x:Class="MauiCustomControls.Views.Menu"
+    x:Class="MauiCustomControls.Controls.Menu"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
     x:Name="This">
     <VerticalStackLayout
         Padding="12"
@@ -14,7 +14,7 @@
         Spacing="4">
         <BindableLayout.ItemTemplate>
             <DataTemplate>
-                <views:MenuItem
+                <controls:MenuItem
                     AfterTap="{Binding Source={x:Reference This}, Path=AfterItemTap}"
                     BeforeTap="{Binding Source={x:Reference This}, Path=BeforeItemTap}"
                     Icon="{Binding Icon}"

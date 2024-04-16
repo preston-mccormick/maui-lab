@@ -1,11 +1,8 @@
 using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.Input;
-using MauiCustomControls.ViewModels;
 using System.Collections;
 using System.ComponentModel;
-using System.Windows.Input;
 
-namespace MauiCustomControls.Views;
+namespace MauiCustomControls.Controls;
 
 public partial class MenuButton : ContentView
 {
