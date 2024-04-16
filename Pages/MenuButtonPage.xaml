@@ -19,7 +19,9 @@
             Wrap="Wrap">
 
             <views:MenuButton
+                BindingContext="{Binding .}"
                 HorizontalOptions="Center"
+                Items="{Binding Items}"
                 Text="MenuButton"
                 VerticalOptions="Start" />
 
@@ -31,7 +33,7 @@
                     HorizontalOptions="Center"
                     Text="BindableMenu"
                     VerticalOptions="Center" />
-                <views:BindableMenu
+                <views:Menu
                     x:Name="Menu1"
                     BindingContext="{Binding .}"
                     HorizontalOptions="Center"
@@ -68,31 +70,6 @@
                             TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
                             TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
                             Text="Fight" />
-                        <views:MenuItem
-                            Icon="gold_ingot.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                            Text="Shop" />
-                        <views:MenuItem
-                            Icon="rose.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                            Text="Love" />
-                        <views:MenuItem
-                            Icon="sign.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                            Text="Share" />
-                        <views:MenuItem
-                            Icon="book.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                            Text="Learn" />
-                        <views:MenuItem
-                            Icon="apple.png"
-                            TapCommand="{Binding Source={RelativeSource AncestorType={x:Type pages:MenuButtonPage}}, Path=MenuItemCommand}"
-                            TapCommandParameter="{Binding Source={RelativeSource Self}, Path=Text}"
-                            Text="Eat" />
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>

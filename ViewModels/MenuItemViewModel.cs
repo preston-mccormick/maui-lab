@@ -14,7 +14,7 @@ public partial class MenuItemViewModel : ObservableObject
     [RelayCommand]
     private void Tap()
     {
-        if (App.Current?.MainPage is not Page page) return;
+        if (Application.Current?.MainPage is not Page page) return;
         page.DisplayAlert("Menu Item Tapped", Text, "OK");
     }
 }

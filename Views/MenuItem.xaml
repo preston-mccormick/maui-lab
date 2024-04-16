@@ -3,19 +3,15 @@
     x:Class="MauiCustomControls.Views.MenuItem"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Views"
-    x:DataType="controls:MenuItem">
+    xmlns:views="clr-namespace:MauiCustomControls.Views"
+    x:DataType="views:MenuItem">
     <HorizontalStackLayout
         Padding="3"
         Spacing="10">
         <HorizontalStackLayout.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding TapCommand}"
-                CommandParameter="{Binding TapCommandParameter}"
-                NumberOfTapsRequired="1" />
-            <PointerGestureRecognizer
-                PointerEntered="OnPointerEntered"
-                PointerExited="OnPointerExited" />
+                NumberOfTapsRequired="1"
+                Tapped="Tapped" />
         </HorizontalStackLayout.GestureRecognizers>
         <Image
             HeightRequest="20"

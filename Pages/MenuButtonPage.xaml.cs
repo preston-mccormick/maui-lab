@@ -11,16 +11,15 @@ public partial class MenuButtonPage : ContentPage
     {
         InitializeComponent();
 
+        MenuItemViewModel[] items = [
+            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
+            new MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
+            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
+            new MenuItemViewModel() { Text = "Eat", Icon = "apple.png" }];
+        var viewModel = new MenuButtonViewModel("Bound Menu", items);
 
-        ViewModels.MenuItemViewModel[] items = [
-            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Eat", Icon = "apple.png" }];
-        var viewModel = new ViewModels.MenuButtonViewModel("Bound Menu", items);
-        // Binding at page level does not work!
         BindingContext = viewModel;
     }
 

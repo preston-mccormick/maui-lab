@@ -87,8 +87,8 @@
 	  <Compile Update="Pages\MenuButtonPage.xaml.cs">
 	    <DependentUpon>MenuButtonPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\BindableMenu.xaml.cs">
-	    <DependentUpon>BindableMenu.xaml</DependentUpon>
+	  <Compile Update="Views\Menu.xaml.cs">
+	    <DependentUpon>Menu.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\StaticMenuPopup.xaml.cs">
 	    <DependentUpon>StaticMenuPopup.xaml</DependentUpon>
@@ -108,7 +108,7 @@
 	  <MauiXaml Update="Pages\MenuButtonPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\BindableMenu.xaml">
+	  <MauiXaml Update="Views\Menu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\StaticMenuPopup.xaml">
@@ -122,6 +122,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Models\" />
+	  <Folder Include="Controls\" />
 	</ItemGroup>
 
 </Project>

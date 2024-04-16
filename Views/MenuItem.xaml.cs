@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -23,20 +24,65 @@ public partial class MenuItem : ContentView
         nameof(TapCommand), typeof(ICommand), typeof(MenuItem), null);
 
     public static readonly BindableProperty TapCommandParameterProperty = BindableProperty.Create(
-        nameof(TapCommandParameter), typeof(object), typeof(MenuItem), null);
+        nameof(TapCommandParameter),
+        typeof(object),
+        typeof(MenuItem),
+        null);
 
-    public ICommand TapCommand
+    /// <summary>
+    /// Command to execute when the menu item is tapped.
+    /// </summary>
+    public ICommand? TapCommand
     {
         get => (ICommand)GetValue(TapCommandProperty);
         set => SetValue(TapCommandProperty, value);
     }
 
-    public object TapCommandParameter
+    /// <summary>
+    /// Bindable parameter passed to the TapCommand.  If not set, the Text property value is passed.
+    /// </summary>
+    public object? TapCommandParameter
     {
         get => GetValue(TapCommandParameterProperty);
         set => SetValue(TapCommandParameterProperty, value);
     }
 
+    /// <summary>
+    /// Action to invoke before the TapCommand is executed.
+    /// Use with AfterTapCommand to show and hide a busy indicator (or whatever).
+    /// </summary>
+    public Action? BeforeTap
+    {
+        get => (Action)GetValue(BeforeTapProperty); 
+        set => SetValue(BeforeTapProperty, value);
+    }
+
+    public static readonly BindableProperty BeforeTapProperty = BindableProperty.Create(
+        nameof(BeforeTap),
+        typeof(Action),
+        typeof(MenuItem),
+        null);
+
+    /// <summary>
+    /// Action to invoke before the TapCommand is executed.
+    /// Use with BeforeTapCommand to show and hide a busy indicator (or whatever).
+    /// </summary>
+    public Action? AfterTap
+    {
+        get => (Action)GetValue(AfterTapProperty);
+        set => SetValue(AfterTapProperty, value);
+    }
+
+    public static readonly BindableProperty AfterTapProperty = BindableProperty.Create(
+        nameof(AfterTap),
+        typeof(Action),
+        typeof(MenuItem),
+        null);
+
+
+    /// <summary>
+    /// Image source for an icon that appears to the left of the menu item text.
+    /// </summary>
     [TypeConverter(typeof(ImageSourceConverter))]
     public ImageSource Icon
     {
@@ -44,6 +90,10 @@ public partial class MenuItem : ContentView
         set => SetValue(IconProperty, value);
     }
 
+    /// <summary>
+    /// Menu item text label.  
+    /// Passed to the TapCommand if TapCommandParameter is not set.
+    /// </summary>
     public string Text
     {
         get => (string)GetValue(TextProperty);
@@ -56,24 +106,16 @@ public partial class MenuItem : ContentView
         BindingContext = this;
     }
 
-    private void OnPointerEntered(object sender, EventArgs e)
+    private void Tapped(object sender, TappedEventArgs e)
     {
-        if (Application.Current?.PlatformAppTheme == AppTheme.Dark)
-        {
-            BackgroundColor = Colors.DarkBlue;
-        }
-        else
-        {
-            BackgroundColor = Colors.AliceBlue;
-        }
-    }
-    private void OnPointerExited(object sender, EventArgs e)
-    {
-        BackgroundColor = null;
-    }
+        if (TapCommand == null) return;
+        if (!TapCommand.CanExecute(TapCommandParameter)) return;
 
-    private void OnPointerEntered(object sender, PointerEventArgs e)
-    {
+        BeforeTap?.Invoke();
 
+        // If the parameter is not set, pass the Text
+        TapCommand.Execute(TapCommandParameter ?? Text);
+
+        AfterTap?.Invoke();
     }
 }

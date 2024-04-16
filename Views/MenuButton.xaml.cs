@@ -1,5 +1,7 @@
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
+using MauiCustomControls.ViewModels;
+using System.Collections;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -14,11 +16,19 @@ public partial class MenuButton : ContentView
         default(ImageSource)
     );
 
+    public static readonly BindableProperty ItemsProperty = BindableProperty.Create(
+        nameof(Items),
+        typeof(IEnumerable),
+        typeof(MenuButton),
+        null
+    );
+
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
         nameof(Text),
         typeof(string),
         typeof(MenuButton),
-        string.Empty);
+        string.Empty
+    );
 
     [TypeConverter(typeof(ImageSourceConverter))]
     public ImageSource Icon
@@ -27,7 +37,13 @@ public partial class MenuButton : ContentView
         set => SetValue(IconProperty, value);
     }
 
-    public string Text
+    public IEnumerable? Items
+    {
+        get => GetValue(ItemsProperty) as IEnumerable;
+        set => SetValue(ItemsProperty, value);
+    }
+
+    public string? Text
     {
         get => (string)GetValue(TextProperty);
         set => SetValue(TextProperty, value);
@@ -41,23 +57,23 @@ public partial class MenuButton : ContentView
 
     private void ButtonClicked(object sender, EventArgs e)
     {
-        if (sender is not Button button) return;
-        if (App.Current?.MainPage is not Page page) return;
+        if (sender is not View view)
+        {
+            throw new ArgumentException("Sender is not a View", nameof(sender));
+        };
+        if (Application.Current?.MainPage is not Page page)
+        {
+            throw new InvalidOperationException("Could not find the current Page");
+        };
 
-        ViewModels.MenuItemViewModel[] items = [
-            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
-            new ViewModels.MenuItemViewModel() { Text = "Eat", Icon = "apple.png" }];
-
-        BindableMenu menu = new(items);
+        Menu menu = new(Items);
         var popup = new Popup()
         {
-            Anchor = button,
+            Anchor = view,
             Content = menu
         };
+        //menu.BeforeItemTap = () => popup.Close(null);
+        menu.AfterItemTap = () => popup.Close(null);
         page.ShowPopup(popup);
     }
 }
