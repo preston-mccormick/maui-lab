@@ -12,13 +12,14 @@
     x:DataType="vm:MenuButtonViewModel">
 
     <Grid
-        ColumnDefinitions="*,*"
+        ColumnDefinitions="*,*,*"
         RowDefinitions="*,*">
 
         <!--  Completed MenuButton control with a popup action menu  -->
         <controls:MenuButton
             Grid.Row="0"
             Grid.Column="0"
+            Grid.ColumnSpan="2"
             Padding="16"
             BackgroundColor="Aquamarine"
             BindingContext="{Binding .}"
@@ -28,10 +29,20 @@
             Text="MenuButton Control"
             VerticalOptions="Start" />
 
+        <!--  CompositeMenuButton control with a popup action menu  -->
+        <controls:CompositeMenuButton
+            Grid.Row="0"
+            Grid.Column="2"
+            BindingContext="{Binding .}"
+            HorizontalOptions="Center"
+            Items="{Binding Items}"
+            Text="MenuButton Control"
+            VerticalOptions="Start" />
+
         <!--  Popup Prototype  -->
         <VerticalStackLayout
-            Grid.Row="0"
-            Grid.Column="1"
+            Grid.Row="1"
+            Grid.Column="0"
             VerticalOptions="Start"
             WidthRequest="250">
             <Button
@@ -44,7 +55,7 @@
         <!--  Bindable Menu Prototype  -->
         <VerticalStackLayout
             Grid.Row="1"
-            Grid.Column="0"
+            Grid.Column="1"
             VerticalOptions="Start"
             WidthRequest="250">
             <Button
@@ -64,7 +75,7 @@
         <!--  Bindable Menu Item Prototype  -->
         <VerticalStackLayout
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="2"
             VerticalOptions="Start">
             <Button
                 Clicked="MenuButtonClicked"
