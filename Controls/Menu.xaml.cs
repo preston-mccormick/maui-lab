@@ -7,13 +7,13 @@ public partial class Menu : ContentView
     public static readonly BindableProperty AfterItemTappedProperty = BindableProperty.Create(
             nameof(AfterItemTap),
             typeof(Action),
-            typeof(MenuItem),
+            typeof(Menu),
             null);
 
     public static readonly BindableProperty BeforeItemTappedProperty = BindableProperty.Create(
             nameof(BeforeItemTap),
             typeof(Action),
-            typeof(MenuItem),
+            typeof(Menu),
             null);
 
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(
