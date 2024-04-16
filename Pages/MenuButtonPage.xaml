@@ -16,10 +16,13 @@
         RowDefinitions="*,*">
 
         <!--  Completed MenuButton control with a popup action menu  -->
-        <controls:MenuButton
+        <controls:MenuButton2
             Grid.Row="0"
             Grid.Column="0"
+            Padding="20"
+            BackgroundColor="Aquamarine"
             BindingContext="{Binding .}"
+            FontAttributes="Bold"
             HorizontalOptions="Center"
             Items="{Binding Items}"
             Text="MenuButton Control"
