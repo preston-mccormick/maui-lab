@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Views;
 using MauiCustomControls.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
+
 namespace MauiCustomControls.Pages;
 
 public partial class MenuButtonPage : ContentPage
@@ -23,29 +24,27 @@ public partial class MenuButtonPage : ContentPage
         BindingContext = viewModel;
     }
 
-    private void PopupMenuButtonClicked(object sender, EventArgs e)
-    {
-        if (sender is not View view) return;
-        var menu = new StaticMenuPopup()
-        {
-            Anchor = view,
-        };
-        this.ShowPopup(menu);
-    }
+    #region Bindable Menu ProtoType
 
-    private void BindButtonClicked(object sender, EventArgs e)
+    private void BindableMenuButtonClicked(object sender, EventArgs e)
     {
         Menu1.IsVisible = !Menu1.IsVisible;
     }
 
+    #endregion
+
+    #region Menu Item Prototype
 
     public ICommand MenuItemCommand => new AsyncRelayCommand<string>(async (item) =>
     {
         await DisplayAlert("Menu Item Tapped", item, "OK");
     });
 
-    private void OnButtonClicked(object sender, EventArgs e)
+    private void MenuItemButtonClicked(object sender, EventArgs e)
     {
         Menu2.IsVisible = !Menu2.IsVisible;
     }
+
+    #endregion
+
 }

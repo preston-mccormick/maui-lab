@@ -6,10 +6,10 @@ namespace MauiCustomControls.ViewModels;
 public partial class MenuItemViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string? text;
+    private string? icon;
 
     [ObservableProperty]
-    private string? icon;
+    private string? text;
 
     [RelayCommand]
     private void Tap()

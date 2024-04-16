@@ -15,6 +15,8 @@
         <BindableLayout.ItemTemplate>
             <DataTemplate>
                 <views:MenuItem
+                    AfterTap="{Binding Source={x:Reference This}, Path=AfterItemTap}"
+                    BeforeTap="{Binding Source={x:Reference This}, Path=BeforeItemTap}"
                     Icon="{Binding Icon}"
                     TapCommand="{Binding TapCommand}"
                     Text="{Binding Text}" />

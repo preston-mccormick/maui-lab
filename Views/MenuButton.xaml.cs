@@ -49,10 +49,12 @@ public partial class MenuButton : ContentView
         set => SetValue(TextProperty, value);
     }
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public MenuButton()
     {
         InitializeComponent();
-        BindingContext = this;
     }
 
     private void ButtonClicked(object sender, EventArgs e)
@@ -66,14 +68,17 @@ public partial class MenuButton : ContentView
             throw new InvalidOperationException("Could not find the current Page");
         };
 
+        // Create the menu and popup
         Menu menu = new(Items);
         var popup = new Popup()
         {
             Anchor = view,
             Content = menu
         };
-        //menu.BeforeItemTap = () => popup.Close(null);
-        menu.AfterItemTap = () => popup.Close(null);
+
+        // Close the popup when a menu item is tapped.
+        menu.BeforeItemTap = () => popup.Close(null);
+
         page.ShowPopup(popup);
     }
 }

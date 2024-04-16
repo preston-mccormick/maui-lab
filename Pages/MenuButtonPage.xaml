@@ -29,7 +29,7 @@
                 VerticalOptions="Start"
                 WidthRequest="250">
                 <Button
-                    Clicked="BindButtonClicked"
+                    Clicked="BindableMenuButtonClicked"
                     HorizontalOptions="Center"
                     Text="BindableMenu"
                     VerticalOptions="Center" />
@@ -44,7 +44,7 @@
 
             <VerticalStackLayout VerticalOptions="Start">
                 <Button
-                    Clicked="OnButtonClicked"
+                    Clicked="MenuItemButtonClicked"
                     HorizontalOptions="Center"
                     Text="MenuItem" />
                 <Border
@@ -73,7 +73,6 @@
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
-
         </FlexLayout>
     </Grid>
 </ContentPage>
