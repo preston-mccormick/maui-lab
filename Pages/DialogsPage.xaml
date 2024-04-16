@@ -8,24 +8,26 @@
     Padding="30"
     x:DataType="pages:DialogsPage"
     BindingContext="{Binding Source={RelativeSource Self}}">
-    <FlexLayout
-        AlignContent="Start"
-        AlignItems="Start"
-        JustifyContent="SpaceEvenly"
-        Wrap="Wrap">
+    <Grid ColumnDefinitions="*,*,*">
 
         <Button
+            Grid.Column="0"
             Command="{Binding ShowAlertCommand}"
+            HorizontalOptions="Center"
             Text="Show Alert"
-            VerticalOptions="Center" />
+            VerticalOptions="Start" />
         <Button
+            Grid.Column="1"
             Command="{Binding ShowActionSheetCommand}"
+            HorizontalOptions="Center"
             Text="Show ActionSheet"
-            VerticalOptions="Center" />
+            VerticalOptions="Start" />
         <Button
+            Grid.Column="2"
             Command="{Binding ShowPromptCommand}"
+            HorizontalOptions="Center"
             Text="Show Prompt"
-            VerticalOptions="Center" />
-    </FlexLayout>
+            VerticalOptions="Start" />
+    </Grid>
 
 </ContentPage>

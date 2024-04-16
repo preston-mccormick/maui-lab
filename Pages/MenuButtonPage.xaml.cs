@@ -1,8 +1,8 @@
 using MauiCustomControls.Views;
-using CommunityToolkit.Maui.Views;
 using MauiCustomControls.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
+using CommunityToolkit.Maui.Views;
 
 namespace MauiCustomControls.Pages;
 
@@ -25,6 +25,21 @@ public partial class MenuButtonPage : ContentPage
 
         Menu2.BeforeItemTap = () => Menu2.IsVisible = false;
     }
+
+
+    #region Popup Prototype
+
+    private void PopupMenuButtonClicked(object sender, EventArgs e)
+    {
+        var popup = new StaticMenuPopup();
+        popup.Anchor = sender as View;
+        if (Application.Current.MainPage is Page page)
+        {
+            page.ShowPopup(popup);
+        }
+    }
+
+    #endregion
 
     #region Menu ProtoType
 

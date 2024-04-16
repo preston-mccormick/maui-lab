@@ -3,78 +3,93 @@
     x:Class="MauiCustomControls.Pages.MenuButtonPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:pages="clr-namespace:MauiCustomControls.Pages"
     xmlns:controls="clr-namespace:MauiCustomControls.Controls"
+    xmlns:pages="clr-namespace:MauiCustomControls.Pages"
     xmlns:vm="clr-namespace:MauiCustomControls.ViewModels"
     x:Name="This"
     Title="Menu Button"
     Padding="30"
     x:DataType="vm:MenuButtonViewModel">
 
-    <Grid RowDefinitions="*,0">
-        <FlexLayout
-            AlignContent="Start"
-            AlignItems="Start"
-            Direction="Row"
-            JustifyContent="SpaceEvenly"
-            Wrap="Wrap">
+    <Grid
+        ColumnDefinitions="*,*"
+        RowDefinitions="*,*">
 
-            <!--  Completed MenuButton control with a popup action menu  -->
-            <controls:MenuButton
+        <!--  Completed MenuButton control with a popup action menu  -->
+        <controls:MenuButton
+            Grid.Row="0"
+            Grid.Column="0"
+            BindingContext="{Binding .}"
+            HorizontalOptions="Center"
+            Items="{Binding Items}"
+            Text="MenuButton Control"
+            VerticalOptions="Start" />
+
+        <!--  Popup Prototype  -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            Grid.Column="1"
+            VerticalOptions="Start"
+            WidthRequest="250">
+            <Button
+                Clicked="PopupMenuButtonClicked"
+                HorizontalOptions="Center"
+                Text="Popup Prototype"
+                VerticalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!--  Bindable Menu Prototype  -->
+        <VerticalStackLayout
+            Grid.Row="1"
+            Grid.Column="0"
+            VerticalOptions="Start"
+            WidthRequest="250">
+            <Button
+                Clicked="BindableMenuButtonClicked"
+                HorizontalOptions="Center"
+                Text="Bindable Menu Prototype"
+                VerticalOptions="Center" />
+            <controls:Menu
+                x:Name="Menu2"
                 BindingContext="{Binding .}"
                 HorizontalOptions="Center"
+                IsVisible="False"
                 Items="{Binding Items}"
-                Text="MenuButton Control"
-                VerticalOptions="Start" />
+                VerticalOptions="End" />
+        </VerticalStackLayout>
 
-            <!--  Proof of Concept for bindable a Menu control  -->
-            <VerticalStackLayout
-                VerticalOptions="Start"
-                WidthRequest="250">
-                <Button
-                    Clicked="BindableMenuButtonClicked"
-                    HorizontalOptions="Center"
-                    Text="Menu Prototype"
-                    VerticalOptions="Center" />
-                <controls:Menu
-                    x:Name="Menu2"
-                    BindingContext="{Binding .}"
-                    HorizontalOptions="Center"
-                    IsVisible="False"
-                    Items="{Binding Items}"
-                    VerticalOptions="End" />
-            </VerticalStackLayout>
+        <!--  Bindable Menu Item Prototype  -->
+        <VerticalStackLayout
+            Grid.Row="1"
+            Grid.Column="1"
+            VerticalOptions="Start">
+            <Button
+                Clicked="MenuButtonClicked"
+                HorizontalOptions="Center"
+                Text="MenuItem Prototype" />
+            <Border
+                x:Name="Menu1"
+                HorizontalOptions="Center"
+                IsVisible="False">
+                <VerticalStackLayout
+                    Padding="10"
+                    BackgroundColor="DimGray"
+                    Spacing="4">
+                    <controls:MenuItem
+                        Icon="steelpick.png"
+                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
+                        Text="Mine" />
+                    <controls:MenuItem
+                        Icon="stonehoe.png"
+                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
+                        Text="Farm" />
+                    <controls:MenuItem
+                        Icon="diamondsword.png"
+                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
+                        Text="Fight" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
 
-            <!--  Test MenuItem control with hard coded Text and Icon  -->
-            <VerticalStackLayout VerticalOptions="Start">
-                <Button
-                    Clicked="MenuButtonClicked"
-                    HorizontalOptions="Center"
-                    Text="MenuItem Prototype" />
-                <Border
-                    x:Name="Menu1"
-                    HorizontalOptions="Center"
-                    IsVisible="False">
-                    <VerticalStackLayout
-                        Padding="10"
-                        BackgroundColor="DimGray"
-                        Spacing="4">
-                        <controls:MenuItem
-                            Icon="steelpick.png"
-                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                            Text="Mine" />
-                        <controls:MenuItem
-                            Icon="stonehoe.png"
-                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                            Text="Farm" />
-                        <controls:MenuItem
-                            Icon="diamondsword.png"
-                            TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                            Text="Fight" />
-                    </VerticalStackLayout>
-                </Border>
-            </VerticalStackLayout>
-
-        </FlexLayout>
     </Grid>
 </ContentPage>
