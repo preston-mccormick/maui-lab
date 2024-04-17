@@ -21,6 +21,19 @@ public partial class Menu : ContentView
             if (bindable is not Menu menu) return;
             if (newValue is not IEnumerable items) return;
 
+            // Setup the menu item template
+            var menuItemTemplate = new DataTemplate(() =>
+            {
+                var menuItem = new MenuItem();
+                menuItem.SetBinding(MenuItem.IconProperty, new Binding("Icon"));
+                menuItem.SetBinding(MenuItem.TextProperty, new Binding("Text"));
+                menuItem.SetBinding(MenuItem.TapCommandProperty, new Binding("TapCommand"));
+                menuItem.SetValue(MenuItem.BeforeTapProperty, menu.BeforeItemTap);
+                menuItem.SetValue(MenuItem.AfterTapProperty, menu.AfterItemTap);
+                return menuItem;
+            });
+            BindableLayout.SetItemTemplate(menu.MenuLayout, menuItemTemplate);
+
             BindableLayout.SetItemsSource(menu.MenuLayout, items);
         });
 
