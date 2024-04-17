@@ -3,12 +3,9 @@
     x:Class="MauiCustomControls.Controls.CompositeMenuButton"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
-    x:Name="This"
-    x:DataType="controls:MenuButton">
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls">
     <Button
+        x:Name="Button"
         Clicked="ButtonClicked"
-        HorizontalOptions="Start"
-        ImageSource="{Binding Source={x:Reference This}, Path=Icon}"
-        Text="{Binding Source={x:Reference This}, Path=Text}" />
+        HorizontalOptions="Start" />
 </ContentView>
