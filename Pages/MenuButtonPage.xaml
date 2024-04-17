@@ -27,6 +27,8 @@
             HorizontalOptions="Center"
             Items="{Binding Items}"
             Text="MenuButton Control"
+            TextColor="{AppThemeBinding Dark=White,
+                                        Light=Black}"
             VerticalOptions="Start" />
 
         <!--  CompositeMenuButton control with a popup action menu  -->
