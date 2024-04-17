@@ -3,8 +3,7 @@
     x:Class="MauiCustomControls.Controls.MenuItem"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
-    x:DataType="controls:MenuItem">
+    xmlns:controls="clr-namespace:MauiCustomControls.Controls">
     <HorizontalStackLayout
         Padding="3"
         Spacing="10">
@@ -14,15 +13,15 @@
                 Tapped="Tapped" />
         </HorizontalStackLayout.GestureRecognizers>
         <Image
+            x:Name="IconImage"
             HeightRequest="32"
             HorizontalOptions="Center"
-            Source="{Binding Icon}"
             VerticalOptions="Center"
             WidthRequest="32" />
         <Label
+            x:Name="TextLabel"
             FontSize="20"
             HorizontalOptions="Center"
-            Text="{Binding Text}"
             VerticalOptions="Center" />
     </HorizontalStackLayout>
 </ContentView>

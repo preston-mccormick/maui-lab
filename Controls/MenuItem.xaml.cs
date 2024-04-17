@@ -6,39 +6,34 @@ namespace MauiCustomControls.Controls;
 public partial class MenuItem : ContentView
 {
     public static readonly BindableProperty AfterTapProperty = BindableProperty.Create(
-        nameof(AfterTap),
-        typeof(Action),
-        typeof(MenuItem),
-        null);
+        nameof(AfterTap), typeof(Action), typeof(MenuItem), null);
 
     public static readonly BindableProperty BeforeTapProperty = BindableProperty.Create(
-        nameof(BeforeTap),
-        typeof(Action),
-        typeof(MenuItem),
-        null);
+        nameof(BeforeTap), typeof(Action), typeof(MenuItem), null);
 
     public static readonly BindableProperty IconProperty = BindableProperty.Create(
-                nameof(Icon),
-        typeof(ImageSource),
-        typeof(MenuItem),
-        default(ImageSource)
-    );
+            nameof(Icon), typeof(ImageSource), typeof(MenuItem), default(ImageSource),
+            propertyChanged: (bindable, oldValue, newValue) =>
+            {
+                if (bindable is not MenuItem menuItem) return;
+                if (newValue is not ImageSource icon) return;
+                menuItem.IconImage.Source = icon;
+            });
 
     public static readonly BindableProperty TapCommandParameterProperty = BindableProperty.Create(
-        nameof(TapCommandParameter),
-        typeof(object),
-        typeof(MenuItem),
-        null);
+        nameof(TapCommandParameter), typeof(object), typeof(MenuItem), null);
 
     public static readonly BindableProperty TapCommandProperty = BindableProperty.Create(
         nameof(TapCommand), typeof(ICommand), typeof(MenuItem), null);
 
     public static readonly BindableProperty TextProperty = BindableProperty.Create(
-                nameof(Text),
-        typeof(string),
-        typeof(MenuItem),
-        string.Empty
-    );
+        nameof(Text), typeof(string), typeof(MenuItem), string.Empty,
+        propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            if (bindable is not MenuItem menuItem) return;
+            if (newValue is not string text) return;
+            menuItem.TextLabel.Text = text;
+        });
 
     /// <summary>
     /// Action to invoke before the TapCommand is executed. Use with BeforeTapCommand to show
