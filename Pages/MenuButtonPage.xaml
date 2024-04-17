@@ -87,7 +87,8 @@
                 IsVisible="False">
                 <VerticalStackLayout
                     Padding="10"
-                    BackgroundColor="DimGray"
+                    BackgroundColor="{AppThemeBinding Dark=DimGray,
+                                                      Light=White}"
                     Spacing="4">
                     <controls:MenuItem
                         Icon="steelpick.png"
