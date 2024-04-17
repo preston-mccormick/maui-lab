@@ -40,7 +40,7 @@ public partial class MenuButtonPage : ContentPage
     {
         var popup = new StaticMenuPopup();
         popup.Anchor = sender as View;
-        if (Application.Current.MainPage is Page page)
+        if (Application.Current?.MainPage is Page page)
         {
             page.ShowPopup(popup);
         }
