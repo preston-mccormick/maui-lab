@@ -42,7 +42,7 @@ public class MenuButton : Button
     /// Generates the menu from the Items collection and displays it in a popup anchored to the button.
     /// The popup will close when a menu item is tapped or when tapping outside of the popup.
     /// </summary>
-    private void ButtonClicked(object? sender, EventArgs e)
+    private async void ButtonClicked(object? sender, EventArgs e)
     {
         if (sender is not View view)
         {
@@ -64,6 +64,6 @@ public class MenuButton : Button
         // Close the popup when a menu item is tapped.
         menu.BeforeItemTap = () => popup.Close(null);
 
-        page.ShowPopup(popup);
+        await page.ShowPopupAsync(popup);
     }
 }
