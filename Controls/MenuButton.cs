@@ -21,7 +21,7 @@ public class MenuButton : Button
 
     /// <summary>
     /// Objects representing the menu items.
-    /// The menu items must use the hard-coded names for the properties Text, Icon, TapCommand, and TapCommandParameter for the binding to work.
+    /// The menu items must use the hard-coded names for the properties Text, Image, TapCommand, and TapCommandParameter for the binding to work.
     /// </summary>
     /// <remarks>Could concievably make these property names configurable, but it would add an extra layer of reflection for questionable gain.</remarks>
     public IEnumerable? Items
@@ -48,22 +48,11 @@ public class MenuButton : Button
         {
             throw new ArgumentException("Sender is not a View", nameof(sender));
         };
-        if (Application.Current?.MainPage is not Page page)
+        if (Items is null)
         {
-            throw new InvalidOperationException("Could not find the current Page");
-        };
+            throw new InvalidOperationException("Items collection is null");
+        }
 
-        // Create the menu and popup
-        Menu menu = new(Items);
-        var popup = new Popup()
-        {
-            Anchor = view,
-            Content = menu
-        };
-
-        // Close the popup when a menu item is tapped.
-        menu.BeforeItemTap = () => popup.Close(null);
-
-        await page.ShowPopupAsync(popup);
+        await ContextMenu.ShowAsync(view, Items);
     }
 }

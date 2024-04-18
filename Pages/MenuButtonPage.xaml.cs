@@ -13,18 +13,18 @@ public partial class MenuButtonPage : ContentPage
         InitializeComponent();
 
         MenuItemViewModel[] items = [
-            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
-            new MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
-            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
-            new MenuItemViewModel() { Text = "Eat", Icon = "apple.png" },
-            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new MenuItemViewModel() { Text = "Farm", Icon = "stonehoe.png" },
-            new MenuItemViewModel() { Text = "Fight", Icon = "diamondsword.png" },
-            new MenuItemViewModel() { Text = "Mine", Icon = "steelpick.png" },
-            new MenuItemViewModel() { Text = "Learn", Icon = "book.png" },
-            new MenuItemViewModel() { Text = "Eat", Icon = "apple.png" }
+            new MenuItemViewModel() { Text = "Mine", Image = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Farm", Image = "stonehoe.png" },
+            new MenuItemViewModel() { Text = "Fight", Image = "diamondsword.png" },
+            new MenuItemViewModel() { Text = "Mine", Image = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Learn", Image = "book.png" },
+            new MenuItemViewModel() { Text = "Eat", Image = "apple.png" },
+            new MenuItemViewModel() { Text = "Mine", Image = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Farm", Image = "stonehoe.png" },
+            new MenuItemViewModel() { Text = "Fight", Image = "diamondsword.png" },
+            new MenuItemViewModel() { Text = "Mine", Image = "steelpick.png" },
+            new MenuItemViewModel() { Text = "Learn", Image = "book.png" },
+            new MenuItemViewModel() { Text = "Eat", Image = "apple.png" }
             ];
         var viewModel = new MenuButtonViewModel("Bound Menu", items);
 

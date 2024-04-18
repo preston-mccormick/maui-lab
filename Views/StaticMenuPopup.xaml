@@ -11,28 +11,28 @@
                                           Light=White}"
         Spacing="4">
         <controls:MenuItem
-            Icon="steelpick.png"
+            Image="steelpick.png"
             Text="Mine" />
         <controls:MenuItem
-            Icon="stonehoe.png"
+            Image="stonehoe.png"
             Text="Farm" />
         <controls:MenuItem
-            Icon="diamondsword.png"
+            Image="diamondsword.png"
             Text="Fight" />
         <controls:MenuItem
-            Icon="gold_ingot.png"
+            Image="gold_ingot.png"
             Text="Shop" />
         <controls:MenuItem
-            Icon="rose.png"
+            Image="rose.png"
             Text="Love" />
         <controls:MenuItem
-            Icon="sign.png"
+            Image="sign.png"
             Text="Share" />
         <controls:MenuItem
-            Icon="book.png"
+            Image="book.png"
             Text="Learn" />
         <controls:MenuItem
-            Icon="apple.png"
+            Image="apple.png"
             Text="Eat" />
     </VerticalStackLayout>
 </toolkit:Popup>

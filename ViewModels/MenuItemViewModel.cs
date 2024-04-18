@@ -7,7 +7,7 @@ namespace MauiCustomControls.ViewModels;
 public partial class MenuItemViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string? icon;
+    private string? image;
 
     [ObservableProperty]
     private string? text;

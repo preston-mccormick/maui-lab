@@ -92,15 +92,15 @@
                                                       Light=White}"
                     Spacing="4">
                     <controls:MenuItem
-                        Icon="steelpick.png"
+                        Image="steelpick.png"
                         TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                         Text="Mine" />
                     <controls:MenuItem
-                        Icon="stonehoe.png"
+                        Image="stonehoe.png"
                         TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                         Text="Farm" />
                     <controls:MenuItem
-                        Icon="diamondsword.png"
+                        Image="diamondsword.png"
                         TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
                         Text="Fight" />
                 </VerticalStackLayout>

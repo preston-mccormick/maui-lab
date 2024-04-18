@@ -14,8 +14,8 @@ namespace MauiCustomControls.Controls;
 /// </summary>
 public partial class CompositeMenuButton : ContentView
 {
-    public static readonly BindableProperty IconProperty = BindableProperty.Create(
-        nameof(Icon), typeof(ImageSource), typeof(CompositeMenuButton), default(ImageSource),
+    public static readonly BindableProperty ImageProperty = BindableProperty.Create(
+        nameof(Image), typeof(ImageSource), typeof(CompositeMenuButton), default(ImageSource),
         propertyChanged: (bindable, oldValue, newValue) =>
         {
             if (bindable is not CompositeMenuButton menuButton) return;
@@ -36,10 +36,10 @@ public partial class CompositeMenuButton : ContentView
         });
 
     [TypeConverter(typeof(ImageSourceConverter))]
-    public ImageSource? Icon
+    public ImageSource? Image
     {
-        get => GetValue(IconProperty) as ImageSource;
-        set => SetValue(IconProperty, value);
+        get => GetValue(ImageProperty) as ImageSource;
+        set => SetValue(ImageProperty, value);
     }
 
     public IEnumerable? Items

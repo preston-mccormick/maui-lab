@@ -13,13 +13,13 @@
                 Tapped="Tapped" />
         </HorizontalStackLayout.GestureRecognizers>
         <Image
-            x:Name="IconImage"
+            x:Name="ItemImage"
             HeightRequest="32"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             WidthRequest="32" />
         <Label
-            x:Name="TextLabel"
+            x:Name="ItemLabel"
             FontSize="20"
             HorizontalOptions="Center"
             VerticalOptions="Center" />

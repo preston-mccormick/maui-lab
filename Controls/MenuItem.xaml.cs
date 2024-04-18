@@ -11,13 +11,13 @@ public partial class MenuItem : ContentView
     public static readonly BindableProperty BeforeTapProperty = BindableProperty.Create(
         nameof(BeforeTap), typeof(Action), typeof(MenuItem), null);
 
-    public static readonly BindableProperty IconProperty = BindableProperty.Create(
-            nameof(Icon), typeof(ImageSource), typeof(MenuItem), default(ImageSource),
+    public static readonly BindableProperty ImageProperty = BindableProperty.Create(
+            nameof(Image), typeof(ImageSource), typeof(MenuItem), default(ImageSource),
             propertyChanged: (bindable, oldValue, newValue) =>
             {
                 if (bindable is not MenuItem menuItem) return;
                 if (newValue is not ImageSource icon) return;
-                menuItem.IconImage.Source = icon;
+                menuItem.ItemImage.Source = icon;
             });
 
     public static readonly BindableProperty TapCommandParameterProperty = BindableProperty.Create(
@@ -32,7 +32,7 @@ public partial class MenuItem : ContentView
         {
             if (bindable is not MenuItem menuItem) return;
             if (newValue is not string text) return;
-            menuItem.TextLabel.Text = text;
+            menuItem.ItemLabel.Text = text;
         });
 
     /// <summary>
@@ -59,10 +59,10 @@ public partial class MenuItem : ContentView
     /// Image source for an icon that appears to the left of the menu item text.
     /// </summary>
     [TypeConverter(typeof(ImageSourceConverter))]
-    public ImageSource Icon
+    public ImageSource Image
     {
-        get => (ImageSource)GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
+        get => (ImageSource)GetValue(ImageProperty);
+        set => SetValue(ImageProperty, value);
     }
 
     /// <summary>
