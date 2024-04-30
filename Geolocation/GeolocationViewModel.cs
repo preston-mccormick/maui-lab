@@ -33,7 +33,7 @@ internal class GeolocationViewModel : ObservableObject
         {
             IGeolocation gloc = Microsoft.Maui.Devices.Sensors.Geolocation.Default;
             Location? location = await gloc.GetLastKnownLocationAsync();
-            Debug.WriteLine($"Latitude: {location?.Latitude}, Longitude: {location?.Longitude}, Altitude: {location?.Altitude}");
+            Debug.WriteLine($"Last Known Location: Latitude: {location?.Latitude}, Longitude: {location?.Longitude}, Altitude: {location?.Altitude}");
             return location;
         }
         catch (FeatureNotSupportedException fnsEx)
