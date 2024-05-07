@@ -1,4 +1,4 @@
-﻿namespace MauiCustomControls.Pages;
+﻿namespace MauiLab.Pages;
 
 public partial class Home : ContentPage
 {

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using System.Collections;
 
-namespace MauiCustomControls.Controls;
+namespace MauiLab.Controls;
 
 /// <summary>
 /// Deriving from button retains all the default button capabilites. However the Click event

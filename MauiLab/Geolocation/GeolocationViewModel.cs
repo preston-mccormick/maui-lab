@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Maui.Devices.Sensors;
 
-namespace MauiCustomControls.Geolocation;
+namespace MauiLab.Geolocation;
 internal class GeolocationViewModel : ObservableObject
 {
     Location? _currentLocation;

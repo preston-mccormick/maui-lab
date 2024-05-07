@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
-namespace MauiCustomControls;
+namespace MauiLab;
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()

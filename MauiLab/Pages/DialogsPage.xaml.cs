@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 
-namespace MauiCustomControls.Pages;
+namespace MauiLab.Pages;
 
 public partial class DialogsPage : ContentPage
 {

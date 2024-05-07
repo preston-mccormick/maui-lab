@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace MauiCustomControls.ViewModels;
+namespace MauiLab.ViewModels;
 
 public partial class MenuButtonViewModel : ObservableObject
 {

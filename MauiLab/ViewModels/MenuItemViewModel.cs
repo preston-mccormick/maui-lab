@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace MauiCustomControls.ViewModels;
+namespace MauiLab.ViewModels;
 
 public partial class MenuItemViewModel : ObservableObject
 {

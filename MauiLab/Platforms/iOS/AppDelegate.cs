@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace MauiCustomControls;
+namespace MauiLab;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {

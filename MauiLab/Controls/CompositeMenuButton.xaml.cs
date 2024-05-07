@@ -2,7 +2,7 @@ using CommunityToolkit.Maui.Views;
 using System.Collections;
 using System.ComponentModel;
 
-namespace MauiCustomControls.Controls;
+namespace MauiLab.Controls;
 
 /// <summary>
 /// The composite menu button inferior in most ways to the derived version, but it is more

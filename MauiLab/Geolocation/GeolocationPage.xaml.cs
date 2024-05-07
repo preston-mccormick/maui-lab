@@ -1,4 +1,4 @@
-namespace MauiCustomControls.Geolocation;
+namespace MauiLab.Geolocation;
 
 public partial class GeolocationPage : ContentPage
 {

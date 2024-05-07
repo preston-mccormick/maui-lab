@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MauiCustomControls.Controls;
+namespace MauiLab.Controls;
 
 /// <summary>
 /// Show a context menu anchored to a view.

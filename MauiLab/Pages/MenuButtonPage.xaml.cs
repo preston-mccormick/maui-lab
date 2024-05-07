@@ -1,10 +1,10 @@
-using MauiCustomControls.Views;
-using MauiCustomControls.ViewModels;
+using MauiLab.Views;
+using MauiLab.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Views;
 
-namespace MauiCustomControls.Pages;
+namespace MauiLab.Pages;
 
 public partial class MenuButtonPage : ContentPage
 {

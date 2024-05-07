@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace MauiCustomControls;
+namespace MauiLab;
 [Application]
 public class MainApplication : MauiApplication
 {

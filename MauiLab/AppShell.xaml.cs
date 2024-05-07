@@ -1,4 +1,4 @@
-﻿namespace MauiCustomControls;
+﻿namespace MauiLab;
 
 public partial class AppShell : Shell
 {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="MauiCustomControls.Pages.MenuButtonPage"
+    x:Class="MauiLab.Pages.MenuButtonPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiCustomControls.Controls"
-    xmlns:vm="clr-namespace:MauiCustomControls.ViewModels"
+    xmlns:controls="clr-namespace:MauiLab.Controls"
+    xmlns:vm="clr-namespace:MauiLab.ViewModels"
     x:Name="This"
     Title="Menu Button"
     Padding="30"

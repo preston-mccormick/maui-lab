@@ -1,6 +1,6 @@
 using CommunityToolkit.Maui.Views;
 
-namespace MauiCustomControls.Views;
+namespace MauiLab.Views;
 
 public partial class StaticMenuPopup : Popup
 {
