@@ -6,10 +6,14 @@
     xmlns:gloc="using:MauiCustomControls.Geolocation"
     Title="Geolocation"
     x:DataType="gloc:GeolocationViewModel">
-    <VerticalStackLayout>
-        <Label FontSize="25" Text="Last Location" />
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label FontSize="25" Text="Cached Location" />
         <Label Text="{Binding Path=LastLocation.Latitude, StringFormat='Latitude: {0}'}" />
         <Label Text="{Binding Path=LastLocation.Longitude, StringFormat='Longitude: {0}'}" />
         <Label Text="{Binding Path=LastLocation.Altitude, StringFormat='Altitude: {0}'}" />
+        <Label FontSize="25" Text="Current Location" />
+        <Label Text="{Binding Path=CurrentLocation.Latitude, StringFormat='Latitude: {0}'}" />
+        <Label Text="{Binding Path=CurrentLocation.Longitude, StringFormat='Longitude: {0}'}" />
+        <Label Text="{Binding Path=CurrentLocation.Altitude, StringFormat='Altitude: {0}'}" />
     </VerticalStackLayout>
 </ContentPage>
