@@ -14,7 +14,8 @@ namespace MauiLab.Colors
         {
             Swatches = new ObservableCollection<ColorModel>(swatches ?? GetNamedColors() );
             Title = title;
-            SortSwatches(ColorSortType.Luminocity, ListSortDirection.Descending);
+            SortOptions = new List<ColorSortOption>(ColorSortOption.GetColorSortOptions());
+            SelectedSortOption = SortOptions.First();
         }
 
         public List<ColorModel> BackgroundColorChoices { get; }
@@ -25,7 +26,7 @@ namespace MauiLab.Colors
             set => SetProperty(ref _selectedBackgroundColor, value);
         }
 
-        public ColorSortOption SelectedSwatchSort
+        public ColorSortOption SelectedSortOption
         {
             get => _selectedSwatchSort;
             set
@@ -39,7 +40,7 @@ namespace MauiLab.Colors
 
         public ObservableCollection<ColorModel> Swatches { get; }
 
-        public List<ColorSortOption> SwatchSortChoices { get; }
+        public List<ColorSortOption> SortOptions { get; }
 
         public string Title { get; set; }
 

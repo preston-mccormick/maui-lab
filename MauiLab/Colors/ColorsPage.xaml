@@ -6,8 +6,16 @@
     xmlns:local="using:MauiLab.Colors"
     Title="{Binding Title}"
     x:DataType="local:ColorsPageModel">
-    <Grid Padding="5">
-        <CollectionView ItemsSource="{Binding Swatches}">
+    <Grid Padding="5" RowDefinitions="Auto, *">
+        <HorizontalStackLayout>
+            <Picker
+                Title="Sort By"
+                Grid.Row="0"
+                ItemDisplayBinding="{Binding Name}"
+                ItemsSource="{Binding SortOptions}"
+                SelectedItem="{Binding SelectedSortOption}" />
+        </HorizontalStackLayout>
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Swatches}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout
                     HorizontalItemSpacing="5"
