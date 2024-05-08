@@ -3,8 +3,9 @@
     x:Class="MauiLab.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:colors="using:MauiLab.Colors"
     xmlns:gloc="using:MauiLab.Geolocation"
-    xmlns:pages="clr-namespace:MauiLab.Pages"
+    xmlns:pages="using:MauiLab.Pages"
     Title="MAUI Lab"
     Shell.FlyoutBehavior="Locked">
     <ShellContent
@@ -23,4 +24,8 @@
         Title="Geolocation"
         ContentTemplate="{DataTemplate gloc:GeolocationPage}"
         Route="geolocation" />
+    <ShellContent
+        Title="Colors"
+        ContentTemplate="{DataTemplate colors:ColorsPage}"
+        Route="colors" />
 </Shell>

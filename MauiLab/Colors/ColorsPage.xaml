@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Colors.ColorsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="using:MauiLab.Colors"
+    Title="{Binding Title}"
+    x:DataType="local:ColorsPageModel">
+    <Grid Padding="5">
+        <CollectionView ItemsSource="{Binding Swatches}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    HorizontalItemSpacing="5"
+                    Orientation="Vertical"
+                    Span="6"
+                    VerticalItemSpacing="5" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:ColorModel">
+                    <VerticalStackLayout
+                        Padding="5"
+                        BackgroundColor="{Binding Color}"
+                        Spacing="10">
+                        <Label
+                            HorizontalOptions="Start"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="Black" />
+                        <Label
+                            HorizontalOptions="Center"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="Gray" />
+                        <Label
+                            HorizontalOptions="End"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="White" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
