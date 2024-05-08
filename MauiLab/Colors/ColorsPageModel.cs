@@ -7,20 +7,19 @@ namespace MauiLab.Colors
 {
     public class ColorsPageModel : ObservableObject
     {
-        private ColorModel _selectedBackgroundColor;
-        private ColorSortOption _selectedSwatchSort;
+        private ColorModel? _selectedBackgroundColor;
+        private ColorSortOption _selectedSortOption;
 
-        public ColorsPageModel(IEnumerable<ColorModel>? swatches = null, string title = "MAUI Named Colors")
+        public ColorsPageModel()
         {
-            Swatches = new ObservableCollection<ColorModel>(swatches ?? GetNamedColors() );
-            Title = title;
+            Swatches = new ObservableCollection<ColorModel>(GetNamedColors() );
+            Title = "MAUI Named Colors";
             SortOptions = new List<ColorSortOption>(ColorSortOption.GetColorSortOptions());
-            SelectedSortOption = SortOptions.First();
+            _selectedSortOption = SortOptions.First();
+
         }
 
-        public List<ColorModel> BackgroundColorChoices { get; }
-
-        public ColorModel SelectedBackgroundColor
+        public ColorModel? SelectedBackgroundColor
         {
             get => _selectedBackgroundColor;
             set => SetProperty(ref _selectedBackgroundColor, value);
@@ -28,12 +27,12 @@ namespace MauiLab.Colors
 
         public ColorSortOption SelectedSortOption
         {
-            get => _selectedSwatchSort;
+            get => _selectedSortOption;
             set
             {
-                if (SetProperty(ref _selectedSwatchSort, value))
+                if (SetProperty(ref _selectedSortOption, value))
                 {
-                    SortSwatches(value);
+                    _ = SortSwatches(value);
                 }
             }
         }
@@ -66,20 +65,20 @@ namespace MauiLab.Colors
             return swatches;
         }
 
-        private void SortSwatches(ColorSortOption sortOption)
+        private async Task SortSwatches(ColorSortOption sortOption)
         {
             if (sortOption == null) return;
-            SortSwatches(sortOption.SortType, sortOption.Direction);
+            await SortSwatches(sortOption.SortType, sortOption.Direction);
         }
 
-        private void SortSwatches(ColorSortType sortType, ListSortDirection sortDirection = ListSortDirection.Ascending)
+        private async Task SortSwatches(ColorSortType sortType, ListSortDirection sortDirection = ListSortDirection.Ascending)
         {
             int direction = sortDirection.Equals(ListSortDirection.Ascending) ? 1 : -1;
 
             switch (sortType)
             {
                 case ColorSortType.Luminocity:
-                    SortInPlace(Swatches, (a, b) =>
+                    await SortInPlace(Swatches, (a, b) =>
                     {
                         var aa = a.Color.GetLuminosity();
                         var bb = b.Color.GetLuminosity();
@@ -88,26 +87,20 @@ namespace MauiLab.Colors
                     break;
 
                 case ColorSortType.Saturation:
-                    SortInPlace(Swatches, (a, b) => direction * a.Color.GetSaturation().CompareTo(b.Color.GetSaturation()));
+                    await SortInPlace(Swatches, (a, b) => direction * a.Color.GetSaturation().CompareTo(b.Color.GetSaturation()));
                     break;
 
                 case ColorSortType.Hue:
-                    //SortInPlace(Swatches, (a, b) =>
-                    //{
-                    //    var aa = a.Color.GetHue() + a.Color.GetLuminosity();
-                    //    var bb = b.Color.GetHue() + b.Color.GetLuminosity();
-                    //    return direction * aa.CompareTo(bb);
-                    //});
-                    SortInPlace(Swatches, (a, b) => direction * a.Color.GetHue().CompareTo(b.Color.GetHue()));
+                    await SortInPlace(Swatches, (a, b) => direction * a.Color.GetHue().CompareTo(b.Color.GetHue()));
                     break;
 
                 case ColorSortType.Name:
-                    SortInPlace(Swatches, (a, b) => direction * a.Name.CompareTo(b.Name));
+                    await SortInPlace(Swatches, (a, b) => direction * a.Name.CompareTo(b.Name));
                     break;
             }
         }
 
-        private static void SortInPlace<T>(ObservableCollection<T> collection, Comparison<T> comparison = null)
+        private static async Task SortInPlace<T>(ObservableCollection<T> collection, Comparison<T>? comparison = null)
         {
             var sortableList = new List<T>(collection);
 
@@ -116,10 +109,13 @@ namespace MauiLab.Colors
 
             for (var i = 0; i < sortableList.Count; i++)
             {
-                var oldIndex = collection.IndexOf(sortableList[i]);
-                var newIndex = i;
-                if (oldIndex != newIndex)
-                    collection.Move(oldIndex, newIndex);
+                T item = sortableList[i];
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    var oldIndex = collection.IndexOf(item);
+                    if (oldIndex != i)
+                        collection.Move(oldIndex, i);
+                });
             }
         }
     }

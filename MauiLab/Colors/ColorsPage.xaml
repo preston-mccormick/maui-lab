@@ -6,7 +6,7 @@
     xmlns:local="using:MauiLab.Colors"
     Title="{Binding Title}"
     x:DataType="local:ColorsPageModel">
-    <Grid Padding="5" RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto, *" RowSpacing="5">
         <HorizontalStackLayout>
             <Picker
                 Title="Sort By"
@@ -15,38 +15,6 @@
                 ItemsSource="{Binding SortOptions}"
                 SelectedItem="{Binding SelectedSortOption}" />
         </HorizontalStackLayout>
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Swatches}">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout
-                    HorizontalItemSpacing="5"
-                    Orientation="Vertical"
-                    Span="6"
-                    VerticalItemSpacing="5" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="local:ColorModel">
-                    <VerticalStackLayout
-                        Padding="5"
-                        BackgroundColor="{Binding Color}"
-                        Spacing="10">
-                        <Label
-                            HorizontalOptions="Start"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="Black" />
-                        <Label
-                            HorizontalOptions="Center"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="Gray" />
-                        <Label
-                            HorizontalOptions="End"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="White" />
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <local:ColorCollectionView Grid.Row="1" />
     </Grid>
 </ContentPage>

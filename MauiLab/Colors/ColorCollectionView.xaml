@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Colors.ColorCollectionView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:colors="using:MauiLab.Colors"
+    Padding="5"
+    x:DataType="colors:ColorsPageModel"
+    BackgroundColor="{Binding SelectedBackgroundColor.Color}">
+    <CollectionView
+        Grid.Row="1"
+        ItemsSource="{Binding Swatches}"
+        SelectedItem="{Binding SelectedBackgroundColor}"
+        SelectionMode="Single">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout
+                HorizontalItemSpacing="5"
+                Orientation="Vertical"
+                Span="6"
+                VerticalItemSpacing="5" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="colors:ColorModel">
+                <VerticalStackLayout
+                    Padding="5"
+                    BackgroundColor="{Binding Color}"
+                    Spacing="10">
+                    <Label
+                        HorizontalOptions="Start"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="Black" />
+                    <Label
+                        HorizontalOptions="Center"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="Gray" />
+                    <Label
+                        HorizontalOptions="End"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="White" />
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentView>
