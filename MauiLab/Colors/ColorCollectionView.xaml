@@ -8,7 +8,6 @@
     x:DataType="colors:ColorsPageModel"
     BackgroundColor="{Binding SelectedBackgroundColor.Color}">
     <CollectionView
-        Grid.Row="1"
         CanReorderItems="True"
         ItemsSource="{Binding Swatches}"
         SelectedItem="{Binding SelectedBackgroundColor}"
@@ -17,7 +16,8 @@
             <GridItemsLayout
                 HorizontalItemSpacing="8"
                 Orientation="Vertical"
-                Span="5"
+                Span="{OnIdiom Default=5,
+                               Phone=2}"
                 VerticalItemSpacing="8" />
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>

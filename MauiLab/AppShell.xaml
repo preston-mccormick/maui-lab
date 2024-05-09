@@ -7,7 +7,8 @@
     xmlns:gloc="using:MauiLab.Geolocation"
     xmlns:pages="using:MauiLab.Pages"
     Title="MAUI Lab"
-    Shell.FlyoutBehavior="Locked">
+    Shell.FlyoutBehavior="{OnIdiom Phone=Flyout,
+                                   Default=Locked}">
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate pages:Home}"
