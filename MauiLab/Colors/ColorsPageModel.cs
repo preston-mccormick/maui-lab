@@ -148,9 +148,15 @@ namespace MauiLab.Colors
                     }
                     break;
                 case "Batch move items on main thread":
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    await MainThread.InvokeOnMainThreadAsync(() =>
                     {
-                        await UpdateSwatches(sortedSwatches, "Update");
+                        for (var i = 0; i < sortedSwatches.Count; i++)
+                        {
+                            ColorModel item = sortedSwatches[i];
+                            var oldIndex = Swatches.IndexOf(item);
+                            if (oldIndex != i)
+                                Swatches.Move(oldIndex, i);
+                        }
                     });
                     break;
             }
