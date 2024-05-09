@@ -20,6 +20,6 @@
                 ItemsSource="{Binding SortOptions}"
                 SelectedItem="{Binding SelectedSortOption}" />
         </HorizontalStackLayout>
-        <local:ColorCollectionView Grid.Row="1" />
+        <local:SwatchesView Grid.Row="1" />
     </Grid>
 </ContentPage>

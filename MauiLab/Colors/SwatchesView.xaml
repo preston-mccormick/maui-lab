@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Colors.SwatchesView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:colors="using:MauiLab.Colors"
+    x:Name="this"
+    Padding="8"
+    x:DataType="colors:ColorsPageModel"
+    BackgroundColor="{Binding SelectedBackgroundColor.Color}">
+    <ScrollView>
+        <FlexLayout
+            AlignContent="Start"
+            AlignItems="Start"
+            BindableLayout.ItemsSource="{Binding Swatches}"
+            Direction="Row"
+            Wrap="Wrap">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="colors:ColorModel">
+                    <Grid
+                        Margin="4"
+                        Padding="8"
+                        BackgroundColor="{Binding Color}"
+                        HeightRequest="120"
+                        RowDefinitions="*,*,*"
+                        WidthRequest="180">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SwatchTappedCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=BindingContext}" />
+                        </Grid.GestureRecognizers>
+                        <Label
+                            Grid.Row="0"
+                            HorizontalOptions="Start"
+                            LineBreakMode="TailTruncation"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="Black"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Row="1"
+                            HorizontalOptions="Center"
+                            LineBreakMode="TailTruncation"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="Gray"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Row="2"
+                            HorizontalOptions="End"
+                            LineBreakMode="TailTruncation"
+                            StyleClass="ColorNameLabel"
+                            Text="{Binding Path=Name}"
+                            TextColor="White"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </ScrollView>
+</ContentView>

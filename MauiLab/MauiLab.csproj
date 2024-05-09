@@ -41,11 +41,11 @@
 	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 	  <ProvisioningType>manual</ProvisioningType>
 	  <CodesignKey>Apple Development: Preston McCormick (CD7T7QNRBZ)</CodesignKey>
-	  <CodesignProvision></CodesignProvision>
+	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-	  <MtouchLink>SdkOnly</MtouchLink>
+	  <MtouchLink>None</MtouchLink>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -94,6 +94,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Colors\SwatchesView.xaml.cs">
+	    <DependentUpon>SwatchesView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
@@ -112,7 +115,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Colors\ColorCollectionView.xaml">
+	  <MauiXaml Update="Colors\SwatchesView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Colors\ColorsPage.xaml">
@@ -136,6 +139,15 @@
 	  <MauiXaml Update="Views\StaticMenuPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Colors\ColorCollectionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="Colors\ColorsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>

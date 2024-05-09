@@ -11,6 +11,13 @@ namespace MauiLab.Colors
         private ColorModel? _selectedBackgroundColor;
         private ColorSortOption _selectedSortOption;
 
+        public RelayCommand<ColorModel> SwatchTappedCommand => new(SwatchTapped);
+
+        private void SwatchTapped(ColorModel? model)
+        {
+            SelectedBackgroundColor = model;
+        }
+
         public ColorsPageModel()
         {
             Swatches = new ObservableCollection<ColorModel>(GetNamedColors());
