@@ -1,22 +1,27 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 
 namespace MauiLab.Colors
 {
-    public class ColorsPageModel : ObservableObject
+    public partial class ColorsPageModel : ObservableObject
     {
         private ColorModel? _selectedBackgroundColor;
         private ColorSortOption _selectedSortOption;
 
         public ColorsPageModel()
         {
-            Swatches = new ObservableCollection<ColorModel>(GetNamedColors() );
+            Swatches = new ObservableCollection<ColorModel>(GetNamedColors());
             Title = "MAUI Named Colors";
             SortOptions = new List<ColorSortOption>(ColorSortOption.GetColorSortOptions());
             _selectedSortOption = SortOptions.First();
-
+            PropertyChanged += async (s, e) =>
+            {
+                if (e.PropertyName == nameof(SelectedSortOption))
+                    await HandleSelectedSortOptionChanged();
+            };
         }
 
         public ColorModel? SelectedBackgroundColor
@@ -28,18 +33,19 @@ namespace MauiLab.Colors
         public ColorSortOption SelectedSortOption
         {
             get => _selectedSortOption;
-            set
-            {
-                if (SetProperty(ref _selectedSortOption, value))
-                {
-                    _ = SortSwatches(value);
-                }
-            }
+            set => SetProperty(ref _selectedSortOption, value);
         }
+        public ReadOnlyCollection<string> UpdateSwatchesStrategy { get; } = new ReadOnlyCollection<string>(
+            ["Replace list", "Move items", "Replace list on main thread", "Move items on main thread", "Batch move items on main thread"]);
 
-        public ObservableCollection<ColorModel> Swatches { get; }
+        [ObservableProperty]
+        private string selectedUpdateSwatchesStrategy = "Replace list";
 
-        public List<ColorSortOption> SortOptions { get; }
+        [ObservableProperty]
+        private ObservableCollection<ColorModel> swatches;
+
+        [ObservableProperty]
+        private List<ColorSortOption> sortOptions;
 
         public string Title { get; set; }
 
@@ -65,10 +71,9 @@ namespace MauiLab.Colors
             return swatches;
         }
 
-        private async Task SortSwatches(ColorSortOption sortOption)
+        private async Task HandleSelectedSortOptionChanged()
         {
-            if (sortOption == null) return;
-            await SortSwatches(sortOption.SortType, sortOption.Direction);
+            await SortSwatches(SelectedSortOption.SortType, SelectedSortOption.Direction);
         }
 
         private async Task SortSwatches(ColorSortType sortType, ListSortDirection sortDirection = ListSortDirection.Ascending)
@@ -78,7 +83,7 @@ namespace MauiLab.Colors
             switch (sortType)
             {
                 case ColorSortType.Luminocity:
-                    await SortInPlace(Swatches, (a, b) =>
+                    await SortSwatches((a, b) =>
                     {
                         var aa = a.Color.GetLuminosity();
                         var bb = b.Color.GetLuminosity();
@@ -87,36 +92,71 @@ namespace MauiLab.Colors
                     break;
 
                 case ColorSortType.Saturation:
-                    await SortInPlace(Swatches, (a, b) => direction * a.Color.GetSaturation().CompareTo(b.Color.GetSaturation()));
+                    await SortSwatches((a, b) => direction * a.Color.GetSaturation().CompareTo(b.Color.GetSaturation()));
                     break;
 
                 case ColorSortType.Hue:
-                    await SortInPlace(Swatches, (a, b) => direction * a.Color.GetHue().CompareTo(b.Color.GetHue()));
+                    await SortSwatches((a, b) => direction * a.Color.GetHue().CompareTo(b.Color.GetHue()));
                     break;
 
                 case ColorSortType.Name:
-                    await SortInPlace(Swatches, (a, b) => direction * a.Name.CompareTo(b.Name));
+                    await SortSwatches((a, b) => direction * a.Name.CompareTo(b.Name));
                     break;
             }
         }
 
-        private static async Task SortInPlace<T>(ObservableCollection<T> collection, Comparison<T>? comparison = null)
+        private async Task SortSwatches(Comparison<ColorModel>? comparison = null)
         {
-            var sortableList = new List<T>(collection);
+            var sortedSwatches = Swatches.ToList();
+            if (comparison == null) sortedSwatches.Sort();
+            else sortedSwatches.Sort(comparison);
 
-            if (comparison == null) sortableList.Sort();
-            else sortableList.Sort(comparison);
+            await UpdateSwatches(sortedSwatches, SelectedUpdateSwatchesStrategy);
 
-            for (var i = 0; i < sortableList.Count; i++)
+        }
+
+        private async Task UpdateSwatches(IList<ColorModel> sortedSwatches, string strategy)
+        {
+            switch (strategy)
             {
-                T item = sortableList[i];
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    var oldIndex = collection.IndexOf(item);
-                    if (oldIndex != i)
-                        collection.Move(oldIndex, i);
-                });
+                case "Replace list":
+                    Swatches = new ObservableCollection<ColorModel>(sortedSwatches);
+                    break;
+                case "Move items":
+                    for (var i = 0; i < sortedSwatches.Count; i++)
+                    {
+                        ColorModel item = sortedSwatches[i];
+                        var oldIndex = Swatches.IndexOf(item);
+                        if (oldIndex != i)
+                            Swatches.Move(oldIndex, i);
+                    }
+                    break;
+                case "Replace list on main thread":
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        Swatches = new ObservableCollection<ColorModel>(sortedSwatches);
+                    });
+                    break;
+                case "Move items on main thread":
+                    for (var i = 0; i < sortedSwatches.Count; i++)
+                    {
+                        ColorModel item = sortedSwatches[i];
+                        var oldIndex = Swatches.IndexOf(item);
+                        if (oldIndex != i)
+                        {
+                            await MainThread.InvokeOnMainThreadAsync(() => Swatches.Move(oldIndex, i));
+                        }
+                    }
+                    break;
+                case "Batch move items on main thread":
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        await UpdateSwatches(sortedSwatches, "Update");
+                    });
+                    break;
             }
         }
+
     }
+
 }

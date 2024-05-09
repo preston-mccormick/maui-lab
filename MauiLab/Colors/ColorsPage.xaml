@@ -6,8 +6,13 @@
     xmlns:local="using:MauiLab.Colors"
     Title="{Binding Title}"
     x:DataType="local:ColorsPageModel">
-    <Grid RowDefinitions="Auto, *" RowSpacing="5">
-        <HorizontalStackLayout>
+    <Grid RowDefinitions="Auto, *">
+        <HorizontalStackLayout Padding="8" Spacing="24">
+            <Picker
+                Title="UI Strategy"
+                Grid.Row="0"
+                ItemsSource="{Binding UpdateSwatchesStrategy}"
+                SelectedItem="{Binding SelectedUpdateSwatchesStrategy}" />
             <Picker
                 Title="Sort By"
                 Grid.Row="0"

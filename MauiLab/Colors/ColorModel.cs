@@ -2,9 +2,9 @@
 
 public class ColorModel : IComparable<ColorModel>
 {
-    public Color Color { get; set; }
+    public Color? Color { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Default sort by name.
