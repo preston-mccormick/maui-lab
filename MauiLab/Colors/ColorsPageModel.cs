@@ -60,9 +60,11 @@ namespace MauiLab.Colors
             {
                 if (field.FieldType == mauiColor)
                 {
-                    Color c = (Color)field.GetValue(null);
-                    var cm = new ColorModel { Name = field.Name, Color = c };
-                    swatches.Add(cm);
+                    object? value = field.GetValue(null);
+                    if (value == null) continue;
+                    var color = (Color)value;
+                    var swatch = new ColorModel(color, field.Name);
+                    swatches.Add(swatch);
                 }
             }
 
@@ -132,10 +134,7 @@ namespace MauiLab.Colors
                     }
                     break;
                 case "Replace list on main thread":
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        Swatches = new ObservableCollection<ColorModel>(sortedSwatches);
-                    });
+                    await MainThread.InvokeOnMainThreadAsync(() => Swatches = new ObservableCollection<ColorModel>(sortedSwatches));
                     break;
                 case "Move items on main thread":
                     for (var i = 0; i < sortedSwatches.Count; i++)
