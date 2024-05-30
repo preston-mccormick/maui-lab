@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="MauiLab.Pages.MenuButtonPage"
+    x:Class="MauiLab.MenuButton.MenuButtonPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:MauiLab.Controls"
+    xmlns:controls="using:MauiLab.MenuButton.Controls"
     xmlns:vm="clr-namespace:MauiLab.ViewModels"
     x:Name="This"
     Title="Menu Button"
     Padding="30"
     x:DataType="vm:MenuButtonViewModel">
 
-    <Grid
-        ColumnDefinitions="*,*"
-        RowDefinitions="*,*,*">
+    <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*">
 
         <!--  Completed MenuButton control with a popup action menu  -->
         <controls:MenuButton

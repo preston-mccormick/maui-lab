@@ -91,25 +91,29 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.20" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.20" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Scrutor" Version="4.2.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Update="Colors\SwatchesView.xaml.cs">
 	    <DependentUpon>SwatchesView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\DialogsPage.xaml.cs">
+	  <Compile Update="Dialogs\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Controls\MenuItem.xaml.cs">
+	  <Compile Update="MenuButton\Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\MenuButtonPage.xaml.cs">
+	  <Compile Update="StartPage.xaml.cs">
+	    <DependentUpon>StartPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="MenuButton\MenuButtonPage.xaml.cs">
 	    <DependentUpon>MenuButtonPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Controls\Menu.xaml.cs">
+	  <Compile Update="MenuButton\Controls\Menu.xaml.cs">
 	    <DependentUpon>Menu.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\StaticMenuPopup.xaml.cs">
+	  <Compile Update="MenuButton\StaticMenuPopup.xaml.cs">
 	    <DependentUpon>StaticMenuPopup.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
@@ -121,22 +125,25 @@
 	  <MauiXaml Update="Colors\ColorsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Editor\EditorBugPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Geolocation\GeolocationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\DialogsPage.xaml">
+	  <MauiXaml Update="Dialogs\DialogsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Controls\MenuItem.xaml">
+	  <MauiXaml Update="MenuButton\Controls\MenuItem.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\MenuButtonPage.xaml">
+	  <MauiXaml Update="MenuButton\MenuButtonPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Controls\Menu.xaml">
+	  <MauiXaml Update="MenuButton\Controls\Menu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\StaticMenuPopup.xaml">
+	  <MauiXaml Update="MenuButton\StaticMenuPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

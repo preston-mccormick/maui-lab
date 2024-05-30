@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Views;
 
-namespace MauiLab.Pages;
+namespace MauiLab.MenuButton;
 
 public partial class MenuButtonPage : ContentPage
 {

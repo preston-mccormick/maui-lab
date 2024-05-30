@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="MauiLab.Pages.DialogsPage"
+    x:Class="MauiLab.Dialogs.DialogsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:pages="clr-namespace:MauiLab.Pages"
+    xmlns:dialogs="clr-namespace:MauiLab.Dialogs"
     Title="Dialogs"
     Padding="30"
-    x:DataType="pages:DialogsPage"
+    x:DataType="dialogs:DialogsPage"
     BindingContext="{Binding Source={RelativeSource Self}}">
     <Grid ColumnDefinitions="*,*,*">
 

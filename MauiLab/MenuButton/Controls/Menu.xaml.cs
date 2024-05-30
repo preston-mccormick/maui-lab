@@ -2,7 +2,7 @@ using CommunityToolkit.Maui.Views;
 using System.Collections;
 using System.Linq;
 
-namespace MauiLab.Controls;
+namespace MauiLab.MenuButton.Controls;
 
 public partial class Menu : ContentView
 {

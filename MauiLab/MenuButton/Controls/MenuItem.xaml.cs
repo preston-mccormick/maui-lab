@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace MauiLab.Controls;
+namespace MauiLab.MenuButton.Controls;
 
 public partial class MenuItem : ContentView
 {

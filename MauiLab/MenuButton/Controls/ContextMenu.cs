@@ -1,12 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MauiLab.Controls;
+namespace MauiLab.MenuButton.Controls;
 
 /// <summary>
 /// Show a context menu anchored to a view.
