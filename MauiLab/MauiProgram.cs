@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("MauiLabTests")]
 namespace MauiLab;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
