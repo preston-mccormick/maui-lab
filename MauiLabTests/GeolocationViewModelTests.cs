@@ -5,7 +5,7 @@ namespace MauiLabTests;
 
 public class GeolocationViewModelTests(ITestOutputHelper output)
 {
-    GeolocationViewModel vm = new();
+    GeolocationViewModel vm = new GeolocationViewModel(new MockGeolocation());
 
     [Fact]
     public async Task CurrentLocation()
@@ -16,5 +16,4 @@ public class GeolocationViewModelTests(ITestOutputHelper output)
         Assert.NotNull(vm.CurrentLocation?.Longitude);
         output.WriteLine($"Current Location: Latitude: {vm.CurrentLocation?.Latitude}, Longitude: {vm.CurrentLocation?.Longitude}");
     }
-
 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 namespace MauiLab.Geolocation;
 internal class GeolocationViewModel : ObservableObject
 {
+    IGeolocation _location;
     Location? _currentLocation;
     Location? _lastLocation;
 
@@ -19,9 +20,9 @@ internal class GeolocationViewModel : ObservableObject
         set => SetProperty(ref _currentLocation, value);
     }
 
-    public GeolocationViewModel()
+    public GeolocationViewModel(IGeolocation location)
     {
-        Init().ConfigureAwait(false);
+        _location = location;
     }
 
     public async Task Init()
@@ -34,8 +35,7 @@ internal class GeolocationViewModel : ObservableObject
     {
         try
         {
-            IGeolocation gloc = Microsoft.Maui.Devices.Sensors.Geolocation.Default;
-            Location? location = await gloc.GetLastKnownLocationAsync();
+            Location? location = await _location.GetLastKnownLocationAsync();
             Debug.WriteLine($"Last Known Location: Latitude: {location?.Latitude}, Longitude: {location?.Longitude}, Altitude: {location?.Altitude}");
             return location;
         }
@@ -65,9 +65,8 @@ internal class GeolocationViewModel : ObservableObject
         _isCheckingLocation = true;
         try
         {
-            IGeolocation gloc = Microsoft.Maui.Devices.Sensors.Geolocation.Default;
             GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(4));
-            Location? location = await gloc.GetLocationAsync(request, _cancelTokenSource.Token);
+            Location? location = await _location.GetLocationAsync(request, _cancelTokenSource.Token);
             return location;
         }
         catch (FeatureNotSupportedException fnsEx)

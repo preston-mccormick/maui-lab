@@ -5,6 +5,8 @@ public partial class GeolocationPage : ContentPage
 	public GeolocationPage()
 	{
 		InitializeComponent();
-        BindingContext = new GeolocationViewModel();
+
+		IGeolocation location = Microsoft.Maui.Devices.Sensors.Geolocation.Default;
+        BindingContext = new GeolocationViewModel(location);
     }
 }
