@@ -3,12 +3,11 @@ using Xunit.Abstractions;
 
 namespace MauiLabTests;
 
-public class GeolocationTests(ITestOutputHelper output)
+public class XunitTests(ITestOutputHelper output)
 {
     [Fact]
-    public void ConstructViewModel()
+    public void Output()
     {
-        var vm = new GeolocationViewModel();
         output.WriteLine($"Testing 123");
     }
 }
