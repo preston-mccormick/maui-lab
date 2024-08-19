@@ -1,4 +1,6 @@
-﻿namespace MauiLab.Colors;
+﻿using System.Reflection;
+
+namespace MauiLab.Colors;
 
 public class ColorModel : IComparable<ColorModel>
 {
@@ -20,4 +22,29 @@ public class ColorModel : IComparable<ColorModel>
         if (other == null) return 1;
         else return Comparer<string>.Default.Compare(Name, other.Name);
     }
+
+    public static List<ColorModel> GetNamedColors()
+    {
+        var swatches = new List<ColorModel>();
+
+        Type mauiColors = typeof(Microsoft.Maui.Graphics.Colors);
+        Type mauiColor = typeof(Color);
+        var fields = mauiColors.GetFields(BindingFlags.Static | BindingFlags.Public);
+        foreach (var field in fields)
+        {
+            if (field.FieldType == mauiColor)
+            {
+                object? value = field.GetValue(null);
+                if (value == null) continue;
+                var color = (Color)value;
+                var swatch = new ColorModel(color, field.Name);
+                swatches.Add(swatch);
+            }
+        }
+
+        swatches.Sort();
+
+        return swatches;
+    }
+
 }

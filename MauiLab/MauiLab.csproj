@@ -101,6 +101,9 @@
 	  <Compile Update="Dialogs\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Layouts\DialogLayoutPage.xaml.cs">
+	    <DependentUpon>DialogLayoutPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="MenuButton\Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
@@ -132,6 +135,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Dialogs\DialogsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Layouts\DialogLayoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MenuButton\Controls\MenuItem.xaml">

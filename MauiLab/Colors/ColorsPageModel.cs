@@ -20,7 +20,7 @@ namespace MauiLab.Colors
 
         public ColorsPageModel()
         {
-            Swatches = new ObservableCollection<ColorModel>(GetNamedColors());
+            Swatches = new ObservableCollection<ColorModel>(ColorModel.GetNamedColors());
             Title = "MAUI Named Colors";
             SortOptions = new List<ColorSortOption>(ColorSortOption.GetColorSortOptions());
             _selectedSortOption = SortOptions.First();
@@ -56,29 +56,6 @@ namespace MauiLab.Colors
 
         public string Title { get; set; }
 
-        public static List<ColorModel> GetNamedColors()
-        {
-            var swatches = new List<ColorModel>();
-
-            Type mauiColors = typeof(Microsoft.Maui.Graphics.Colors);
-            Type mauiColor = typeof(Color);
-            var fields = mauiColors.GetFields(BindingFlags.Static | BindingFlags.Public);
-            foreach (var field in fields)
-            {
-                if (field.FieldType == mauiColor)
-                {
-                    object? value = field.GetValue(null);
-                    if (value == null) continue;
-                    var color = (Color)value;
-                    var swatch = new ColorModel(color, field.Name);
-                    swatches.Add(swatch);
-                }
-            }
-
-            swatches.Sort();
-
-            return swatches;
-        }
 
         private async Task HandleSelectedSortOptionChanged()
         {

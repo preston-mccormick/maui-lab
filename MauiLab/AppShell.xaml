@@ -8,6 +8,7 @@
     xmlns:editor="using:MauiLab.Editor"
     xmlns:gloc="using:MauiLab.Geolocation"
     xmlns:lab="using:MauiLab"
+    xmlns:layouts="using:MauiLab.Layouts"
     xmlns:mb="using:MauiLab.MenuButton"
     Title="MAUI Lab"
     Shell.FlyoutBehavior="{OnIdiom Phone=Flyout,
@@ -36,4 +37,8 @@
         Title="Editor Bug"
         ContentTemplate="{DataTemplate editor:EditorBugPage}"
         Route="editor-bug" />
+    <ShellContent
+        Title="Dialog Layout"
+        ContentTemplate="{DataTemplate layouts:DialogLayoutPage}"
+        Route="layouts-dialog" />
 </Shell>
