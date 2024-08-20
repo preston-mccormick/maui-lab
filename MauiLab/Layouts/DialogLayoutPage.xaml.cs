@@ -1,4 +1,3 @@
-
 using MauiLab.Colors;
 using System.Collections.ObjectModel;
 
