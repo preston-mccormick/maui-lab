@@ -14,4 +14,9 @@ public partial class DialogLayoutPage : ContentPage
                 Colors = new ObservableCollection<ColorModel>(ColorModel.GetNamedColors())
             };
     }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        collectionView.IsVisible = !collectionView.IsVisible;
+    }
 }

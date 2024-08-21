@@ -6,16 +6,13 @@
     xmlns:colors="clr-namespace:MauiLab.Colors"
     xmlns:layouts="clr-namespace:MauiLab.Layouts"
     Title="Dialog Layout"
-    x:DataType="layouts:DialogLayoutPageModel"
-    BackgroundColor="White">
+    x:DataType="layouts:DialogLayoutPageModel">
     <Grid
         Margin="-1"
         ColumnDefinitions="*,Auto,*"
-        ColumnSpacing="8"
-        HorizontalOptions="Fill"
-        RowDefinitions="2*,Auto,5*"
-        RowSpacing="8"
-        VerticalOptions="Fill">
+        ColumnSpacing="48"
+        RowDefinitions="*,4*,*"
+        RowSpacing="48">
         <!--  Rows  -->
         <Rectangle
             Grid.Row="0"
@@ -52,58 +49,39 @@
         <Border
             Grid.Row="1"
             Grid.Column="1"
-            Margin="15"
-            Padding="10"
-            BackgroundColor="Gray"
             HorizontalOptions="Center"
-            Opacity="1"
-            Stroke="Black"
-            StrokeThickness="1"
-            VerticalOptions="Center">
-            <Border.Shadow>
-                <Shadow Radius="10" />
-            </Border.Shadow>
-            <Grid
-                BackgroundColor="White"
-                HorizontalOptions="Center"
-                RowDefinitions="Auto,*,Auto"
-                VerticalOptions="Center">
+            Style="{StaticResource panel}"
+            VerticalOptions="Start">
+            <Grid RowDefinitions="Auto,Auto,*">
                 <Label
                     Grid.Row="0"
                     FontSize="Medium"
-                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
                     Text="{Binding Title}"
-                    TextColor="Black"
                     VerticalOptions="Start" />
-                <CollectionView
+                <Button
                     Grid.Row="1"
-                    HorizontalOptions="Center"
-                    IsVisible="True"
+                    Margin="12"
+                    Clicked="Button_Clicked"
+                    Text="Toggle" />
+                <CollectionView
+                    x:Name="collectionView"
+                    Grid.Row="2"
                     ItemsSource="{Binding Colors}"
-                    VerticalOptions="Center"
-                    VerticalScrollBarVisibility="Always">
+                    SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="colors:ColorModel">
                             <HorizontalStackLayout IsVisible="True">
                                 <BoxView
                                     Margin="4"
                                     HeightRequest="30"
-                                    VerticalOptions="Center"
                                     WidthRequest="60"
                                     Color="{Binding Color}" />
-                                <Label
-                                    Margin="4"
-                                    Text="{Binding Name}"
-                                    TextColor="Black"
-                                    VerticalOptions="Center" />
+                                <Label Margin="4" Text="{Binding Name}" />
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button
-                    Grid.Row="2"
-                    Margin="8"
-                    Text="OK" />
             </Grid>
         </Border>
     </Grid>
