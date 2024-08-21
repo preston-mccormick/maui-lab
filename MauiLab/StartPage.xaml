@@ -11,7 +11,7 @@
                 Margin="0,0,0,-20"
                 FontSize="30"
                 Text="Welcome to"
-                TextColor="{StaticResource Primary}"
+                TextColor="{StaticResource Blue2}"
                 VerticalTextAlignment="Center" />
             <HorizontalStackLayout
                 Margin="100,0,0,0"
@@ -21,7 +21,7 @@
                 <Label
                     FontSize="75"
                     Text="MAUI Lab"
-                    TextColor="{StaticResource Secondary}"
+                    TextColor="{StaticResource Blue1}"
                     VerticalTextAlignment="Center" />
                 <Image
                     HeightRequest="150"

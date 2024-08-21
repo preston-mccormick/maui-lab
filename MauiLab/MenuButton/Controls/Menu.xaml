@@ -18,7 +18,7 @@
                         </VisualState>
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                <Setter Property="BackgroundColor" Value="{StaticResource Blue2}" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
@@ -30,7 +30,7 @@
         <!--  Menu  -->
         <VerticalStackLayout
             x:Name="MenuLayout"
-            BackgroundColor="{AppThemeBinding Dark=DimGray,
-                                              Light=White}" />
+            BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},
+                                              Default={StaticResource LightBackground}}" />
     </ContentView.Content>
 </ContentView>

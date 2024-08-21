@@ -17,41 +17,42 @@
             Wrap="Wrap">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="colors:ColorModel">
-                    <Grid
-                        Margin="4"
-                        Padding="8"
+                    <Border
                         BackgroundColor="{Binding Color}"
                         HeightRequest="120"
-                        RowDefinitions="*,*,*"
+                        Style="{StaticResource card}"
                         WidthRequest="180">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SwatchTappedCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=BindingContext}" />
-                        </Grid.GestureRecognizers>
-                        <Label
-                            Grid.Row="0"
-                            HorizontalOptions="Start"
-                            LineBreakMode="TailTruncation"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="Black"
-                            VerticalOptions="Center" />
-                        <Label
-                            Grid.Row="1"
-                            HorizontalOptions="Center"
-                            LineBreakMode="TailTruncation"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="Gray"
-                            VerticalOptions="Center" />
-                        <Label
-                            Grid.Row="2"
-                            HorizontalOptions="End"
-                            LineBreakMode="TailTruncation"
-                            StyleClass="ColorNameLabel"
-                            Text="{Binding Path=Name}"
-                            TextColor="White"
-                            VerticalOptions="Center" />
-                    </Grid>
+                        <Grid RowDefinitions="*,*,*">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SwatchTappedCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=BindingContext}" />
+                            </Grid.GestureRecognizers>
+                            <Label
+                                Grid.Row="0"
+                                HorizontalOptions="Start"
+                                LineBreakMode="TailTruncation"
+                                StyleClass="ColorNameLabel"
+                                Text="{Binding Path=Name}"
+                                TextColor="Black"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Row="1"
+                                HorizontalOptions="Center"
+                                LineBreakMode="TailTruncation"
+                                StyleClass="ColorNameLabel"
+                                Text="{Binding Path=Name}"
+                                TextColor="Gray"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Row="2"
+                                HorizontalOptions="End"
+                                LineBreakMode="TailTruncation"
+                                StyleClass="ColorNameLabel"
+                                Text="{Binding Path=Name}"
+                                TextColor="White"
+                                VerticalOptions="Center" />
+                        </Grid>
+
+                    </Border>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </FlexLayout>
