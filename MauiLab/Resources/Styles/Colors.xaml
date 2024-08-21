@@ -4,28 +4,29 @@
 
     <!--  Note: For Android please see also Platforms\Android\Resources\values\colors.xml  -->
 
-    <Color x:Key="LightText">#f1f1f1</Color>
+    <Color x:Key="LightText">#F1F1F1</Color>
     <Color x:Key="DarkText">#000000</Color>
-    <Color x:Key="DisabledLightText">#808080</Color>
-    <Color x:Key="DisabledDarkText">#808080</Color>
-
-    <Color x:Key="LightBackground">#ffffff</Color>
+    <Color x:Key="DisabledText">#808080</Color>
+    <Color x:Key="LightBackground">#FFFFFF</Color>
     <Color x:Key="DarkBackground">#222222</Color>
 
-    <Color x:Key="Blue1">#b1e0e6</Color>
-    <Color x:Key="Blue2">#78cdd4</Color>
-    <Color x:Key="Green1">#e7fee5</Color>
-    <Color x:Key="Green2">#b8dc95</Color>
-    <Color x:Key="Pink1">#fed5ff</Color>
-    <Color x:Key="Pink2">#feA8Ff</Color>
+    <Color x:Key="LightPrimary">#B1E0E6</Color>
+    <Color x:Key="Primary">#78CDD4</Color>
+    <Color x:Key="DarkPrimary">#44B9C4</Color>
 
-    <Color x:Key="Magenta">#d600aa</Color>
+    <Color x:Key="LightSecondary">#FFE5FF</Color>
+    <Color x:Key="Secondary">#FEA8FF</Color>
+    <Color x:Key="DarkSecondary">#FC49FF</Color>
 
-    <Color x:Key="White">#ffffff</Color>
-    <Color x:Key="LighterGray">#cccccc</Color>
-    <Color x:Key="LightGray">#999999</Color>
+    <Color x:Key="LightTertiary">#E9F4DD</Color>
+    <Color x:Key="Tertiary">#B8DC95</Color>
+    <Color x:Key="DarkTertiary">#6FA738</Color>
+
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="LighterGray">#CCCCCC</Color>
+    <Color x:Key="LightGray">#AAAAAA</Color>
     <Color x:Key="Gray">#808080</Color>
-    <Color x:Key="DarkGray">#666666</Color>
+    <Color x:Key="DarkGray">#555555</Color>
     <Color x:Key="DarkerGray">#333333</Color>
     <Color x:Key="Black">#000000</Color>
 
