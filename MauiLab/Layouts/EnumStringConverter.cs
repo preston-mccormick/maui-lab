@@ -3,7 +3,7 @@
 namespace MauiLab.Layouts;
 
 /// <summary>
-/// Not tested yet.  
+/// Not tested  
 /// 
 /// Use x:TypeArguments to pass in the type of the enum in XAML.
 /// </summary>
