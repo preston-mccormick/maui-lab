@@ -25,6 +25,12 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
         <Setter Property="Margin" Value="24" />
         <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style
+        x:Key="floating-panel"
+        BasedOn="{StaticResource panel}"
+        TargetType="Border">
         <Setter Property="Shadow" Value="{StaticResource highShadow}" />
     </Style>
 
@@ -35,6 +41,13 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
         <Setter Property="Margin" Value="9" />
         <Setter Property="Padding" Value="6" />
+    </Style>
+
+    <Style
+        x:Key="floating-card"
+        BasedOn="{StaticResource card}"
+        TargetType="Border">
+        <Setter Property="Shadow" Value="{StaticResource lowShadow}" />
     </Style>
 
     <!--  Default Styles  -->

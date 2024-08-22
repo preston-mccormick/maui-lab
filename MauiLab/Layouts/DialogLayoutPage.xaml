@@ -7,82 +7,97 @@
     xmlns:layouts="clr-namespace:MauiLab.Layouts"
     Title="Dialog Layout"
     x:DataType="layouts:DialogLayoutPageModel">
-    <Grid
-        Margin="-1"
-        ColumnDefinitions="*,Auto,*"
-        ColumnSpacing="48"
-        RowDefinitions="*,4*,*"
-        RowSpacing="48">
-        <!--  Rows  -->
-        <Rectangle
-            Grid.Row="0"
-            Grid.ColumnSpan="3"
-            BackgroundColor="Magenta"
-            Opacity="0.25" />
-        <Rectangle
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
-            BackgroundColor="Yellow"
-            Opacity="0.25" />
-        <Rectangle
-            Grid.Row="2"
-            Grid.ColumnSpan="3"
-            BackgroundColor="CYan"
-            Opacity="0.25" />
-        <!--  Columns  -->
-        <Rectangle
-            Grid.RowSpan="3"
-            Grid.Column="0"
-            BackgroundColor="Red"
-            Opacity="0.25" />
-        <Rectangle
-            Grid.RowSpan="3"
-            Grid.Column="1"
-            BackgroundColor="Green"
-            Opacity="0.25" />
-        <Rectangle
-            Grid.RowSpan="3"
-            Grid.Column="2"
-            BackgroundColor="Blue"
-            Opacity="0.25" />
-        <!--  Center  -->
-        <Border
-            Grid.Row="1"
-            Grid.Column="1"
-            HorizontalOptions="Center"
-            Style="{StaticResource panel}"
+    <Grid x:Name="LayersGrid">
+        <Grid
+            x:Name="LayoutGrid"
+            Margin="-1"
+            ColumnDefinitions="*,Auto,*"
+            ColumnSpacing="48"
+            RowDefinitions="*,4*,*"
+            RowSpacing="48">
+            <!--  Rows  -->
+            <Rectangle
+                Grid.Row="0"
+                Grid.ColumnSpan="3"
+                BackgroundColor="Magenta"
+                Opacity="0.25" />
+            <Rectangle
+                Grid.Row="1"
+                Grid.ColumnSpan="3"
+                BackgroundColor="Yellow"
+                Opacity="0.25" />
+            <Rectangle
+                Grid.Row="2"
+                Grid.ColumnSpan="3"
+                BackgroundColor="Cyan"
+                Opacity="0.25" />
+            <!--  Columns  -->
+            <Rectangle
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                BackgroundColor="Red"
+                Opacity="0.25" />
+            <Rectangle
+                Grid.RowSpan="3"
+                Grid.Column="1"
+                BackgroundColor="Green"
+                Opacity="0.25" />
+            <Rectangle
+                Grid.RowSpan="3"
+                Grid.Column="2"
+                BackgroundColor="Blue"
+                Opacity="0.25" />
+            <!--  Center  -->
+            <Border
+                x:Name="Panel"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                Style="{StaticResource floating-panel}"
+                VerticalOptions="Start">
+                <Grid RowDefinitions="Auto,Auto,*">
+                    <Label
+                        Grid.Row="0"
+                        FontSize="Medium"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Title}"
+                        TextColor="{AppThemeBinding Default={StaticResource PrimaryDark} Dark={StaticResource Primary}}"
+                        VerticalOptions="Start" />
+                    <Button
+                        Grid.Row="1"
+                        Margin="12"
+                        Clicked="Button_Clicked"
+                        IsVisible="False"
+                        Text="Toggle" />
+                    <CollectionView
+                        x:Name="CollectionView"
+                        Grid.Row="2"
+                        ItemsSource="{Binding Colors}"
+                        SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="colors:ColorModel">
+                                <HorizontalStackLayout IsVisible="True">
+                                    <BoxView
+                                        Margin="4"
+                                        HeightRequest="30"
+                                        WidthRequest="60"
+                                        Color="{Binding Color}" />
+                                    <Label Margin="4" Text="{Binding Name}" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--  Layout Levers  -->
+        <VerticalStackLayout
+            Grid.RowSpan="2"
+            HorizontalOptions="Start"
             VerticalOptions="Start">
-            <Grid RowDefinitions="Auto,Auto,*">
-                <Label
-                    Grid.Row="0"
-                    FontSize="Medium"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Title}"
-                    VerticalOptions="Start" />
-                <Button
-                    Grid.Row="1"
-                    Margin="12"
-                    Clicked="Button_Clicked"
-                    Text="Toggle" />
-                <CollectionView
-                    x:Name="collectionView"
-                    Grid.Row="2"
-                    ItemsSource="{Binding Colors}"
-                    SelectionMode="Single">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="colors:ColorModel">
-                            <HorizontalStackLayout IsVisible="True">
-                                <BoxView
-                                    Margin="4"
-                                    HeightRequest="30"
-                                    WidthRequest="60"
-                                    Color="{Binding Color}" />
-                                <Label Margin="4" Text="{Binding Name}" />
-                            </HorizontalStackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Grid>
-        </Border>
+            <layouts:LayoutLevers Title="Panel" BindingContext="{Binding Source={x:Reference Panel}}" />
+            <layouts:LayoutLevers Title="CollectionView" BindingContext="{Binding Source={x:Reference CollectionView}}" />
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

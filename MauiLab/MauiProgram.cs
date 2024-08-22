@@ -13,6 +13,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         AppDomain.CurrentDomain.FirstChanceException += HandleFirstChanceException;
+        AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
         var builder = MauiApp.CreateBuilder();
         builder
@@ -31,8 +32,16 @@ public static class MauiProgram
         return builder.Build();
     }
 
+    private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception ex)
+        {
+            Debug.WriteLine($"UnhandledException: {ex.Message}");
+        }
+    }
+
     private static void HandleFirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
     {
-        Debug.WriteLine($"ERROR: {e.Exception.Message}\n{e.Exception.ToString()}");
+        Debug.WriteLine($"FirstChanceException: {e.Exception.Message}");
     }
 }
