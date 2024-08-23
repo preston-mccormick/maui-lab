@@ -41,4 +41,8 @@
         Title="Dialog Layout"
         ContentTemplate="{DataTemplate layouts:DialogLayoutPage}"
         Route="layouts-dialog" />
+    <ShellContent
+        Title="Scrolling Layout"
+        ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}"
+        Route="layouts-scrollviw" />
 </Shell>

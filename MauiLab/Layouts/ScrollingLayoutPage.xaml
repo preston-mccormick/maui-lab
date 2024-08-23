@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.ScrollingLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Scrolling Layout">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Label
+            Margin="12"
+            FontSize="Large"
+            Text="Header" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="12" Spacing="12">
+                <VerticalStackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="BoxView">
+                            <Setter Property="HeightRequest" Value="60" />
+                        </Style>
+                        <LinearGradientBrush x:Key="SelectedGradient" EndPoint="1,0">
+                            <GradientStop Offset="0.25" Color="Red" />
+                            <GradientStop Offset="0.25" Color="Yellow" />
+                            <GradientStop Offset="0.5" Color="Yellow" />
+                            <GradientStop Offset="0.5" Color="Blue" />
+                            <GradientStop Offset="0.75" Color="Blue" />
+                            <GradientStop Offset="0.75" Color="Green" />
+                            <GradientStop Offset="1" Color="Green" />
+                        </LinearGradientBrush>
+                    </ResourceDictionary>
+                </VerticalStackLayout.Resources>
+                <BoxView Background="{StaticResource SelectedGradient}" />
+                <BoxView BackgroundColor="Red" />
+                <BoxView BackgroundColor="Yellow" />
+                <BoxView BackgroundColor="Blue" />
+                <BoxView BackgroundColor="Green" />
+                <BoxView Background="{StaticResource SelectedGradient}" />
+                <BoxView BackgroundColor="Red" />
+                <BoxView BackgroundColor="Yellow" />
+                <BoxView BackgroundColor="Blue" />
+                <BoxView BackgroundColor="Green" />
+                <BoxView Background="{StaticResource SelectedGradient}" />
+                <BoxView BackgroundColor="Red" />
+                <BoxView BackgroundColor="Yellow" />
+                <BoxView BackgroundColor="Blue" />
+                <BoxView BackgroundColor="Green" />
+                <BoxView Background="{StaticResource SelectedGradient}" />
+                <BoxView BackgroundColor="Red" />
+                <BoxView BackgroundColor="Yellow" />
+                <BoxView BackgroundColor="Blue" />
+                <BoxView BackgroundColor="Green" />
+                <BoxView Background="{StaticResource SelectedGradient}" />
+                <BoxView BackgroundColor="Red" />
+                <BoxView BackgroundColor="Yellow" />
+                <BoxView BackgroundColor="Blue" />
+                <BoxView BackgroundColor="Green" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Label
+            Grid.Row="2"
+            Margin="12"
+            FontSize="Large"
+            Text="Footer" />
+    </Grid>
+</ContentPage>
