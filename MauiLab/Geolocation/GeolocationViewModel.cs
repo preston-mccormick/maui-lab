@@ -1,100 +1,121 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
 
 namespace MauiLab.Geolocation;
-internal class GeolocationViewModel : ObservableObject
+
+public partial class GeolocationViewModel : ObservableObject
 {
-    IGeolocation _location;
-    Location? _currentLocation;
-    Location? _lastLocation;
+    private readonly IGeolocation _service;
+    private Location? _lastLocation;
 
     public Location? LastLocation
     {
         get => _lastLocation;
-        set => SetProperty(ref _lastLocation, value);
+        set
+        {
+            if (SetProperty(ref _lastLocation, value))
+            {
+
+                Debug.WriteLine($"LastLocation Changed: {_lastLocation}");
+            }
+        }
     }
 
-    public Location? CurrentLocation
+    public GeolocationViewModel(IGeolocation geolocation)
     {
-        get => _currentLocation;
-        set => SetProperty(ref _currentLocation, value);
+        _service = geolocation;
     }
 
-    public GeolocationViewModel(IGeolocation location)
+    public bool CanStart() => !_service.IsListeningForeground;
+
+    public bool CanStop() => _service.IsListeningForeground;
+
+    private void OnListeningFailed(object? sender, GeolocationListeningFailedEventArgs e)
     {
-        _location = location;
-
+        Debug.WriteLine($"ListeningFailed: {e.Error}");
+        StartListeningCommand.NotifyCanExecuteChanged();
+        StopListeningCommand.NotifyCanExecuteChanged();
     }
 
-    public async Task Init()
+    private void OnLocationChanged(object? sender, GeolocationLocationChangedEventArgs e)
     {
-        LastLocation = await GetCachedLocation();
-        CurrentLocation = await GetCurrentLocation();
+        LastLocation = e.Location;
     }
 
-    private async Task<Location?> GetCachedLocation()
+    [RelayCommand(AllowConcurrentExecutions = false, CanExecute = "CanStart")]
+    private async Task StartListening()
+    {
+        LastLocation = await _service.GetLastKnownLocationAsync();
+        if (!_service.IsListeningForeground)
+        {
+            _service.LocationChanged += OnLocationChanged;
+            _service.ListeningFailed += OnListeningFailed;
+            var request = new GeolocationListeningRequest(
+                accuracy: GeolocationAccuracy.Default);
+            bool success = false;
+            try
+            {
+                success = await _service.StartListeningForegroundAsync(request);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            }
+
+            if (success)
+            {
+                Debug.WriteLine("Started listening to geolocation");
+            }
+            else
+            {
+                _service.LocationChanged -= OnLocationChanged;
+                _service.ListeningFailed -= OnListeningFailed;
+                Debug.WriteLine("Failed to start listening to geolocation");
+            }
+        }
+        StartListeningCommand.NotifyCanExecuteChanged();
+        StopListeningCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = "CanStop")]
+    private void StopListening()
     {
         try
         {
-            Location? location = await _location.GetLastKnownLocationAsync();
-            Debug.WriteLine($"Last Known Location: Latitude: {location?.Latitude}, Longitude: {location?.Longitude}, Altitude: {location?.Altitude}");
-            return location;
+            _service.LocationChanged -= OnLocationChanged;
+            _service.ListeningFailed -= OnListeningFailed;
+            if (_service.IsListeningForeground)
+            {
+                _service.StopListeningForeground();
+            }
+            StartListeningCommand.NotifyCanExecuteChanged();
+            StopListeningCommand.NotifyCanExecuteChanged();
+            Debug.WriteLine("Stopped listening to geolocation");
         }
-        catch (FeatureNotSupportedException fnsEx)
+        catch (Exception ex)
         {
-            // Handle not supported on device exception
-            Debug.WriteLine(fnsEx);
+            Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
         }
-        catch (FeatureNotEnabledException fneEx)
-        {
-            // Handle not enabled on device exception
-            Debug.WriteLine(fneEx);
-        }
-        catch (PermissionException pEx)
-        {
-            // Handle permission exception
-            Debug.WriteLine(pEx);
-        }
-        return null;
     }
 
-    private CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
-    private bool _isCheckingLocation;
-
-    private async Task<Location?> GetCurrentLocation()
+    [RelayCommand]
+    private async Task UpdateLocation()
     {
-        _isCheckingLocation = true;
         try
         {
-            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(4));
-            Location? location = await _location.GetLocationAsync(request, _cancelTokenSource.Token);
-            return location;
-        }
-        catch (FeatureNotSupportedException fnsEx)
-        {
-            // Handle not supported on device exception
-            Debug.WriteLine(fnsEx);
-        }
-        catch (FeatureNotEnabledException fneEx)
-        {
-            // Handle not enabled on device exception
-            Debug.WriteLine(fneEx);
-        }
-        catch (PermissionException pEx)
-        {
-            // Handle permission exception
-            Debug.WriteLine(pEx);
-        }
-        finally
-        {
-            _isCheckingLocation = false;
-        }
-        return null;
-    }
+            var location = await _service.GetLocationAsync();
 
-    public void CancelRequest()
-    {
-        if (_isCheckingLocation && _cancelTokenSource != null && _cancelTokenSource.IsCancellationRequested == false)
-            _cancelTokenSource.Cancel();
+            if (location == null)
+            {
+                location = await _service.GetLastKnownLocationAsync();
+            }
+
+            LastLocation = location;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+        }
     }
 }
