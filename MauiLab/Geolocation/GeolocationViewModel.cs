@@ -23,6 +23,7 @@ internal class GeolocationViewModel : ObservableObject
     public GeolocationViewModel(IGeolocation location)
     {
         _location = location;
+
     }
 
     public async Task Init()

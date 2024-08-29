@@ -1,4 +1,7 @@
 ﻿using CommunityToolkit.Maui;
+using MauiLab.Services;
+using MauiLab.Services.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -24,12 +27,21 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        RegisterServices(builder.Services);
 
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
+    }
+
+    private static void RegisterServices(IServiceCollection services)
+    {
+        services.AddSingleton<IGeolocation>(
+            Microsoft.Maui.Devices.Sensors.Geolocation.Default);
+
+        services.AddSingleton<ILog, DebugLogger>();
     }
 
     private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
