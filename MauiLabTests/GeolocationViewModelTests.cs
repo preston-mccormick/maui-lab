@@ -8,12 +8,12 @@ public class GeolocationViewModelTests(ITestOutputHelper output)
     GeolocationViewModel vm = new GeolocationViewModel(new MockGeolocation());
 
     [Fact]
-    public async Task CurrentLocation()
+    public async Task UpdateLocation()
     {
-        await vm.Init();
-        Assert.NotNull(vm.CurrentLocation);
-        Assert.NotNull(vm.CurrentLocation?.Latitude);
-        Assert.NotNull(vm.CurrentLocation?.Longitude);
-        output.WriteLine($"Current Location: Latitude: {vm.CurrentLocation?.Latitude}, Longitude: {vm.CurrentLocation?.Longitude}");
+        await vm.UpdateLocation();
+        Assert.NotNull(vm.LastLocation);
+        Assert.NotNull(vm.LastLocation?.Latitude);
+        Assert.NotNull(vm.LastLocation?.Longitude);
+        output.WriteLine($"Current Location: Latitude: {vm.LastLocation?.Latitude}, Longitude: {vm.LastLocation?.Longitude}");
     }
 }

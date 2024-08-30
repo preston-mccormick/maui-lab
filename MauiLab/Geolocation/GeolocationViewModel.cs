@@ -44,42 +44,41 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand(AllowConcurrentExecutions = false, CanExecute = "CanStart")]
-    private async Task StartListening()
+    public async Task StartListening()
     {
-        LastLocation = await _service.GetLastKnownLocationAsync();
-        if (!_service.IsListeningForeground)
+        try
         {
+            LastLocation = await _service.GetLastKnownLocationAsync();
+
+            if (_service.IsListeningForeground) return;
+
             _service.LocationChanged += OnLocationChanged;
             _service.ListeningFailed += OnListeningFailed;
-            var request = new GeolocationListeningRequest(
-                accuracy: GeolocationAccuracy.Default);
+
             bool success = false;
-            try
-            {
-                success = await _service.StartListeningForegroundAsync(request);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
-            }
+            var request = new GeolocationListeningRequest();
+            success = await _service.StartListeningForegroundAsync(request);
 
             if (success)
             {
                 Debug.WriteLine("Started listening to geolocation");
-            }
-            else
-            {
-                _service.LocationChanged -= OnLocationChanged;
-                _service.ListeningFailed -= OnListeningFailed;
-                Debug.WriteLine("Failed to start listening to geolocation");
+                StartListeningCommand.NotifyCanExecuteChanged();
+                StopListeningCommand.NotifyCanExecuteChanged();
+                return;
             }
         }
-        StartListeningCommand.NotifyCanExecuteChanged();
-        StopListeningCommand.NotifyCanExecuteChanged();
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
+        }
+
+        // Failed
+        await StopListening();
     }
 
     [RelayCommand(CanExecute = "CanStop")]
-    private void StopListening()
+    public async Task StopListening()
     {
         try
         {
@@ -88,19 +87,20 @@ public partial class GeolocationViewModel : ObservableObject
             if (_service.IsListeningForeground)
             {
                 _service.StopListeningForeground();
+                Debug.WriteLine("Stopped listening to geolocation");
             }
             StartListeningCommand.NotifyCanExecuteChanged();
             StopListeningCommand.NotifyCanExecuteChanged();
-            Debug.WriteLine("Stopped listening to geolocation");
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
         }
     }
 
     [RelayCommand]
-    private async Task UpdateLocation()
+    public async Task UpdateLocation()
     {
         try
         {
@@ -116,6 +116,7 @@ public partial class GeolocationViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
         }
     }
 }
