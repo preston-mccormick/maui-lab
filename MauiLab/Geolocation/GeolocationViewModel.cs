@@ -56,7 +56,7 @@ public partial class GeolocationViewModel : ObservableObject
             _service.ListeningFailed += OnListeningFailed;
 
             bool success = false;
-            var request = new GeolocationListeningRequest();
+            var request = new GeolocationListeningRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(0.5));
             success = await _service.StartListeningForegroundAsync(request);
 
             if (success)
