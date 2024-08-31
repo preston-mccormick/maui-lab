@@ -10,7 +10,53 @@
     x:DataType="vm:MenuButtonViewModel">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style BasedOn="{StaticResource button-default}" TargetType="controls:MenuButton">
+            <Style TargetType="controls:MenuButton">
+                <Setter Property="TextColor"
+                        Value="{AppThemeBinding Default={StaticResource DarkText}}" />
+                <Setter Property="BackgroundColor"
+                        Value="{AppThemeBinding Default={StaticResource Primary}}" />
+                <Setter Property="FontFamily"
+                        Value="OpenSansRegular" />
+                <Setter Property="FontSize"
+                        Value="14" />
+                <Setter Property="BorderWidth"
+                        Value="0" />
+                <Setter Property="CornerRadius"
+                        Value="8" />
+                <Setter Property="Padding"
+                        Value="16,12" />
+                <Setter Property="Margin"
+                        Value="6" />
+                <Setter Property="MinimumHeightRequest"
+                        Value="44" />
+                <Setter Property="MinimumWidthRequest"
+                        Value="44" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor"
+                                            Value="{AppThemeBinding Default={StaticResource Primary}}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor"
+                                            Value="{AppThemeBinding Default={StaticResource DarkText}}" />
+                                    <Setter Property="BackgroundColor"
+                                            Value="{AppThemeBinding Default={StaticResource Gray}}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor"
+                                            Value="{AppThemeBinding Default={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
                 <Setter Property="Items" Value="{Binding Items}" />
                 <Setter Property="Text" Value="Menu Button" />
             </Style>
