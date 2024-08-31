@@ -9,7 +9,6 @@
     <ContentView.Resources>
         <Style TargetType="Entry">
             <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="MaximumHeightRequest" Value="33" />
         </Style>
         <Style TargetType="Label">
             <Setter Property="VerticalOptions" Value="Center" />
@@ -30,7 +29,7 @@
         <Grid
             ColumnDefinitions="Auto,*"
             ColumnSpacing="12"
-            RowDefinitions="Auto,33,33,33,33,33,33,33"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
             RowSpacing="6">
 
             <Label
@@ -70,7 +69,6 @@
             <Entry
                 Grid.Row="4"
                 Grid.Column="1"
-                HeightRequest="30"
                 Text="{Binding HeightRequest}" />
 
             <Label Grid.Row="5" Text="HorizontalOptions" />
