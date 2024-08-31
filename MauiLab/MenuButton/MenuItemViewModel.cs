@@ -7,10 +7,10 @@ namespace MauiLab.ViewModels;
 public partial class MenuItemViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string? image;
+    private string? _image;
 
     [ObservableProperty]
-    private string? text;
+    private string? _text;
 
     [RelayCommand]
     private void Tap(object parameter)
@@ -19,7 +19,7 @@ public partial class MenuItemViewModel : ObservableObject
         if (Application.Current?.MainPage is not Page page) return;
         page.DisplayAlert("Menu Item Tapped", Text, "OK");
 #else       
-        string message = $"Menu Item Tapped: {parameter ?? "<null>"}";
+        string message = $"Menu Item Tapped: {Text}";
         Toast.Make(message, textSize: 42).Show();
 #endif
     }

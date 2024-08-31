@@ -5,105 +5,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="using:MauiLab.MenuButton.Controls"
     xmlns:vm="clr-namespace:MauiLab.ViewModels"
-    x:Name="This"
     Title="Menu Button"
-    Padding="30"
+    Padding="24"
     x:DataType="vm:MenuButtonViewModel">
-
-    <Grid ColumnDefinitions="*,*" RowDefinitions="*,*,*">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style BasedOn="{StaticResource button-default}" TargetType="controls:MenuButton">
+                <Setter Property="Items" Value="{Binding Items}" />
+                <Setter Property="Text" Value="Menu Button" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
         <!--  Completed MenuButton control with a popup action menu  -->
-        <controls:MenuButton
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Padding="16"
-            BackgroundColor="Aquamarine"
-            BindingContext="{Binding .}"
-            FontAttributes="Bold"
-            HorizontalOptions="Center"
-            Items="{Binding Items}"
-            Text="MenuButton Control"
-            TextColor="{AppThemeBinding Dark=Black,
-                                        Light=Black}"
-            VerticalOptions="Start" />
-
-        <!--  CompositeMenuButton control with a popup action menu  -->
-        <controls:CompositeMenuButton
-            Grid.Row="1"
-            Grid.Column="0"
-            BindingContext="{Binding .}"
-            HorizontalOptions="Center"
-            Items="{Binding Items}"
-            Text="MenuButton Control"
-            VerticalOptions="Start" />
-
-        <!--  Popup Prototype  -->
-        <VerticalStackLayout
-            Grid.Row="1"
-            Grid.Column="1"
-            VerticalOptions="Start"
-            WidthRequest="250">
-            <Button
-                Clicked="PopupMenuButtonClicked"
-                HorizontalOptions="Center"
-                Text="Popup Prototype"
-                VerticalOptions="Center" />
-        </VerticalStackLayout>
-
-        <!--  Bindable Menu Prototype  -->
-        <VerticalStackLayout
-            Grid.Row="2"
-            Grid.Column="0"
-            VerticalOptions="Start"
-            WidthRequest="250">
-            <Button
-                Clicked="BindableMenuButtonClicked"
-                HorizontalOptions="Center"
-                Text="Bindable Menu Prototype"
-                VerticalOptions="Center" />
-            <controls:Menu
-                x:Name="Menu2"
-                BindingContext="{Binding .}"
-                HorizontalOptions="Center"
-                IsVisible="False"
-                Items="{Binding Items}"
-                VerticalOptions="End" />
-        </VerticalStackLayout>
-
-        <!--  Bindable Menu Item Prototype  -->
-        <VerticalStackLayout
-            Grid.Row="2"
-            Grid.Column="1"
-            VerticalOptions="Start">
-            <Button
-                Clicked="MenuButtonClicked"
-                HorizontalOptions="Center"
-                Text="MenuItem Prototype" />
-            <Border
-                x:Name="Menu1"
-                HorizontalOptions="Center"
-                IsVisible="False">
-                <VerticalStackLayout
-                    Padding="10"
-                    BackgroundColor="{AppThemeBinding Dark=DimGray,
-                                                      Light=White}"
-                    Spacing="4">
-                    <controls:MenuItem
-                        Image="steelpick.png"
-                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                        Text="Mine" />
-                    <controls:MenuItem
-                        Image="stonehoe.png"
-                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                        Text="Farm" />
-                    <controls:MenuItem
-                        Image="diamondsword.png"
-                        TapCommand="{Binding Source={x:Reference This}, Path=MenuItemCommand}"
-                        Text="Fight" />
-                </VerticalStackLayout>
-            </Border>
-        </VerticalStackLayout>
-
+        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="Start" />
+        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="Center" />
+        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="End" />
+        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="Start" />
+        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="Center" />
+        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="End" />
+        <controls:MenuButton HorizontalOptions="End" VerticalOptions="Start" />
+        <controls:MenuButton HorizontalOptions="End" VerticalOptions="Center" />
+        <controls:MenuButton HorizontalOptions="End" VerticalOptions="End" />
     </Grid>
 </ContentPage>
