@@ -11,7 +11,7 @@
         <Label Text="{Binding LastLocation.Accuracy, StringFormat='Accuracy: {0}'}" />
         <Label Text="{Binding LastLocation.Latitude, StringFormat='Latitude: {0}'}" />
         <Label Text="{Binding LastLocation.Longitude, StringFormat='Longitude: {0}'}" />
-        <Label Text="{Binding LastLocation.Timestamp, StringFormat='Timestamp: {0:G}'}" />
+        <Label Text="{Binding LastLocation.Timestamp.LocalDateTime, StringFormat='Timestamp: {0:G}'}" />
         <HorizontalStackLayout Spacing="12">
             <Button Command="{Binding UpdateLocationCommand}" Text="Update" />
             <Button Command="{Binding StartListeningCommand}" Text="Start Listening" />
