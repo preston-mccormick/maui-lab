@@ -1,6 +1,4 @@
-﻿using MauiLab.Layouts;
-
-namespace MauiLab;
+﻿namespace MauiLab;
 
 public partial class AppShell : Shell
 {
