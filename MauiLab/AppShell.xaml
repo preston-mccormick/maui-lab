@@ -12,32 +12,11 @@
     Title="MAUI Lab"
     Shell.FlyoutBehavior="{OnIdiom Phone=Flyout,
                                    Default=Locked}">
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate lab:StartPage}"
-        Route="home" />
-    <ShellContent
-        Title="Dialogs"
-        ContentTemplate="{DataTemplate dialogs:DialogsPage}"
-        Route="dialogs" />
-    <ShellContent
-        Title="Menu Button"
-        ContentTemplate="{DataTemplate mb:MenuButtonPage}"
-        Route="popup-menu" />
-    <ShellContent
-        Title="Geolocation"
-        ContentTemplate="{DataTemplate gloc:GeolocationPage}"
-        Route="geolocation" />
-    <ShellContent
-        Title="Colors"
-        ContentTemplate="{DataTemplate colors:ColorsPage}"
-        Route="colors" />
-    <ShellContent
-        Title="Dialog Layout"
-        ContentTemplate="{DataTemplate layouts:DialogLayoutPage}"
-        Route="layouts-dialog" />
-    <ShellContent
-        Title="Scrolling Layout"
-        ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}"
-        Route="layouts-scrollviw" />
+    <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
+    <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
+    <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
+    <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
+    <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
+    <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
+    <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
 </Shell>
