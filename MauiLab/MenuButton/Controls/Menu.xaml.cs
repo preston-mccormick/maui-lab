@@ -1,6 +1,4 @@
-using CommunityToolkit.Maui.Views;
 using System.Collections;
-using System.Linq;
 
 namespace MauiLab.MenuButton.Controls;
 
@@ -97,23 +95,12 @@ public partial class Menu : ContentView
 
     private async void Show(View anchor)
     {
-        if (Application.Current?.MainPage is not Page page)
+        if (Items is null)
         {
-            throw new InvalidOperationException("Could not find the current Page");
-        };
+            return;
+        }
 
-        // Create the menu and popup
-        Menu menu = new(Items);
-        var popup = new Popup()
-        {
-            Anchor = anchor,
-            Content = menu
-        };
-
-        // Close the popup when a menu item is tapped.
-        menu.BeforeItemTap = () => popup.Close(null);
-
-        await page.ShowPopupAsync(popup);
+        await ContextMenu.ShowAsync(anchor, Items);
     }
 
 }

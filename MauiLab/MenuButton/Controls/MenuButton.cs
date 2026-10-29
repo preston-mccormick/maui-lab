@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui.Views;
-using System.Collections;
+﻿using System.Collections;
 
 namespace MauiLab.MenuButton.Controls;
 
