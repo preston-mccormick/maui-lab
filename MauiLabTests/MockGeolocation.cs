@@ -4,6 +4,8 @@ public class MockGeolocation : IGeolocation
 {
     public bool IsListeningForeground { get; private set; } = false;
 
+    public bool IsEnabled => true;
+
     public event EventHandler<GeolocationLocationChangedEventArgs>? LocationChanged;
     public event EventHandler<GeolocationListeningFailedEventArgs>? ListeningFailed;
 
