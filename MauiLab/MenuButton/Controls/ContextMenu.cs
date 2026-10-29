@@ -162,15 +162,18 @@ public class ContextMenu
 
     static Page CurrentPage(VisualElement anchor)
     {
-        var page = anchor.Window?.Page
-            ?? Application.Current?.Windows.FirstOrDefault()?.Page;
-
-        if (page is null)
+        if (anchor.Window?.Page is { } page)
         {
-            throw new InvalidOperationException("Could not find the current Page");
+            return page;
         }
 
-        return page;
+        var windows = Application.Current?.Windows;
+        if (windows is { Count: > 0 } && windows[0].Page is { } windowPage)
+        {
+            return windowPage;
+        }
+
+        throw new InvalidOperationException("Could not find the current Page");
     }
 
     static Point Place(View anchor, Size menuSize)
@@ -224,6 +227,8 @@ public class ContextMenu
             var point = native.ConvertPointToView(CoreGraphics.CGPoint.Empty, window);
             return new Point(point.X, point.Y);
         }
+
+        return new Point(view.X, view.Y);
 #elif ANDROID
         var native = (Android.Views.View)view.Handler.PlatformView;
         var location = new int[2];
@@ -247,7 +252,8 @@ public class ContextMenu
         var native = (Microsoft.UI.Xaml.UIElement)view.Handler.PlatformView;
         var point = native.TransformToVisual(null).TransformPoint(new Windows.Foundation.Point(0, 0));
         return new Point(point.X, point.Y);
-#endif
+#else
         return new Point(view.X, view.Y);
+#endif
     }
 }

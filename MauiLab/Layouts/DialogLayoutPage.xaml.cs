@@ -18,6 +18,6 @@ public partial class DialogLayoutPage : ContentPage
     private void Button_Clicked(object sender, EventArgs e)
     {
         CollectionView.IsVisible = !CollectionView.IsVisible;
-        LayoutGrid.Layout(LayoutGrid.Bounds);
+        LayoutGrid.Arrange(LayoutGrid.Bounds);
     }
 }

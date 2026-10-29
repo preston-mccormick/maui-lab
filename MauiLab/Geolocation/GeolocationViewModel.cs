@@ -44,6 +44,7 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand(AllowConcurrentExecutions = false, CanExecute = "CanStart")]
+    [Obsolete]
     public async Task StartListening()
     {
         try
@@ -78,6 +79,7 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = "CanStop")]
+    [Obsolete]
     public async Task StopListening()
     {
         try
@@ -100,6 +102,7 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand]
+    [Obsolete]
     public async Task UpdateLocation()
     {
         try

@@ -12,7 +12,7 @@ public partial class DialogsPage : ContentPage
 
     public ICommand ShowAlertCommand => new AsyncRelayCommand(async () =>
     {
-        await DisplayAlert("Alert!", "This is a test of the Emergency Broadcast System", "Acknowledge");
+        await DisplayAlertAsync("Alert!", "This is a test of the Emergency Broadcast System", "Acknowledge");
     });
 
     public ICommand ShowPromptCommand => new AsyncRelayCommand(async () =>
@@ -22,6 +22,6 @@ public partial class DialogsPage : ContentPage
 
     public ICommand ShowActionSheetCommand => new AsyncRelayCommand(async () =>
     {
-        string action = await DisplayActionSheet("Message", "Cancel", "Destructive", "Button1", "Button2", "Button3");
+        string action = await DisplayActionSheetAsync("Message", "Cancel", "Destructive", "Button1", "Button2", "Button3");
     });
 }
