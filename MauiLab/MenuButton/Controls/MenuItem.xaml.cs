@@ -109,7 +109,7 @@ public partial class MenuItem : ContentView
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void Tapped(object sender, TappedEventArgs e)
+    private void Tapped(object? sender, TappedEventArgs e)
     {
         if (TapCommand == null) return;
         if (!TapCommand.CanExecute(TapCommandParameter)) return;

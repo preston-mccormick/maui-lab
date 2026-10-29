@@ -58,7 +58,7 @@
                 <Grid RowDefinitions="Auto,Auto,*">
                     <Label
                         Grid.Row="0"
-                        FontSize="Medium"
+                        Style="{StaticResource Medium}"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Title}"
                         TextColor="{AppThemeBinding Default={StaticResource DarkText},

@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Maui;
+﻿using System.Collections;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Extensions;
 using Microsoft.Maui.Controls.Shapes;
-using System.Collections;
 
 namespace MauiLab.MenuButton.Controls;
 

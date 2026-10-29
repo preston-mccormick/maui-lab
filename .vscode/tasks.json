@@ -3,7 +3,10 @@
 	"tasks": [
 		{
 			"type": "dotnet-meteor.task",
-			"problemMatcher": [],
+			"args": [
+				"-tl:off"
+			],
+			"problemMatcher": "$msCompile",
 			"label": "dotnet-meteor: Build",
 			"group": {
 				"kind": "build",

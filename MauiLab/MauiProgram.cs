@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using DotNet.Meteor.HotReload.Plugin;
 using MauiLab.Services;
 using MauiLab.Services.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,13 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            // The toolkit API is supported only on OS targets. Plain net11.0 has no OS, so this call warns (CA1416) there.
+#if HAS_TARGET_PLATFORM
             .UseMauiCommunityToolkit()
+#endif
+#if DEBUG
+            .EnableHotReload()
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

@@ -44,7 +44,6 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand(AllowConcurrentExecutions = false, CanExecute = "CanStart")]
-    [Obsolete]
     public async Task StartListening()
     {
         try
@@ -71,7 +70,7 @@ public partial class GeolocationViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
-            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
+            await AppShell.Current.DisplayAlertAsync(ex.GetType().Name, ex.Message, "Close");
         }
 
         // Failed
@@ -79,7 +78,6 @@ public partial class GeolocationViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = "CanStop")]
-    [Obsolete]
     public async Task StopListening()
     {
         try
@@ -97,12 +95,11 @@ public partial class GeolocationViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
-            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
+            await AppShell.Current.DisplayAlertAsync(ex.GetType().Name, ex.Message, "Close");
         }
     }
 
     [RelayCommand]
-    [Obsolete]
     public async Task UpdateLocation()
     {
         try
@@ -119,7 +116,7 @@ public partial class GeolocationViewModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
-            await AppShell.Current.DisplayAlert(ex.GetType().Name, ex.Message, "Close");
+            await AppShell.Current.DisplayAlertAsync(ex.GetType().Name, ex.Message, "Close");
         }
     }
 }

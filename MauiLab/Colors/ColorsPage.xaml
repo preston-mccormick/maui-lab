@@ -8,11 +8,13 @@
     x:DataType="local:ColorsPageModel">
     <Grid RowDefinitions="Auto, *">
         <HorizontalStackLayout Padding="8" Spacing="24">
+            <Label Text="Strategy" VerticalTextAlignment="Center" />
             <Picker
                 Title="UI Strategy"
                 Grid.Row="0"
                 ItemsSource="{Binding UpdateSwatchesStrategy}"
                 SelectedItem="{Binding SelectedUpdateSwatchesStrategy}" />
+            <Label Text="Sort" VerticalTextAlignment="Center" />
             <Picker
                 Title="Sort By"
                 Grid.Row="0"
