@@ -2,6 +2,7 @@
 using DotNet.Meteor.HotReload.Plugin;
 using MauiLab.Services;
 using MauiLab.Services.Logging;
+using MauiLab.Usage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -49,6 +50,11 @@ public static class MauiProgram
             Microsoft.Maui.Devices.Sensors.Geolocation.Default);
 
         services.AddSingleton<ILog, DebugLogger>();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<IUsageStore>(_ => new SqliteUsageStore(
+            () => Path.Combine(FileSystem.AppDataDirectory, "usage.db")));
+        services.AddSingleton<UsageTracker>();
+        services.AddSingleton<UsagePageModel>();
     }
 
     private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)

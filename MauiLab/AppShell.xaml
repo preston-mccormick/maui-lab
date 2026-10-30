@@ -9,6 +9,7 @@
     xmlns:lab="using:MauiLab"
     xmlns:layouts="using:MauiLab.Layouts"
     xmlns:mb="using:MauiLab.MenuButton"
+    xmlns:usage="using:MauiLab.Usage"
     Title="MAUI Lab"
     Shell.FlyoutBehavior="Flyout">
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
@@ -18,4 +19,5 @@
     <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
     <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
     <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
+    <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />
 </Shell>

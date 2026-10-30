@@ -1,0 +1,379 @@
+namespace MauiLab.Usage;
+
+/// <summary>
+/// Turns window and shell signals into a usage log.
+/// A session stays open across backgrounding. Coming back is a foreground event, not a new session.
+/// </summary>
+public sealed class UsageTracker
+{
+    readonly IUsageStore _store;
+    readonly TimeProvider _clock;
+    readonly object _gate = new();
+    readonly List<UsageEvent> _events = [];
+
+    bool _loaded;
+    bool _processSessionStarted;
+    bool _foreground;
+    Guid? _sessionId;
+    OpenVisit? _open;
+    (string? Name, string? Route)? _pending;
+
+    public UsageTracker(IUsageStore store, TimeProvider clock)
+    {
+        _store = store;
+        _clock = clock;
+    }
+
+    public event EventHandler? Changed;
+
+    public void Activate(string? pageName, string? route)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            var now = _clock.GetUtcNow();
+            var name = Norm(pageName);
+            var path = Norm(route);
+
+            if (!_processSessionStarted)
+            {
+                ReconcileOrphans();
+                if (_events.Count == 0)
+                    Append(UsageEventKind.Installed, now, null, null, null, null, null, null, null);
+
+                if (name == null && path == null && _pending is { } pending)
+                {
+                    name = pending.Name;
+                    path = pending.Route;
+                }
+
+                _pending = null;
+                BeginSession(now);
+                OpenPage(now, name, path);
+                changed = true;
+            }
+            else
+            {
+                if (!_foreground)
+                {
+                    _foreground = true;
+                    if (_open != null)
+                    {
+                        Append(
+                            UsageEventKind.Foregrounded,
+                            now,
+                            _sessionId,
+                            _open.Id,
+                            _open.Name,
+                            _open.Route,
+                            null,
+                            null,
+                            null);
+                    }
+
+                    changed = true;
+                }
+
+                if ((name != null || path != null) && !IsOpenPage(name, path))
+                {
+                    CloseOpenPage(now);
+                    OpenPage(now, name, path);
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Deactivate and stop both call this. The second call, while already backgrounded, is ignored.
+    /// </summary>
+    public void Background()
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            if (!_processSessionStarted || !_foreground)
+                return;
+
+            _foreground = false;
+            Append(
+                UsageEventKind.Backgrounded,
+                _clock.GetUtcNow(),
+                _sessionId,
+                _open?.Id,
+                _open?.Name,
+                _open?.Route,
+                null,
+                null,
+                null);
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Navigate(string? pageName, string? route)
+    {
+        var name = Norm(pageName);
+        var path = Norm(route);
+        if (name == null && path == null)
+            return;
+
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            if (!_processSessionStarted)
+            {
+                _pending = (name, path);
+                return;
+            }
+
+            if (IsOpenPage(name, path))
+                return;
+
+            var now = _clock.GetUtcNow();
+            CloseOpenPage(now);
+            OpenPage(now, name, path);
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void EndSession()
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            if (!_processSessionStarted || _sessionId is not Guid sessionId)
+                return;
+
+            var now = _clock.GetUtcNow();
+            var start = _events.First(e => e.Kind == UsageEventKind.SessionStarted && e.SessionId == sessionId);
+            CloseOpenPage(now);
+            Append(
+                UsageEventKind.SessionEnded,
+                now,
+                sessionId,
+                null,
+                null,
+                null,
+                UsageMath.Elapsed(start.Timestamp, now),
+                SessionActive(sessionId),
+                UsageEndReason.Clean);
+            _processSessionStarted = false;
+            _sessionId = null;
+            _foreground = false;
+            _open = null;
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Reset(string? pageName, string? route)
+    {
+        lock (_gate)
+        {
+            EnsureLoaded();
+            var now = _clock.GetUtcNow();
+            _store.Clear();
+            _events.Clear();
+            _open = null;
+            _sessionId = null;
+            _pending = null;
+            _processSessionStarted = false;
+            _foreground = false;
+            Append(UsageEventKind.HistoryReset, now, null, null, null, null, null, null, null);
+            BeginSession(now);
+            OpenPage(now, Norm(pageName), Norm(route));
+        }
+
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public IReadOnlyList<TimelineRow> Project()
+    {
+        lock (_gate)
+        {
+            EnsureLoaded();
+            return UsageTimeline.Project(_events, _clock.GetUtcNow());
+        }
+    }
+
+    void ReconcileOrphans()
+    {
+        var openSessions = _events
+            .Where(e => e.Kind == UsageEventKind.SessionStarted && e.SessionId is Guid)
+            .Where(start => !_events.Any(e => e.Kind == UsageEventKind.SessionEnded && e.SessionId == start.SessionId))
+            .ToList();
+
+        foreach (var start in openSessions)
+        {
+            var sessionId = start.SessionId!.Value;
+            var ordered = _events
+                .Where(e => e.SessionId == sessionId)
+                .OrderBy(e => e.Timestamp)
+                .ThenBy(e => e.Sequence)
+                .ToList();
+            var asOf = TerminationTime(ordered);
+            CloseStoredPages(sessionId, asOf);
+            Append(
+                UsageEventKind.SessionEnded,
+                asOf,
+                sessionId,
+                null,
+                null,
+                null,
+                UsageMath.Elapsed(start.Timestamp, asOf),
+                SessionActive(sessionId),
+                UsageEndReason.Terminated);
+        }
+    }
+
+    static DateTimeOffset TerminationTime(List<UsageEvent> ordered)
+    {
+        var signal = ordered.LastOrDefault(e => e.Kind is
+            UsageEventKind.Backgrounded or
+            UsageEventKind.Foregrounded or
+            UsageEventKind.PageOpened or
+            UsageEventKind.PageClosed or
+            UsageEventKind.SessionStarted);
+
+        if (signal?.Kind == UsageEventKind.Backgrounded)
+            return signal.Timestamp;
+
+        return ordered[^1].Timestamp;
+    }
+
+    void CloseStoredPages(Guid sessionId, DateTimeOffset asOf)
+    {
+        var opens = _events
+            .Where(e => e.Kind == UsageEventKind.PageOpened && e.SessionId == sessionId)
+            .ToList();
+
+        foreach (var open in opens)
+        {
+            if (open.PageVisitId is not Guid visitId)
+                continue;
+            if (_events.Any(e => e.Kind == UsageEventKind.PageClosed && e.PageVisitId == visitId))
+                continue;
+
+            var lifecycle = _events.Where(e => e.PageVisitId == visitId);
+            Append(
+                UsageEventKind.PageClosed,
+                asOf,
+                sessionId,
+                visitId,
+                open.Name,
+                open.Route,
+                UsageMath.Elapsed(open.Timestamp, asOf),
+                UsageMath.ActiveTime(open.Timestamp, asOf, lifecycle),
+                null);
+        }
+    }
+
+    void BeginSession(DateTimeOffset now)
+    {
+        _sessionId = Guid.NewGuid();
+        _open = null;
+        _processSessionStarted = true;
+        _foreground = true;
+        Append(UsageEventKind.SessionStarted, now, _sessionId, null, null, null, null, null, null);
+    }
+
+    void OpenPage(DateTimeOffset now, string? name, string? route)
+    {
+        if (name == null && route == null)
+            return;
+
+        var id = Guid.NewGuid();
+        _open = new OpenVisit(id, name, route, now);
+        Append(UsageEventKind.PageOpened, now, _sessionId, id, name, route, null, null, null);
+        if (!_foreground)
+        {
+            Append(UsageEventKind.Backgrounded, now, _sessionId, id, name, route, null, null, null);
+        }
+    }
+
+    void CloseOpenPage(DateTimeOffset asOf)
+    {
+        if (_open is not OpenVisit page || _sessionId is not Guid sessionId)
+            return;
+
+        var lifecycle = _events.Where(e => e.PageVisitId == page.Id);
+        Append(
+            UsageEventKind.PageClosed,
+            asOf,
+            sessionId,
+            page.Id,
+            page.Name,
+            page.Route,
+            UsageMath.Elapsed(page.OpenedAt, asOf),
+            UsageMath.ActiveTime(page.OpenedAt, asOf, lifecycle),
+            null);
+        _open = null;
+    }
+
+    TimeSpan SessionActive(Guid sessionId) =>
+        _events
+            .Where(e => e.Kind == UsageEventKind.PageClosed && e.SessionId == sessionId)
+            .Aggregate(TimeSpan.Zero, (sum, e) => sum + (e.Active ?? TimeSpan.Zero));
+
+    bool IsOpenPage(string? name, string? route)
+    {
+        if (_open == null)
+            return false;
+        if (name != null && _open.Name != null)
+            return name == _open.Name;
+        return name == _open.Name && route == _open.Route;
+    }
+
+    void EnsureLoaded()
+    {
+        if (_loaded)
+            return;
+
+        _events.AddRange(_store.GetAll());
+        _loaded = true;
+    }
+
+    void Append(
+        UsageEventKind kind,
+        DateTimeOffset timestamp,
+        Guid? sessionId,
+        Guid? pageVisitId,
+        string? name,
+        string? route,
+        TimeSpan? elapsed,
+        TimeSpan? active,
+        string? endReason)
+    {
+        var stored = _store.Append(new UsageEvent(
+            Guid.NewGuid(),
+            Sequence: 0,
+            kind,
+            timestamp,
+            sessionId,
+            pageVisitId,
+            name,
+            route,
+            elapsed,
+            active,
+            endReason,
+            UploadedUtc: null));
+        _events.Add(stored);
+    }
+
+    static string? Norm(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+    sealed record OpenVisit(Guid Id, string? Name, string? Route, DateTimeOffset OpenedAt);
+}

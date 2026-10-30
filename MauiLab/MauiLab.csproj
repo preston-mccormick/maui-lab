@@ -106,6 +106,10 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0-rc.3.26522.148" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.14" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.14" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -123,6 +127,9 @@
 	  </Compile>
 	  <Compile Update="MenuButton\Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Usage\UsagePage.xaml.cs">
+	    <DependentUpon>UsagePage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="StartPage.xaml.cs">
 	    <DependentUpon>StartPage.xaml</DependentUpon>
@@ -161,6 +168,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MenuButton\MenuButtonPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Usage\UsagePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MenuButton\Controls\Menu.xaml">

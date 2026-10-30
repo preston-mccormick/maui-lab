@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Usage.UsagePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:usage="using:MauiLab.Usage"
+    Title="Usage"
+    x:DataType="usage:UsagePageModel">
+    <Grid Padding="12,12,12,0" RowDefinitions="Auto,*" RowSpacing="8">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                <Label FontSize="25" Text="Usage" />
+                <Label
+                    FontSize="14"
+                    Text="Sessions, pages, and time in the foreground."
+                    TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+            </VerticalStackLayout>
+            <Button
+                Grid.Column="1"
+                Command="{Binding ResetCommand}"
+                Text="Reset"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Rows}"
+            ItemsUpdatingScrollMode="KeepScrollOffset"
+            SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="usage:TimelineRow">
+                    <Grid
+                        Margin="{Binding Indent}"
+                        Padding="0,4"
+                        ColumnDefinitions="28,*"
+                        MinimumHeightRequest="44">
+                        <BoxView
+                            WidthRequest="2"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Fill"
+                            Color="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LighterGray}}" />
+                        <Border
+                            BackgroundColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource Gray}}"
+                            HeightRequest="12"
+                            HorizontalOptions="Center"
+                            StrokeShape="RoundRectangle 6"
+                            StrokeThickness="0"
+                            VerticalOptions="Center"
+                            WidthRequest="12">
+                            <Border.Triggers>
+                                <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Open">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Primary}, Dark={StaticResource LightPrimary}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Page">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Activity">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LightGray}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Session">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkPrimary}, Dark={StaticResource Primary}}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Root">
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkTertiary}, Dark={StaticResource Tertiary}}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label FontAttributes="Bold" FontSize="16" Text="{Binding Title}" />
+                            <Label
+                                FontSize="13"
+                                Text="{Binding Detail}"
+                                TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
