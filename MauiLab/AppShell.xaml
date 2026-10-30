@@ -10,8 +10,7 @@
     xmlns:layouts="using:MauiLab.Layouts"
     xmlns:mb="using:MauiLab.MenuButton"
     Title="MAUI Lab"
-    Shell.FlyoutBehavior="{OnIdiom Phone=Flyout,
-                                   Default=Locked}">
+    Shell.FlyoutBehavior="Flyout">
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
     <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
     <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
