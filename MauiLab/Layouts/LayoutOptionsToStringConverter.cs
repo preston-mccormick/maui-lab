@@ -4,7 +4,7 @@ namespace MauiLab.Layouts;
 
 public class LayoutOptionsToStringConverter : IValueConverter
 {
-    LayoutOptionsConverter converter = new();
+    readonly LayoutOptionsConverter converter = new();
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

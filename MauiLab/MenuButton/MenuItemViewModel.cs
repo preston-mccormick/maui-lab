@@ -7,10 +7,10 @@ namespace MauiLab.ViewModels;
 public partial class MenuItemViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string? _image;
+    public partial string? Image { get; set; }
 
     [ObservableProperty]
-    private string? _text;
+    public partial string? Text { get; set; }
 
     [RelayCommand]
     private void Tap(object parameter)

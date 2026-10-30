@@ -7,8 +7,8 @@ namespace MauiLab.Layouts;
 public partial class DialogLayoutPageModel : ObservableObject
 {
     [ObservableProperty]
-    private string? _title;
+    public partial string? Title { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<ColorModel> _colors = new();
+    public partial ObservableCollection<ColorModel> Colors { get; set; } = [];
 }

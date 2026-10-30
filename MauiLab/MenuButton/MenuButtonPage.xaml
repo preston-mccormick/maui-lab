@@ -58,20 +58,20 @@
                     </VisualStateGroupList>
                 </Setter>
                 <Setter Property="Items" Value="{Binding Items}" />
-                <Setter Property="Text" Value="Menu Button" />
+                <Setter Property="Text" Value="{Binding Text}" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid>
         <!--  Completed MenuButton control with a popup action menu  -->
-        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="Start" />
-        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="Center" />
-        <controls:MenuButton HorizontalOptions="Start" VerticalOptions="End" />
-        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="Start" />
-        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="Center" />
-        <controls:MenuButton HorizontalOptions="Center" VerticalOptions="End" />
-        <controls:MenuButton HorizontalOptions="End" VerticalOptions="Start" />
-        <controls:MenuButton HorizontalOptions="End" VerticalOptions="Center" />
-        <controls:MenuButton HorizontalOptions="End" VerticalOptions="End" />
+        <controls:MenuButton x:Name="TopLeft" HorizontalOptions="Start" VerticalOptions="Start" />
+        <controls:MenuButton x:Name="MiddleLeft" HorizontalOptions="Start" VerticalOptions="Center" />
+        <controls:MenuButton x:Name="BottomLeft" HorizontalOptions="Start" VerticalOptions="End" />
+        <controls:MenuButton x:Name="TopCenter" HorizontalOptions="Center" VerticalOptions="Start" />
+        <controls:MenuButton x:Name="MiddleCenter" HorizontalOptions="Center" VerticalOptions="Center" />
+        <controls:MenuButton x:Name="BottomCenter" HorizontalOptions="Center" VerticalOptions="End" />
+        <controls:MenuButton x:Name="TopRight" HorizontalOptions="End" VerticalOptions="Start" />
+        <controls:MenuButton x:Name="MiddleRight" HorizontalOptions="End" VerticalOptions="Center" />
+        <controls:MenuButton x:Name="BottomRight" HorizontalOptions="End" VerticalOptions="End" />
     </Grid>
 </ContentPage>

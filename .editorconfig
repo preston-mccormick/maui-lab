@@ -1,0 +1,8 @@
+root = true
+
+[*.cs]
+csharp_style_prefer_primary_constructors = false:none
+dotnet_diagnostic.IDE0290.severity = none
+
+[MauiLab/Platforms/**.cs]
+dotnet_diagnostic.IDE0130.severity = none

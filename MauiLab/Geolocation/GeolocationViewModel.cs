@@ -105,11 +105,7 @@ public partial class GeolocationViewModel : ObservableObject
         try
         {
             var location = await _service.GetLocationAsync();
-
-            if (location == null)
-            {
-                location = await _service.GetLastKnownLocationAsync();
-            }
+            location ??= await _service.GetLastKnownLocationAsync();
 
             LastLocation = location;
         }

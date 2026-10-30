@@ -24,93 +24,115 @@
 
     <Border
         HorizontalOptions="Start"
+        MinimumWidthRequest="200"
         Style="{StaticResource floating-card}"
         VerticalOptions="Start">
-        <Grid
-            ColumnDefinitions="Auto,*"
-            ColumnSpacing="12"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-            RowSpacing="6">
-
-            <Label
+        <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+            <Grid
                 Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,12"
-                Style="{StaticResource Small}"
-                HorizontalOptions="Center"
-                Text="{Binding Source={x:Reference This}, Path=Title}"
-                TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
-                                            Dark={StaticResource Tertiary}}" />
-            <Label Grid.Row="1" Text="Height" />
-            <Label
+                Padding="0,4"
+                Margin="0,0,0,6">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHeaderTapped" />
+                </Grid.GestureRecognizers>
+                <Label
+                    HorizontalOptions="Start"
+                    Style="{StaticResource Small}"
+                    Text="{Binding Source={x:Reference This}, Path=ExpandGlyph, x:DataType=layouts:LayoutLevers}"
+                    TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
+                                                Dark={StaticResource Tertiary}}" />
+                <Label
+                    HorizontalOptions="Center"
+                    Style="{StaticResource Small}"
+                    Text="{Binding Source={x:Reference This}, Path=Title, x:DataType=layouts:LayoutLevers}"
+                    TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
+                                                Dark={StaticResource Tertiary}}" />
+            </Grid>
+
+            <Grid
                 Grid.Row="1"
-                Grid.Column="1"
-                Text="{Binding Height, StringFormat='{0:N2}'}" />
+                ColumnDefinitions="Auto,*"
+                ColumnSpacing="12"
+                IsVisible="{Binding Source={x:Reference This}, Path=IsExpanded, x:DataType=layouts:LayoutLevers}"
+                RowDefinitions="44,44,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                RowSpacing="6">
 
-            <Label Grid.Row="2" Text="Width" />
-            <Label
-                Grid.Row="2"
-                Grid.Column="1"
-                Text="{Binding Width, StringFormat='{0:N2}'}" />
+                <Label Grid.Row="0" Text="Height" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Height, StringFormat='{0:N2}'}" />
 
-            <Label Grid.Row="3" Text="WidthRequest" />
-            <Entry
-                Grid.Row="3"
-                Grid.Column="1"
-                Text="{Binding WidthRequest}" />
-            <!--<Slider
-                Grid.Row="3"
-                Grid.Column="1"
-                Maximum="1000"
-                Minimum="-1"
-                Value="{Binding WidthRequest}" />-->
+                <Label Grid.Row="1" Text="Width" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding Width, StringFormat='{0:N2}'}" />
 
-            <Label Grid.Row="4" Text="HeightRequest" />
-            <Entry
-                Grid.Row="4"
-                Grid.Column="1"
-                Text="{Binding HeightRequest}" />
+                <Label Grid.Row="2" Text="WidthRequest" />
+                <Entry
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding WidthRequest}" />
 
-            <Label Grid.Row="5" Text="HorizontalOptions" />
-            <Picker
-                Grid.Row="5"
-                Grid.Column="1"
-                SelectedItem="{Binding HorizontalOptions, Converter={StaticResource LayoutOptionsConverter}}">
-                <Picker.Items>
-                    <x:String>Start</x:String>
-                    <x:String>Center</x:String>
-                    <x:String>End</x:String>
-                    <x:String>Fill</x:String>
-                    <x:String>StartAndExpand</x:String>
-                    <x:String>CenterAndExpand</x:String>
-                    <x:String>EndAndExpand</x:String>
-                    <x:String>FillAndExpand</x:String>
-                </Picker.Items>
-            </Picker>
+                <Label Grid.Row="3" Text="MinimumWidthRequest" />
+                <Entry
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding MinimumWidthRequest}" />
 
-            <Label Grid.Row="6" Text="VerticalOptions" />
-            <Picker
-                Grid.Row="6"
-                Grid.Column="1"
-                SelectedItem="{Binding VerticalOptions, Converter={StaticResource LayoutOptionsConverter}}">
-                <Picker.Items>
-                    <x:String>Start</x:String>
-                    <x:String>Center</x:String>
-                    <x:String>End</x:String>
-                    <x:String>Fill</x:String>
-                    <x:String>StartAndExpand</x:String>
-                    <x:String>CenterAndExpand</x:String>
-                    <x:String>EndAndExpand</x:String>
-                    <x:String>FillAndExpand</x:String>
-                </Picker.Items>
-            </Picker>
+                <Label Grid.Row="4" Text="MaximumWidthRequest" />
+                <Entry
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Text="{Binding MaximumWidthRequest}" />
 
-            <Label Grid.Row="7" Text="IsVisible" />
-            <Switch
-                Grid.Row="7"
-                Grid.Column="1"
-                IsToggled="{Binding IsVisible}" />
+                <Label Grid.Row="5" Text="HeightRequest" />
+                <Entry
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Text="{Binding HeightRequest}" />
 
+                <Label Grid.Row="6" Text="HorizontalOptions" />
+                <Picker
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    SelectedItem="{Binding HorizontalOptions, Converter={StaticResource LayoutOptionsConverter}}">
+                    <Picker.Items>
+                        <x:String>Start</x:String>
+                        <x:String>Center</x:String>
+                        <x:String>End</x:String>
+                        <x:String>Fill</x:String>
+                        <x:String>StartAndExpand</x:String>
+                        <x:String>CenterAndExpand</x:String>
+                        <x:String>EndAndExpand</x:String>
+                        <x:String>FillAndExpand</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Label Grid.Row="7" Text="VerticalOptions" />
+                <Picker
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    SelectedItem="{Binding VerticalOptions, Converter={StaticResource LayoutOptionsConverter}}">
+                    <Picker.Items>
+                        <x:String>Start</x:String>
+                        <x:String>Center</x:String>
+                        <x:String>End</x:String>
+                        <x:String>Fill</x:String>
+                        <x:String>StartAndExpand</x:String>
+                        <x:String>CenterAndExpand</x:String>
+                        <x:String>EndAndExpand</x:String>
+                        <x:String>FillAndExpand</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Label Grid.Row="8" Text="IsVisible" />
+                <Switch
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    IsToggled="{Binding IsVisible}" />
+            </Grid>
         </Grid>
     </Border>
 </ContentView>

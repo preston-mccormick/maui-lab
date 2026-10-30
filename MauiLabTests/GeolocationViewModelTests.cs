@@ -5,7 +5,7 @@ namespace MauiLabTests;
 
 public class GeolocationViewModelTests(ITestOutputHelper output)
 {
-    GeolocationViewModel vm = new GeolocationViewModel(new MockGeolocation());
+    readonly GeolocationViewModel vm = new(new MockGeolocation());
 
     [Fact]
     public async Task UpdateLocation()

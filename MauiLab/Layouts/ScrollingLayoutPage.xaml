@@ -17,41 +17,41 @@
                             <Setter Property="HeightRequest" Value="60" />
                         </Style>
                         <LinearGradientBrush x:Key="SelectedGradient" EndPoint="1,0">
-                            <GradientStop Offset="0.25" Color="Red" />
-                            <GradientStop Offset="0.25" Color="Yellow" />
-                            <GradientStop Offset="0.5" Color="Yellow" />
-                            <GradientStop Offset="0.5" Color="Blue" />
-                            <GradientStop Offset="0.75" Color="Blue" />
-                            <GradientStop Offset="0.75" Color="Green" />
-                            <GradientStop Offset="1" Color="Green" />
+                            <GradientStop Offset="0.25" Color="Pink" />
+                            <GradientStop Offset="0.25" Color="LightYellow" />
+                            <GradientStop Offset="0.5" Color="LightYellow" />
+                            <GradientStop Offset="0.5" Color="LightBlue" />
+                            <GradientStop Offset="0.75" Color="LightBlue" />
+                            <GradientStop Offset="0.75" Color="LightGreen" />
+                            <GradientStop Offset="1" Color="LightGreen" />
                         </LinearGradientBrush>
                     </ResourceDictionary>
                 </VerticalStackLayout.Resources>
                 <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Red" />
-                <BoxView BackgroundColor="Yellow" />
-                <BoxView BackgroundColor="Blue" />
-                <BoxView BackgroundColor="Green" />
+                <BoxView BackgroundColor="Pink" />
+                <BoxView BackgroundColor="LightYellow" />
+                <BoxView BackgroundColor="LightBlue" />
+                <BoxView BackgroundColor="LightGreen" />
                 <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Red" />
-                <BoxView BackgroundColor="Yellow" />
-                <BoxView BackgroundColor="Blue" />
-                <BoxView BackgroundColor="Green" />
+                <BoxView BackgroundColor="Pink" />
+                <BoxView BackgroundColor="LightYellow" />
+                <BoxView BackgroundColor="LightBlue" />
+                <BoxView BackgroundColor="LightGreen" />
                 <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Red" />
-                <BoxView BackgroundColor="Yellow" />
-                <BoxView BackgroundColor="Blue" />
-                <BoxView BackgroundColor="Green" />
+                <BoxView BackgroundColor="Pink" />
+                <BoxView BackgroundColor="LightYellow" />
+                <BoxView BackgroundColor="LightBlue" />
+                <BoxView BackgroundColor="LightGreen" />
                 <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Red" />
-                <BoxView BackgroundColor="Yellow" />
-                <BoxView BackgroundColor="Blue" />
-                <BoxView BackgroundColor="Green" />
+                <BoxView BackgroundColor="Pink" />
+                <BoxView BackgroundColor="LightYellow" />
+                <BoxView BackgroundColor="LightBlue" />
+                <BoxView BackgroundColor="LightGreen" />
                 <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Red" />
-                <BoxView BackgroundColor="Yellow" />
-                <BoxView BackgroundColor="Blue" />
-                <BoxView BackgroundColor="Green" />
+                <BoxView BackgroundColor="Pink" />
+                <BoxView BackgroundColor="LightYellow" />
+                <BoxView BackgroundColor="LightBlue" />
+                <BoxView BackgroundColor="LightGreen" />
             </VerticalStackLayout>
         </ScrollView>
         <Label

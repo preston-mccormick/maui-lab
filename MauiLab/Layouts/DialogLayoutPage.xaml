@@ -7,46 +7,59 @@
     xmlns:layouts="clr-namespace:MauiLab.Layouts"
     Title="Dialog Layout"
     x:DataType="layouts:DialogLayoutPageModel">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="ColorItemTemplate" x:DataType="colors:ColorModel">
+            <HorizontalStackLayout>
+                <BoxView
+                    Margin="4"
+                    BackgroundColor="{Binding Color}"
+                    HeightRequest="30"
+                    WidthRequest="60"
+                    Color="{Binding Color}" />
+                <Label Margin="4" Text="{Binding Name}" />
+            </HorizontalStackLayout>
+        </DataTemplate>
+    </ContentPage.Resources>
     <Grid x:Name="LayersGrid">
         <Grid
             x:Name="LayoutGrid"
             Margin="-1"
-            ColumnDefinitions="*,Auto,*"
+            ColumnDefinitions="*,4*,*"
             ColumnSpacing="48"
             RowDefinitions="*,4*,*"
             RowSpacing="48">
-            <!--  Rows  -->
-            <Rectangle
+            <!--  Rows. These paint the cells and do not contribute a size.  -->
+            <layouts:CellWash
                 Grid.Row="0"
                 Grid.ColumnSpan="3"
-                BackgroundColor="Magenta"
-                Opacity="0.25" />
-            <Rectangle
+                Opacity="0.25"
+                Color="Magenta" />
+            <layouts:CellWash
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
-                BackgroundColor="Yellow"
-                Opacity="0.25" />
-            <Rectangle
+                Opacity="0.25"
+                Color="Yellow" />
+            <layouts:CellWash
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
-                BackgroundColor="Cyan"
-                Opacity="0.25" />
+                Opacity="0.25"
+                Color="Cyan" />
             <!--  Columns  -->
-            <Rectangle
+            <layouts:CellWash
                 Grid.RowSpan="3"
                 Grid.Column="0"
-                BackgroundColor="Red"
-                Opacity="0.25" />
-            <Rectangle
+                Opacity="0.25"
+                Color="Red" />
+            <layouts:CellWash
                 Grid.RowSpan="3"
                 Grid.Column="1"
-                BackgroundColor="Green"
-                Opacity="0.25" />
-            <Rectangle
+                Opacity="0.25"
+                Color="Green" />
+            <layouts:CellWash
                 Grid.RowSpan="3"
                 Grid.Column="2"
-                BackgroundColor="Blue"
-                Opacity="0.25" />
+                Opacity="0.25"
+                Color="Blue" />
             <!--  Center  -->
             <Border
                 x:Name="Panel"
@@ -55,40 +68,23 @@
                 HorizontalOptions="Center"
                 Style="{StaticResource floating-panel}"
                 VerticalOptions="Start">
-                <Grid RowDefinitions="Auto,Auto,*">
+                <Grid RowDefinitions="Auto,*">
                     <Label
                         Grid.Row="0"
-                        Style="{StaticResource Medium}"
                         HorizontalTextAlignment="Center"
+                        Style="{StaticResource Medium}"
                         Text="{Binding Title}"
                         TextColor="{AppThemeBinding Default={StaticResource DarkText},
                                                     Dark={StaticResource LightText}}"
                         VerticalOptions="Start" />
-                    <Button
-                        Grid.Row="1"
-                        Margin="12"
-                        Clicked="Button_Clicked"
-                        IsVisible="False"
-                        Text="Toggle" />
                     <CollectionView
                         x:Name="CollectionView"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         ItemSizingStrategy="MeasureAllItems"
+                        ItemTemplate="{StaticResource ColorItemTemplate}"
                         ItemsSource="{Binding Colors}"
-                        SelectionMode="Single">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="colors:ColorModel">
-                                <HorizontalStackLayout IsVisible="True">
-                                    <BoxView
-                                        Margin="4"
-                                        HeightRequest="30"
-                                        WidthRequest="60"
-                                        Color="{Binding Color}" />
-                                    <Label Margin="4" Text="{Binding Name}" />
-                                </HorizontalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        MaximumWidthRequest="320"
+                        SelectionMode="Single" />
                 </Grid>
             </Border>
         </Grid>

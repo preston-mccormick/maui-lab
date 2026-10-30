@@ -6,8 +6,11 @@ public class MockGeolocation : IGeolocation
 
     public bool IsEnabled => true;
 
+    // Required by IGeolocation. This mock never raises them.
+#pragma warning disable CS0067
     public event EventHandler<GeolocationLocationChangedEventArgs>? LocationChanged;
     public event EventHandler<GeolocationListeningFailedEventArgs>? ListeningFailed;
+#pragma warning restore CS0067
 
     public Task<Location?> GetLastKnownLocationAsync()
     {

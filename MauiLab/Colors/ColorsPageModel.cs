@@ -20,9 +20,9 @@ namespace MauiLab.Colors
 
         public ColorsPageModel()
         {
-            Swatches = new ObservableCollection<ColorModel>(ColorModel.GetNamedColors());
+            Swatches = [.. ColorModel.GetNamedColors()];
             Title = "MAUI Named Colors";
-            SortOptions = new List<ColorSortOption>(ColorSortOption.GetColorSortOptions());
+            SortOptions = ColorSortOption.GetColorSortOptions();
             _selectedSortOption = SortOptions.First();
             PropertyChanged += async (s, e) =>
             {
@@ -46,13 +46,13 @@ namespace MauiLab.Colors
             ["Replace list", "Move items", "Replace list on main thread", "Move items on main thread", "Batch move items on main thread"]);
 
         [ObservableProperty]
-        private string selectedUpdateSwatchesStrategy = "Replace list";
+        public partial string SelectedUpdateSwatchesStrategy { get; set; } = "Replace list";
 
         [ObservableProperty]
-        private ObservableCollection<ColorModel> swatches;
+        public partial ObservableCollection<ColorModel> Swatches { get; set; }
 
         [ObservableProperty]
-        private List<ColorSortOption> sortOptions;
+        public partial List<ColorSortOption> SortOptions { get; set; }
 
         public string Title { get; set; }
 
@@ -101,12 +101,12 @@ namespace MauiLab.Colors
 
         }
 
-        private async Task UpdateSwatches(IList<ColorModel> sortedSwatches, string strategy)
+        private async Task UpdateSwatches(List<ColorModel> sortedSwatches, string strategy)
         {
             switch (strategy)
             {
                 case "Replace list":
-                    Swatches = new ObservableCollection<ColorModel>(sortedSwatches);
+                    Swatches = [.. sortedSwatches];
                     break;
                 case "Move items":
                     for (var i = 0; i < sortedSwatches.Count; i++)
@@ -118,7 +118,7 @@ namespace MauiLab.Colors
                     }
                     break;
                 case "Replace list on main thread":
-                    await MainThread.InvokeOnMainThreadAsync(() => Swatches = new ObservableCollection<ColorModel>(sortedSwatches));
+                    await MainThread.InvokeOnMainThreadAsync(() => Swatches = [.. sortedSwatches]);
                     break;
                 case "Move items on main thread":
                     for (var i = 0; i < sortedSwatches.Count; i++)

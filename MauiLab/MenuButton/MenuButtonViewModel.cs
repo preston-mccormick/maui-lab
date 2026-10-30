@@ -9,11 +9,12 @@ public partial class MenuButtonViewModel : ObservableObject
 {
     public MenuButtonViewModel(string? text = null, params MenuItemViewModel[] items)
     {
-        Items = new ObservableCollection<MenuItemViewModel>(items);
+        Text = text;
+        Items = [.. items];
     }
 
     [ObservableProperty]
-    private string? text;
+    public partial string? Text { get; set; }
 
     public ObservableCollection<MenuItemViewModel> Items { get; }
 }
