@@ -19,7 +19,7 @@ public partial class MenuItemViewModel : ObservableObject
         if (Application.Current?.MainPage is not Page page) return;
         page.DisplayAlert("Menu Item Tapped", Text, "OK");
 #else       
-        string message = $"Menu Item Tapped: {Text}";
+        string message = Text ?? String.Empty;
         Toast.Make(message, textSize: 42).Show();
 #endif
     }

@@ -11,47 +11,33 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="controls:MenuButton">
-                <Setter Property="TextColor"
-                        Value="{AppThemeBinding Default={StaticResource DarkText}}" />
-                <Setter Property="BackgroundColor"
-                        Value="{AppThemeBinding Default={StaticResource Primary}}" />
-                <Setter Property="FontFamily"
-                        Value="OpenSansRegular" />
-                <Setter Property="FontSize"
-                        Value="14" />
-                <Setter Property="BorderWidth"
-                        Value="0" />
-                <Setter Property="CornerRadius"
-                        Value="8" />
-                <Setter Property="Padding"
-                        Value="16,12" />
-                <Setter Property="Margin"
-                        Value="6" />
-                <Setter Property="MinimumHeightRequest"
-                        Value="44" />
-                <Setter Property="MinimumWidthRequest"
-                        Value="44" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource DarkText}}" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Primary}}" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="Margin" Value="6" />
+                <Setter Property="MinimumHeightRequest" Value="44" />
+                <Setter Property="MinimumWidthRequest" Value="166" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor"
-                                            Value="{AppThemeBinding Default={StaticResource Primary}}" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Primary}}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="TextColor"
-                                            Value="{AppThemeBinding Default={StaticResource DarkText}}" />
-                                    <Setter Property="BackgroundColor"
-                                            Value="{AppThemeBinding Default={StaticResource Gray}}" />
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource DarkText}}" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Gray}}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="PointerOver">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor"
-                                            Value="{AppThemeBinding Default={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}" />
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -64,14 +50,41 @@
     </ContentPage.Resources>
     <Grid>
         <!--  Completed MenuButton control with a popup action menu  -->
-        <controls:MenuButton x:Name="TopLeft" HorizontalOptions="Start" VerticalOptions="Start" />
-        <controls:MenuButton x:Name="MiddleLeft" HorizontalOptions="Start" VerticalOptions="Center" />
-        <controls:MenuButton x:Name="BottomLeft" HorizontalOptions="Start" VerticalOptions="End" />
-        <controls:MenuButton x:Name="TopCenter" HorizontalOptions="Center" VerticalOptions="Start" />
-        <controls:MenuButton x:Name="MiddleCenter" HorizontalOptions="Center" VerticalOptions="Center" />
-        <controls:MenuButton x:Name="BottomCenter" HorizontalOptions="Center" VerticalOptions="End" />
-        <controls:MenuButton x:Name="TopRight" HorizontalOptions="End" VerticalOptions="Start" />
-        <controls:MenuButton x:Name="MiddleRight" HorizontalOptions="End" VerticalOptions="Center" />
-        <controls:MenuButton x:Name="BottomRight" HorizontalOptions="End" VerticalOptions="End" />
+        <controls:MenuButton
+            x:Name="TopLeft"
+            HorizontalOptions="Start"
+            VerticalOptions="Start" />
+        <controls:MenuButton
+            x:Name="MiddleLeft"
+            HorizontalOptions="Start"
+            VerticalOptions="Center" />
+        <controls:MenuButton
+            x:Name="BottomLeft"
+            HorizontalOptions="Start"
+            VerticalOptions="End" />
+        <controls:MenuButton
+            x:Name="TopCenter"
+            HorizontalOptions="Center"
+            VerticalOptions="Start" />
+        <controls:MenuButton
+            x:Name="MiddleCenter"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+        <controls:MenuButton
+            x:Name="BottomCenter"
+            HorizontalOptions="Center"
+            VerticalOptions="End" />
+        <controls:MenuButton
+            x:Name="TopRight"
+            HorizontalOptions="End"
+            VerticalOptions="Start" />
+        <controls:MenuButton
+            x:Name="MiddleRight"
+            HorizontalOptions="End"
+            VerticalOptions="Center" />
+        <controls:MenuButton
+            x:Name="BottomRight"
+            HorizontalOptions="End"
+            VerticalOptions="End" />
     </Grid>
 </ContentPage>
