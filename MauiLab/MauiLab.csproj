@@ -50,12 +50,20 @@
 	  <MtouchLink>None</MtouchLink>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<!-- App Image -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	<!-- Apple splash is LaunchScreen.storyboard. MauiSplashScreen cannot size the image to the window. -->
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+	  <EnableMauiSplashScreenProcessing>false</EnableMauiSplashScreenProcessing>
+	</PropertyGroup>
 
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="128,128" />
+	<ItemGroup>
+		<!-- App icon. Apple targets use an Icon Composer bundle so light, dark, and tinted modes are real variants. -->
+		<MauiIcon Include="Resources\AppIcon\appicon.icon" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'maccatalyst'" />
+
+		<!-- Android still uses MauiSplashScreen. Apple uses LaunchScreen.storyboard. -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FFFFFF" DarkColor="#222222" BaseSize="256,256" />
+		<InterfaceDefinition Include="Resources\SplashScreen\LaunchScreen.storyboard" Link="LaunchScreen.storyboard" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
+		<ImageAsset Include="Resources\SplashScreen\Assets.xcassets\**\*" Link="Splash.xcassets/%(RecursiveDir)%(Filename)%(Extension)" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' Or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

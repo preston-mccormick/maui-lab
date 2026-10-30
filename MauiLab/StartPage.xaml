@@ -6,24 +6,31 @@
     Title="Home"
     Padding="30,110">
     <Grid>
-        <VerticalStackLayout HorizontalOptions="Center">
+        <VerticalStackLayout
+            x:Name="Hero"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
             <Label
+                x:Name="WelcomeLabel"
                 Margin="0,0,0,-20"
                 FontSize="30"
                 Text="Welcome to"
                 TextColor="{StaticResource Primary}"
                 VerticalTextAlignment="Center" />
             <HorizontalStackLayout
+                x:Name="TitleRow"
                 Margin="100,0,0,0"
                 HorizontalOptions="Center"
                 Spacing="8"
                 VerticalOptions="Start">
                 <Label
+                    x:Name="TitleLabel"
                     FontSize="75"
                     Text="MAUI Lab"
                     TextColor="{StaticResource LightPrimary}"
                     VerticalTextAlignment="Center" />
                 <Image
+                    x:Name="Flask"
                     HeightRequest="150"
                     Source="chemistry_flask.png"
                     WidthRequest="150" />
