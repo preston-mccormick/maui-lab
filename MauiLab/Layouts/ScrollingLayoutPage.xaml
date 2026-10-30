@@ -16,42 +16,65 @@
                         <Style TargetType="BoxView">
                             <Setter Property="HeightRequest" Value="60" />
                         </Style>
-                        <LinearGradientBrush x:Key="SelectedGradient" EndPoint="1,0">
-                            <GradientStop Offset="0.25" Color="Pink" />
-                            <GradientStop Offset="0.25" Color="LightYellow" />
-                            <GradientStop Offset="0.5" Color="LightYellow" />
-                            <GradientStop Offset="0.5" Color="LightBlue" />
-                            <GradientStop Offset="0.75" Color="LightBlue" />
-                            <GradientStop Offset="0.75" Color="LightGreen" />
-                            <GradientStop Offset="1" Color="LightGreen" />
+                        <LinearGradientBrush x:Key="Gradient1" EndPoint="1,0">
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="1" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                        </LinearGradientBrush>
+                        <LinearGradientBrush x:Key="Gradient2" EndPoint="1,0">
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                            <GradientStop Offset="1" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                        </LinearGradientBrush>
+                        <LinearGradientBrush x:Key="Gradient3" EndPoint="1,0">
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="1" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                        </LinearGradientBrush>
+                        <LinearGradientBrush x:Key="Gradient4" EndPoint="1,0">
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightGreen, Dark=ForestGreen}" />
+                            <GradientStop Offset="0.25" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightBlue, Dark=SteelBlue}" />
+                            <GradientStop Offset="0.5" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=LightYellow, Dark=DarkGoldenrod}" />
+                            <GradientStop Offset="0.75" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
+                            <GradientStop Offset="1" Color="{AppThemeBinding Default=Pink, Dark=MediumVioletRed}" />
                         </LinearGradientBrush>
                     </ResourceDictionary>
                 </VerticalStackLayout.Resources>
-                <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Pink" />
-                <BoxView BackgroundColor="LightYellow" />
-                <BoxView BackgroundColor="LightBlue" />
-                <BoxView BackgroundColor="LightGreen" />
-                <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Pink" />
-                <BoxView BackgroundColor="LightYellow" />
-                <BoxView BackgroundColor="LightBlue" />
-                <BoxView BackgroundColor="LightGreen" />
-                <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Pink" />
-                <BoxView BackgroundColor="LightYellow" />
-                <BoxView BackgroundColor="LightBlue" />
-                <BoxView BackgroundColor="LightGreen" />
-                <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Pink" />
-                <BoxView BackgroundColor="LightYellow" />
-                <BoxView BackgroundColor="LightBlue" />
-                <BoxView BackgroundColor="LightGreen" />
-                <BoxView Background="{StaticResource SelectedGradient}" />
-                <BoxView BackgroundColor="Pink" />
-                <BoxView BackgroundColor="LightYellow" />
-                <BoxView BackgroundColor="LightBlue" />
-                <BoxView BackgroundColor="LightGreen" />
+                <BoxView Background="{StaticResource Gradient1}" />
+                <BoxView Background="{StaticResource Gradient2}" />
+                <BoxView Background="{StaticResource Gradient3}" />
+                <BoxView Background="{StaticResource Gradient4}" />
+                <BoxView Background="{StaticResource Gradient1}" />
+                <BoxView Background="{StaticResource Gradient2}" />
+                <BoxView Background="{StaticResource Gradient3}" />
+                <BoxView Background="{StaticResource Gradient4}" />
+                <BoxView Background="{StaticResource Gradient1}" />
+                <BoxView Background="{StaticResource Gradient2}" />
+                <BoxView Background="{StaticResource Gradient3}" />
+                <BoxView Background="{StaticResource Gradient4}" />
+                <BoxView Background="{StaticResource Gradient1}" />
+                <BoxView Background="{StaticResource Gradient2}" />
+                <BoxView Background="{StaticResource Gradient3}" />
+                <BoxView Background="{StaticResource Gradient4}" />
+                <BoxView Background="{StaticResource Gradient1}" />
+                <BoxView Background="{StaticResource Gradient2}" />
+                <BoxView Background="{StaticResource Gradient3}" />
+                <BoxView Background="{StaticResource Gradient4}" />
+
             </VerticalStackLayout>
         </ScrollView>
         <Label
