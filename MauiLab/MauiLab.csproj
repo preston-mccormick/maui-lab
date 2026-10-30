@@ -73,6 +73,9 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<EmbeddedResource Include="Colors\Data\xkcd-colors.json" LogicalName="MauiLab.Colors.Data.xkcd-colors.json" />
+		<EmbeddedResource Include="Colors\Data\short-colors.json" LogicalName="MauiLab.Colors.Data.short-colors.json" />
 	</ItemGroup>
 
 	<ItemGroup>

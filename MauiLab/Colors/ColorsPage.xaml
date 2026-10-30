@@ -7,21 +7,93 @@
     Title="{Binding Title}"
     x:DataType="local:ColorsPageModel">
     <Grid RowDefinitions="Auto, *">
-        <HorizontalStackLayout Padding="8" Spacing="24">
-            <Label Text="Strategy" VerticalTextAlignment="Center" />
-            <Picker
-                Title="UI Strategy"
-                Grid.Row="0"
-                ItemsSource="{Binding UpdateSwatchesStrategy}"
-                SelectedItem="{Binding SelectedUpdateSwatchesStrategy}" />
-            <Label Text="Sort" VerticalTextAlignment="Center" />
-            <Picker
-                Title="Sort By"
-                Grid.Row="0"
-                ItemDisplayBinding="{Binding Name}"
-                ItemsSource="{Binding SortOptions}"
-                SelectedItem="{Binding SelectedSortOption}" />
-        </HorizontalStackLayout>
+        <VerticalStackLayout Padding="8" Spacing="8">
+            <Grid ColumnDefinitions="Auto, *, Auto, *" ColumnSpacing="12">
+                <Label
+                    Text="Control"
+                    VerticalOptions="Center" />
+                <Picker
+                    Title="Control"
+                    Grid.Column="1"
+                    HorizontalOptions="Fill"
+                    ItemsSource="{Binding ControlOptions}"
+                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                    SelectedItem="{Binding SelectedControl}" />
+                <Label
+                    Grid.Column="2"
+                    Text="List"
+                    VerticalOptions="Center" />
+                <Picker
+                    Title="List"
+                    Grid.Column="3"
+                    HorizontalOptions="Fill"
+                    ItemDisplayBinding="{Binding Name}"
+                    ItemsSource="{Binding ColorLists}"
+                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                    SelectedItem="{Binding SelectedColorList}" />
+            </Grid>
+            <Grid ColumnDefinitions="Auto, *, Auto, 140, Auto, Auto, Auto" ColumnSpacing="8">
+                <Label
+                    Text="Sort"
+                    VerticalOptions="Center" />
+                <Picker
+                    Title="Sort By"
+                    Grid.Column="1"
+                    HorizontalOptions="Fill"
+                    ItemDisplayBinding="{Binding Name}"
+                    ItemsSource="{Binding SortOptions}"
+                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                    SelectedItem="{Binding SelectedSortOption}" />
+                <Label
+                    Grid.Column="2"
+                    Text="Font"
+                    VerticalOptions="Center" />
+                <Slider
+                    Grid.Column="3"
+                    Maximum="40"
+                    Minimum="8"
+                    Value="14"
+                    WidthRequest="140"
+                    DragCompleted="OnFontDragCompleted"
+                    DragStarted="OnFontDragStarted"
+                    ValueChanged="OnFontValueChanged"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Column="4"
+                    Margin="-4,0,16,0"
+                    Text="{Binding FontSizeText}"
+                    VerticalOptions="Center"
+                    WidthRequest="32" />
+                <Label
+                    Grid.Column="5"
+                    Text="Show Timings?"
+                    VerticalOptions="Center" />
+                <Switch
+                    Grid.Column="6"
+                    IsToggled="{Binding ShowTimings}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </VerticalStackLayout>
         <local:SwatchesView Grid.Row="1" />
+        <Border
+            Grid.Row="1"
+            Margin="16"
+            Padding="16,12"
+            BackgroundColor="{AppThemeBinding Light=#FFFACD,
+                                              Dark=#483D8B}"
+            HorizontalOptions="End"
+            IsVisible="{Binding HasTimingNotice}"
+            StrokeShape="RoundRectangle 12"
+            StrokeThickness="0"
+            VerticalOptions="End">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DismissTimingCommand}" />
+            </Border.GestureRecognizers>
+            <Label
+                FontSize="28"
+                Text="{Binding TimingText}"
+                TextColor="{AppThemeBinding Light=#483D8B,
+                                            Dark=#FFFACD}" />
+        </Border>
     </Grid>
 </ContentPage>

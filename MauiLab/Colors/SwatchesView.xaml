@@ -4,57 +4,88 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:colors="using:MauiLab.Colors"
-    x:Name="this"
-    Padding="8"
     x:DataType="colors:ColorsPageModel"
-    BackgroundColor="{Binding SelectedBackgroundColor.Color}">
-    <ScrollView>
-        <FlexLayout
-            AlignContent="Start"
-            AlignItems="Start"
-            BindableLayout.ItemsSource="{Binding Swatches}"
-            Direction="Row"
-            Wrap="Wrap">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="colors:ColorModel">
-                    <Border
-                        BackgroundColor="{Binding Color}"
-                        HeightRequest="120"
-                        Style="{StaticResource card}"
-                        WidthRequest="180">
-                        <Grid RowDefinitions="*,*,*">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference this}, Path=BindingContext.SwatchTappedCommand}" CommandParameter="{Binding Source={RelativeSource Self}, Path=BindingContext}" />
-                            </Grid.GestureRecognizers>
-                            <Label
-                                Grid.Row="0"
-                                HorizontalOptions="Start"
-                                LineBreakMode="TailTruncation"
-                                StyleClass="ColorNameLabel"
-                                Text="{Binding Path=Name}"
-                                TextColor="Black"
-                                VerticalOptions="Center" />
-                            <Label
-                                Grid.Row="1"
-                                HorizontalOptions="Center"
-                                LineBreakMode="TailTruncation"
-                                StyleClass="ColorNameLabel"
-                                Text="{Binding Path=Name}"
-                                TextColor="Gray"
-                                VerticalOptions="Center" />
-                            <Label
-                                Grid.Row="2"
-                                HorizontalOptions="End"
-                                LineBreakMode="TailTruncation"
-                                StyleClass="ColorNameLabel"
-                                Text="{Binding Path=Name}"
-                                TextColor="White"
-                                VerticalOptions="Center" />
-                        </Grid>
-
-                    </Border>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </FlexLayout>
-    </ScrollView>
+    BackgroundColor="{Binding SwatchesBackground}">
+    <ContentView.Resources>
+        <DataTemplate x:Key="SwatchTemplate" x:DataType="colors:ColorModel">
+            <Border
+                Margin="{Binding CardMargin, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}"
+                BackgroundColor="{Binding Color}"
+                HeightRequest="120"
+                HorizontalOptions="Center"
+                Style="{StaticResource card}"
+                VerticalOptions="Start"
+                WidthRequest="{Binding CardWidth, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}">
+                <Grid RowDefinitions="*,*,*">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding BindingContext.SwatchTappedCommand, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}"
+                            CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Grid.Row="0"
+                        FontSize="{Binding BindingContext.SwatchFontSize, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}"
+                        HorizontalOptions="Start"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="1"
+                        FontSize="{Binding BindingContext.SwatchFontSize, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}"
+                        HorizontalOptions="Center"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="Gray"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="2"
+                        FontSize="{Binding BindingContext.SwatchFontSize, Source={RelativeSource AncestorType={x:Type colors:SwatchesView}}}"
+                        HorizontalOptions="End"
+                        LineBreakMode="TailTruncation"
+                        StyleClass="ColorNameLabel"
+                        Text="{Binding Path=Name}"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentView.Resources>
+    <Grid>
+        <ScrollView
+            x:Name="SwatchesScroll"
+            BackgroundColor="Transparent"
+            HorizontalOptions="Fill"
+            IsVisible="{Binding UseFlexLayout}"
+            VerticalOptions="Fill">
+            <FlexLayout
+                AlignContent="Start"
+                AlignItems="Start"
+                BindableLayout.ItemsSource="{Binding FlexSwatches}"
+                BindableLayout.ItemTemplate="{StaticResource SwatchTemplate}"
+                Direction="Row"
+                HorizontalOptions="Fill"
+                Wrap="Wrap" />
+        </ScrollView>
+        <CollectionView
+            x:Name="SwatchesCollection"
+            BackgroundColor="Transparent"
+            HorizontalOptions="Fill"
+            IsVisible="{Binding UseCollectionView}"
+            ItemTemplate="{StaticResource SwatchTemplate}"
+            ItemsSource="{Binding VirtualSwatches}"
+            SelectionMode="None"
+            VerticalOptions="Fill">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    x:Name="SwatchGridLayout"
+                    HorizontalItemSpacing="0"
+                    Orientation="Vertical"
+                    Span="2"
+                    VerticalItemSpacing="0" />
+            </CollectionView.ItemsLayout>
+        </CollectionView>
+    </Grid>
 </ContentView>
