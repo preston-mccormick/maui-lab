@@ -13,11 +13,11 @@
     Title="MAUI Lab"
     Shell.FlyoutBehavior="Flyout">
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
-    <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
-    <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
-    <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
     <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
-    <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
-    <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
+    <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
+    <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
+    <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
+    <!-- <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" /> -->
+    <!-- <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" /> -->
     <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />
 </Shell>
