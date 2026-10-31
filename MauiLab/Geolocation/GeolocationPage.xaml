@@ -4,18 +4,169 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:gloc="using:MauiLab.Geolocation"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Title="Geolocation"
     x:DataType="gloc:GeolocationViewModel">
+    <ContentPage.Resources>
+        <Color x:Key="OnAir">#1F9D55</Color>
+        <Color x:Key="OffAir">#D32F2F</Color>
+        <Style x:Key="Caption" TargetType="Label">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="Reading" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="AirSign" TargetType="Border">
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 4" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="AirSignText" TargetType="Label">
+            <Setter Property="CharacterSpacing" Value="1.5" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+
     <VerticalStackLayout Padding="12" Spacing="12">
-        <Label FontSize="25" Text="Location" />
-        <Label Text="{Binding LastLocation.Accuracy, StringFormat='Accuracy: {0}'}" />
-        <Label Text="{Binding LastLocation.Latitude, StringFormat='Latitude: {0}'}" />
-        <Label Text="{Binding LastLocation.Longitude, StringFormat='Longitude: {0}'}" />
-        <Label Text="{Binding LastLocation.Timestamp.LocalDateTime, StringFormat='Timestamp: {0:G}'}" />
         <HorizontalStackLayout Spacing="12">
-            <Button Command="{Binding UpdateLocationCommand}" Text="Update" />
-            <Button Command="{Binding StartListeningCommand}" Text="Start Listening" />
-            <Button Command="{Binding StopListeningCommand}" Text="Stop Listening" />
+            <Label
+                FontSize="25"
+                Text="Location"
+                VerticalOptions="Center" />
+            <Border
+                BackgroundColor="{StaticResource OnAir}"
+                IsVisible="{Binding IsListening}"
+                Style="{StaticResource AirSign}">
+                <Border.Shadow>
+                    <Shadow
+                        Brush="{StaticResource OnAir}"
+                        Opacity="0.85"
+                        Radius="10"
+                        Offset="0,0" />
+                </Border.Shadow>
+                <Label Style="{StaticResource AirSignText}" Text="LISTENING" />
+            </Border>
+            <Border
+                BackgroundColor="{StaticResource OffAir}"
+                IsVisible="{Binding IsListening, Converter={toolkit:InvertedBoolConverter}}"
+                Style="{StaticResource AirSign}">
+                <Border.Shadow>
+                    <Shadow
+                        Brush="{StaticResource OffAir}"
+                        Opacity="0.85"
+                        Radius="10"
+                        Offset="0,0" />
+                </Border.Shadow>
+                <Label Style="{StaticResource AirSignText}" Text="STOPPED" />
+            </Border>
         </HorizontalStackLayout>
+
+        <Border Margin="0" Style="{StaticResource card}">
+            <Grid>
+                <Label
+                    FontSize="18"
+                    IsVisible="{Binding HasLocation, Converter={toolkit:InvertedBoolConverter}}"
+                    Text="No location yet." />
+                <Grid
+                    ColumnDefinitions="Auto,Auto,28,Auto,Auto"
+                    ColumnSpacing="8"
+                    HorizontalOptions="Start"
+                    IsVisible="{Binding HasLocation}"
+                    RowDefinitions="Auto,Auto,Auto,Auto"
+                    RowSpacing="8">
+                    <Label Style="{StaticResource Caption}" Text="Latitude" />
+                    <Label
+                        Grid.Column="1"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Latitude, StringFormat='{0:F6}'}" />
+                    <Label Grid.Column="3" Style="{StaticResource Caption}" Text="Longitude" />
+                    <Label
+                        Grid.Column="4"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Longitude, StringFormat='{0:F6}'}" />
+
+                    <Label Grid.Row="1" Style="{StaticResource Caption}" Text="Accuracy" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Accuracy, StringFormat='{0:F1} m', TargetNullValue='—'}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Style="{StaticResource Caption}"
+                        Text="Altitude" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Altitude, StringFormat='{0:F1} m', TargetNullValue='—'}" />
+
+                    <Label
+                        Grid.Row="2"
+                        Style="{StaticResource Caption}"
+                        Text="Vert. Acc." />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.VerticalAccuracy, StringFormat='{0:F1} m', TargetNullValue='—'}" />
+                    <Label Grid.Row="2" Grid.Column="3" Style="{StaticResource Caption}" Text="Speed" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Speed, StringFormat='{0:F1} m/s', TargetNullValue='—'}" />
+
+                    <Label Grid.Row="3" Style="{StaticResource Caption}" Text="Course" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Course, StringFormat='{0:F0}°', TargetNullValue='—'}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="3"
+                        Style="{StaticResource Caption}"
+                        Text="Timestamp" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="4"
+                        Style="{StaticResource Reading}"
+                        Text="{Binding LastLocation.Timestamp.LocalDateTime, StringFormat='{0:G}'}" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <FlexLayout
+            AlignItems="Start"
+            Direction="Row"
+            JustifyContent="Start"
+            Wrap="Wrap">
+            <Button
+                Margin="0,0,12,12"
+                Command="{Binding UpdateLocationCommand}"
+                Text="Update" />
+            <Button
+                Margin="0,0,12,12"
+                Command="{Binding OpenMapsCommand}"
+                Text="Open in Maps" />
+            <Button
+                Margin="0,0,12,12"
+                Command="{Binding StartListeningCommand}"
+                Text="Start Listening" />
+            <Button
+                Margin="0,0,12,12"
+                Command="{Binding StopListeningCommand}"
+                Text="Stop Listening" />
+        </FlexLayout>
     </VerticalStackLayout>
 </ContentPage>
