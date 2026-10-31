@@ -6,6 +6,9 @@
     xmlns:usage="using:MauiLab.Usage"
     Title="Usage"
     x:DataType="usage:UsagePageModel">
+    <ContentPage.Resources>
+        <usage:CategoryColorConverter x:Key="CategoryColor" />
+    </ContentPage.Resources>
     <Grid Padding="12,12,12,0" RowDefinitions="Auto,*" RowSpacing="8">
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
             <VerticalStackLayout Spacing="2" VerticalOptions="Center">
@@ -22,42 +25,37 @@
                 VerticalOptions="Center" />
         </Grid>
 
+        <!--
+            Rows are a fixed 44pt and the list measures one item. Self-sizing cells (MeasureAllItems)
+            lay out from an estimate and then grow to their real size, and because that happens during
+            the Shell transition the growth animates: rows appeared squeezed, then spread out.
+        -->
         <CollectionView
             Grid.Row="1"
+            ItemSizingStrategy="MeasureFirstItem"
             ItemsSource="{Binding Rows}"
             ItemsUpdatingScrollMode="KeepScrollOffset"
             SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="usage:TimelineRow">
-                    <Grid Padding="0" ColumnDefinitions="*,Auto" MinimumHeightRequest="44">
+                    <Grid Padding="0" ColumnDefinitions="*,Auto" HeightRequest="44">
                         <usage:UsageRailView
                             Grid.ColumnSpan="2"
                             HorizontalOptions="Fill"
                             Rail="{Binding Rail}"
                             VerticalOptions="Fill" />
-                        <VerticalStackLayout Margin="{Binding TextIndent}" Spacing="1" VerticalOptions="Center">
-                            <Label FontAttributes="Bold" FontSize="16" Text="{Binding Title}">
-                                <Label.Triggers>
-                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Navigation">
-                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageNavigation}, Dark={StaticResource UsageNavigationOnDark}}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Screen">
-                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageScreen}, Dark={StaticResource UsageScreenOnDark}}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Lifecycle">
-                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageLifecycle}, Dark={StaticResource UsageLifecycleOnDark}}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Action">
-                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageAction}, Dark={StaticResource UsageActionOnDark}}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Permission">
-                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsagePermission}, Dark={StaticResource UsagePermissionOnDark}}" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
+                        <VerticalStackLayout Margin="{Binding TextIndent, Mode=OneTime}" Spacing="1" VerticalOptions="Center">
+                            <!--  Title, indent and time never change for a given row, so they bind once.  -->
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Title, Mode=OneTime}"
+                                TextColor="{Binding Category, Mode=OneTime, Converter={StaticResource CategoryColor}}" />
                             <Label
                                 FontSize="13"
                                 IsVisible="{Binding HasDetail}"
+                                LineBreakMode="TailTruncation"
                                 Text="{Binding Detail}"
                                 TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
                         </VerticalStackLayout>
@@ -67,7 +65,8 @@
                             FontSize="13"
                             HorizontalOptions="End"
                             HorizontalTextAlignment="End"
-                            Text="{Binding When}"
+                            LineBreakMode="NoWrap"
+                            Text="{Binding When, Mode=OneTime}"
                             TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}"
                             VerticalOptions="Center" />
                     </Grid>

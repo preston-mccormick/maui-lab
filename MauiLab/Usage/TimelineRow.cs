@@ -5,6 +5,7 @@ namespace MauiLab.Usage;
 public sealed class TimelineRow : INotifyPropertyChanged
 {
     string _detail;
+    TimelineRail _rail;
 
     public TimelineRow(string id, int depth, string title, string detail, string marker, string when, string category)
     {
@@ -15,7 +16,7 @@ public sealed class TimelineRow : INotifyPropertyChanged
         Marker = marker;
         When = when;
         Category = category;
-        Rail = new TimelineRail(depth, category, false, false, null, []);
+        _rail = new TimelineRail(depth, category, false, false, null, []);
     }
 
     public string Id { get; }
@@ -32,7 +33,18 @@ public sealed class TimelineRow : INotifyPropertyChanged
 
     public string Category { get; }
 
-    public TimelineRail Rail { get; set; }
+    /// <summary>Connector geometry. Changes when a neighbour is inserted or removed, so it notifies.</summary>
+    public TimelineRail Rail
+    {
+        get => _rail;
+        set
+        {
+            if (_rail.Equals(value))
+                return;
+            _rail = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Rail)));
+        }
+    }
 
     public bool HasDetail => _detail.Length > 0;
 

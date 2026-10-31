@@ -50,7 +50,7 @@ public class UsageRailView : GraphicsView
             var mid = height / 2f;
             float X(int lane) => 14 + lane * 22;
 
-            canvas.StrokeColor = ThemeColor("Gray", "LighterGray", Microsoft.Maui.Graphics.Colors.Gray);
+            canvas.StrokeColor = UsageColors.Themed("Gray", "LighterGray", Microsoft.Maui.Graphics.Colors.Gray);
             canvas.StrokeSize = 2;
             canvas.StrokeLineCap = LineCap.Round;
 
@@ -70,30 +70,8 @@ public class UsageRailView : GraphicsView
                 canvas.DrawPath(path);
             }
 
-            canvas.FillColor = CategoryColor(rail.Category);
+            canvas.FillColor = UsageColors.ForCategory(rail.Category);
             canvas.FillCircle(x, mid, 6);
-        }
-
-        static Color CategoryColor(string category)
-        {
-            var (light, dark) = category switch
-            {
-                UsageCategory.Screen => ("UsageScreen", "UsageScreenOnDark"),
-                UsageCategory.Lifecycle => ("UsageLifecycle", "UsageLifecycleOnDark"),
-                UsageCategory.Action => ("UsageAction", "UsageActionOnDark"),
-                UsageCategory.Permission => ("UsagePermission", "UsagePermissionOnDark"),
-                _ => ("UsageNavigation", "UsageNavigationOnDark")
-            };
-            return ThemeColor(light, dark, Microsoft.Maui.Graphics.Colors.Black);
-        }
-
-        static Color ThemeColor(string lightKey, string darkKey, Color fallback)
-        {
-            var dark = Application.Current?.RequestedTheme == AppTheme.Dark;
-            if (Application.Current?.Resources.TryGetValue(dark ? darkKey : lightKey, out var value) == true &&
-                value is Color color)
-                return color;
-            return fallback;
         }
     }
 }

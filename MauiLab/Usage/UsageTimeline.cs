@@ -9,6 +9,7 @@ public static class UsageTimeline
         if (events.Count == 0)
             return [];
 
+        // One stable sort; everything after this is a linear pass over the sorted list.
         var ordered = events
             .OrderBy(e => e.Timestamp)
             .ThenBy(e => e.Sequence)
@@ -19,22 +20,39 @@ public static class UsageTimeline
             ? ordered
             : ordered.Where(e => UsageEvent.Compare(e, root) >= 0).ToList();
 
+        // Group once by session, keeping sorted order inside each group.
+        var sessions = new List<UsageEvent>();
+        var bySession = new Dictionary<Guid, List<UsageEvent>>();
+        var updates = new List<UsageEvent>();
+        foreach (var entry in relevant)
+        {
+            if (entry.Kind == UsageEventKind.Updated)
+                updates.Add(entry);
+
+            if (entry.SessionId is not Guid sessionId)
+                continue;
+
+            if (!bySession.TryGetValue(sessionId, out var group))
+            {
+                group = [];
+                bySession[sessionId] = group;
+            }
+
+            group.Add(entry);
+            if (entry.Kind == UsageEventKind.SessionStarted)
+                sessions.Add(entry);
+        }
+
         var blocks = new List<(DateTimeOffset Sort, long Sequence, List<TimelineRow> Rows)>();
-        var sessions = relevant
-            .Where(e => e.Kind == UsageEventKind.SessionStarted && e.SessionId is Guid)
-            .ToList();
         foreach (var session in sessions)
         {
-            var inSession = relevant.Where(e => e.SessionId == session.SessionId).ToList();
+            var inSession = bySession[session.SessionId!.Value];
             var rows = SessionRows(session, inSession, now);
-            var newest = inSession
-                .OrderByDescending(e => e.Timestamp)
-                .ThenByDescending(e => e.Sequence)
-                .First();
+            var newest = inSession[^1];
             blocks.Add((newest.Timestamp, newest.Sequence, rows));
         }
 
-        foreach (var updated in relevant.Where(e => e.Kind == UsageEventKind.Updated))
+        foreach (var updated in updates)
         {
             blocks.Add((
                 updated.Timestamp,
@@ -103,22 +121,47 @@ public static class UsageTimeline
             : $"Navigated to {label} page";
     }
 
+    /// <param name="inSession">Every event in the session, oldest first.</param>
     static List<TimelineRow> SessionRows(UsageEvent session, List<UsageEvent> inSession, DateTimeOffset now)
     {
-        var ended = inSession.FirstOrDefault(e => e.Kind == UsageEventKind.SessionEnded);
-        var rows = new List<TimelineRow>();
-        foreach (var entry in inSession
-                     .Where(e => e.Kind is not (UsageEventKind.PageClosed or UsageEventKind.SessionEnded))
-                     .OrderByDescending(e => e.Timestamp)
-                     .ThenByDescending(e => e.Sequence))
+        // One pass to index the session: the first close per visit, and every event per visit.
+        UsageEvent? ended = null;
+        var closes = new Dictionary<Guid, UsageEvent>();
+        var byVisit = new Dictionary<Guid, List<UsageEvent>>();
+        foreach (var entry in inSession)
         {
+            if (entry.Kind == UsageEventKind.SessionEnded)
+                ended ??= entry;
+
+            if (entry.PageVisitId is not Guid visitId)
+                continue;
+
+            if (entry.Kind == UsageEventKind.PageClosed)
+                closes.TryAdd(visitId, entry);
+
+            if (!byVisit.TryGetValue(visitId, out var visit))
+            {
+                visit = [];
+                byVisit[visitId] = visit;
+            }
+
+            visit.Add(entry);
+        }
+
+        var rows = new List<TimelineRow>();
+        for (var index = inSession.Count - 1; index >= 0; index--)
+        {
+            var entry = inSession[index];
+            if (entry.Kind is UsageEventKind.PageClosed or UsageEventKind.SessionEnded)
+                continue;
+
             switch (entry.Kind)
             {
                 case UsageEventKind.PageOpened:
-                    var close = inSession.FirstOrDefault(e =>
-                        e.Kind == UsageEventKind.PageClosed && e.PageVisitId == entry.PageVisitId);
+                    var visitId = entry.PageVisitId!.Value;
+                    var close = closes.GetValueOrDefault(visitId);
                     var asOf = close?.Timestamp ?? now;
-                    var lifecycle = inSession.Where(e => e.PageVisitId == entry.PageVisitId);
+                    var lifecycle = byVisit[visitId];
                     var elapsed = close?.Elapsed ?? UsageMath.Elapsed(entry.Timestamp, asOf);
                     var active = close?.Active ?? UsageMath.ActiveTime(entry.Timestamp, asOf, lifecycle);
                     rows.Add(new TimelineRow(

@@ -395,14 +395,20 @@ public sealed class UsageTracker
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    public IReadOnlyList<TimelineRow> Project()
+    /// <summary>The clock the tracker stamps events with. Pair with <see cref="Snapshot"/> to project off-thread.</summary>
+    public DateTimeOffset Now => _clock.GetUtcNow();
+
+    /// <summary>A copy of every event, taken under the lock. Safe to project on another thread.</summary>
+    public IReadOnlyList<UsageEvent> Snapshot()
     {
         lock (_gate)
         {
             EnsureLoaded();
-            return UsageTimeline.Project(_events, _clock.GetUtcNow());
+            return _events.ToArray();
         }
     }
+
+    public IReadOnlyList<TimelineRow> Project() => UsageTimeline.Project(Snapshot(), Now);
 
     void ReconcileOrphans()
     {

@@ -34,4 +34,33 @@ public class TimelineRailTests
         Assert.True(rails[6].LineFromTop);
         Assert.False(rails[6].LineToBottom);
     }
+
+    [Fact]
+    public void Compute_MatchesTheReferenceOnRandomDepthSequences()
+    {
+        var random = new Random(31);
+        for (var round = 0; round < 200; round++)
+        {
+            var length = random.Next(0, 60);
+            var depths = Enumerable.Range(0, length).Select(_ => random.Next(0, 5)).ToArray();
+            var categories = Enumerable.Repeat(UsageCategory.Action, length).ToArray();
+
+            var expected = LegacyTimeline.ComputeRails(depths, categories);
+            var actual = TimelineRail.Compute(depths, categories);
+
+            Assert.Equal(expected, actual);
+        }
+    }
+
+    [Fact]
+    public void Equality_ComparesLaneContents()
+    {
+        var left = new TimelineRail(2, UsageCategory.Action, true, false, 1, [0, 1]);
+        var right = new TimelineRail(2, UsageCategory.Action, true, false, 1, [0, 1]);
+        var other = new TimelineRail(2, UsageCategory.Action, true, false, 1, [0]);
+
+        Assert.Equal(left, right);
+        Assert.Equal(left.GetHashCode(), right.GetHashCode());
+        Assert.NotEqual(left, other);
+    }
 }
