@@ -78,11 +78,30 @@ public sealed class SqliteUsageStore : IUsageStore, IDisposable
         }
 
         _connection.CreateTable<UsageEventRow>();
+        EnsureColumns(_connection);
         _connection.Execute(
             "CREATE INDEX IF NOT EXISTS ix_usage_event_timestamp ON usage_event (TimestampUtcTicks, Sequence);");
         _connection.Execute(
             "CREATE INDEX IF NOT EXISTS ix_usage_event_pending ON usage_event (UploadedUtcTicks);");
         return _connection;
+    }
+
+    static void EnsureColumns(SQLiteConnection db)
+    {
+        var names = db.GetTableInfo("usage_event")
+            .Select(column => column.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        void Add(string name, string type)
+        {
+            if (!names.Contains(name))
+                db.Execute($"ALTER TABLE usage_event ADD COLUMN {name} {type}");
+        }
+
+        Add("Width", "REAL");
+        Add("Height", "REAL");
+        Add("Mode", "TEXT");
+        Add("ParentId", "TEXT");
     }
 
     static void EnsureBatteries()
@@ -129,6 +148,14 @@ public sealed class UsageEventRow
 
     public long? UploadedUtcTicks { get; set; }
 
+    public double? Width { get; set; }
+
+    public double? Height { get; set; }
+
+    public string? Mode { get; set; }
+
+    public string? ParentId { get; set; }
+
     public static UsageEventRow From(UsageEvent usageEvent) => new()
     {
         Id = usageEvent.Id.ToString("D"),
@@ -142,7 +169,11 @@ public sealed class UsageEventRow
         ElapsedMilliseconds = Milliseconds(usageEvent.Elapsed),
         ActiveMilliseconds = Milliseconds(usageEvent.Active),
         EndReason = usageEvent.EndReason,
-        UploadedUtcTicks = usageEvent.UploadedUtc?.ToUniversalTime().UtcTicks
+        UploadedUtcTicks = usageEvent.UploadedUtc?.ToUniversalTime().UtcTicks,
+        Width = usageEvent.Width,
+        Height = usageEvent.Height,
+        Mode = usageEvent.Mode,
+        ParentId = usageEvent.ParentId?.ToString("D")
     };
 
     public UsageEvent ToEvent() => new(
@@ -157,7 +188,11 @@ public sealed class UsageEventRow
         Span(ElapsedMilliseconds),
         Span(ActiveMilliseconds),
         EndReason,
-        UploadedUtcTicks is long ticks ? new DateTimeOffset(ticks, TimeSpan.Zero) : null);
+        UploadedUtcTicks is long ticks ? new DateTimeOffset(ticks, TimeSpan.Zero) : null,
+        Width,
+        Height,
+        Mode,
+        ParentId is null ? null : Guid.Parse(ParentId));
 
     static long? Milliseconds(TimeSpan? span) =>
         span is TimeSpan value ? value.Ticks / TimeSpan.TicksPerMillisecond : null;

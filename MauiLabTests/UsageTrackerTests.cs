@@ -16,7 +16,7 @@ public class UsageTrackerTests
             clock.Advance(TimeSpan.FromHours(8));
 
             var asleep = tracker.Project().First();
-            Assert.Equal("Home", asleep.Title);
+            Assert.Equal("Navigated to Home page", asleep.Title);
             Assert.Contains("in progress", asleep.Detail);
             Assert.Contains("open 8h 2m", asleep.Detail);
             Assert.Contains("active 2m", asleep.Detail);
@@ -25,7 +25,7 @@ public class UsageTrackerTests
             clock.Advance(TimeSpan.FromMinutes(3));
 
             var awake = tracker.Project().First();
-            Assert.Equal("Home", awake.Title);
+            Assert.Equal("Navigated to Home page", awake.Title);
             Assert.Contains("in progress", awake.Detail);
             Assert.Contains("open 8h 5m", awake.Detail);
             Assert.Contains("active 5m", awake.Detail);
@@ -156,7 +156,7 @@ public class UsageTrackerTests
 
             Assert.Equal(2, events.Count(e => e.Kind == UsageEventKind.SessionStarted));
             Assert.Single(events, e => e.Kind == UsageEventKind.Installed);
-            Assert.Equal("Colors", second.Project().First().Title);
+            Assert.Equal("Navigated to Colors page", second.Project().First().Title);
 
             var rows = second.Project();
             Assert.Contains(rows, r => r.Title == "Session started" && r.Detail.Contains("terminated"));
@@ -201,7 +201,7 @@ public class UsageTrackerTests
             Assert.DoesNotContain(events, e => e.Name == "Colors" || e.Name == "Home");
 
             var rows = tracker.Project();
-            Assert.Equal("Usage", rows[0].Title);
+            Assert.Equal("Navigated to Usage page", rows[0].Title);
             Assert.Equal(1, rows[0].Depth);
             Assert.Equal("Open", rows[0].Marker);
             Assert.Equal("Session started", rows[1].Title);
@@ -243,13 +243,141 @@ public class UsageTrackerTests
 
             var rows = tracker.Project();
             Assert.Equal(
-                ["Usage", "Colors", "Foregrounded", "Backgrounded", "Home", "Session started", "Installed"],
+                [
+                    "Navigated to Usage page",
+                    "Navigated to Colors page",
+                    "Foregrounded",
+                    "Backgrounded",
+                    "Navigated to Home page",
+                    "Session started",
+                    "Installed"
+                ],
                 rows.Select(r => r.Title).ToArray());
             Assert.Equal([1, 1, 2, 2, 1, 0, 0], rows.Select(r => r.Depth).ToArray());
             Assert.Contains("in progress", rows[0].Detail);
             Assert.Equal("open 8h 5m · active 5m", rows[1].Detail);
             Assert.Equal("open 30s · active 30s", rows[4].Detail);
+            Assert.Equal("", rows[2].Detail);
+            Assert.Equal("", rows[5].Detail);
+            Assert.Equal("", rows[^1].Detail);
+            Assert.Equal(UsageTimeline.FormatWhen(UsageLab.Start, clock.UtcNow), rows[5].When);
+            Assert.Equal(UsageTimeline.FormatWhen(UsageLab.Start.AddSeconds(30).AddMinutes(2).AddHours(8), clock.UtcNow), rows[2].When);
+            Assert.False(string.IsNullOrEmpty(rows[0].When));
+            Assert.False(string.IsNullOrEmpty(rows[^1].When));
             Assert.Equal("Installed", rows[^1].Title);
+        }
+    }
+
+    [Fact]
+    public void PopupRoute_DoesNotSplitTheVisit()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Menu Button", "//menubutton", "MenuButtonPage");
+            tracker.Navigate(null, "D_FAULT_PopupPage45", "PopupPage");
+            tracker.Activate(null, "//PopupPageabc", "PopupPage");
+
+            Assert.Single(store.GetAll(), e => e.Kind == UsageEventKind.PageOpened);
+            Assert.DoesNotContain(store.GetAll(), e => e.Kind == UsageEventKind.PageClosed);
+            Assert.Equal("Navigated to Menu Button page", tracker.Project().First().Title);
+        }
+    }
+
+    [Fact]
+    public void WindowArea_RecordsStartSizeAndLaterChange()
+    {
+        var (tracker, clock, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Home", "//home");
+            tracker.NoteArea(1024, 768, 1024, 768, 0, 0);
+            tracker.NoteArea(1024.4, 768, 1024, 768, 0, 0);
+            clock.Advance(TimeSpan.FromMinutes(1));
+            tracker.NoteArea(1250, 750, 1440, 900, 40, 40);
+
+            var areas = store.GetAll().Where(e => e.Kind == UsageEventKind.AreaChanged).ToList();
+            Assert.Equal(2, areas.Count);
+            Assert.Equal(1024, areas[0].Width);
+            Assert.Equal(768, areas[0].Height);
+            Assert.Equal("Full screen", areas[0].Mode);
+            Assert.Equal("Windowed", areas[1].Mode);
+
+            var rows = tracker.Project();
+            Assert.Equal("Navigated to Home page", rows[0].Title);
+            Assert.Equal("1250 × 750", rows[1].Title);
+            Assert.Equal("Windowed", rows[1].Detail);
+            Assert.Equal(1, rows[1].Depth);
+            Assert.Equal("1024 × 768", rows[2].Title);
+            Assert.Equal("Full screen", rows[2].Detail);
+        }
+    }
+
+    [Fact]
+    public void AmbiguousCompactWidth_StoresSizeWithoutMode()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Home", "//home");
+            tracker.NoteArea(341, 800, 1024, 800, 0, 0);
+
+            var area = Assert.Single(store.GetAll(), e => e.Kind == UsageEventKind.AreaChanged);
+            Assert.Equal(341, area.Width);
+            Assert.Equal(800, area.Height);
+            Assert.Null(area.Mode);
+            Assert.Equal("", tracker.Project().Single(row => row.Title == "341 × 800").Detail);
+        }
+    }
+
+    [Fact]
+    public void MenuChoice_NestsButtonMenuAndSelection()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Menu Button", "//menubutton");
+            tracker.BeginInteraction("Top Left", "Menu");
+            tracker.NoteChoice("Mine");
+            tracker.CompleteInteraction();
+
+            var rows = tracker.Project();
+            Assert.Equal(
+                ["Navigated to Menu Button page", "Top Left", "Menu", "Mine", "Session started", "Installed"],
+                rows.Select(row => row.Title).ToArray());
+            Assert.Equal([1, 2, 3, 4, 0, 0], rows.Select(row => row.Depth).ToArray());
+            Assert.All(rows.Skip(1).Take(3), row => Assert.Equal("", row.Detail));
+        }
+    }
+
+    [Fact]
+    public void PromptDismiss_RecordsDismissedUnderTheButton()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Dialogs", "//dialogs");
+            tracker.BeginInteraction("Show Prompt", "Prompt");
+            tracker.CompleteInteraction();
+            tracker.BeginInteraction("Show ActionSheet", "Action sheet");
+            tracker.NoteChoice("Copy");
+            tracker.CompleteInteraction();
+
+            var rows = tracker.Project();
+            Assert.Equal(
+                [
+                    "Navigated to Dialogs page",
+                    "Show ActionSheet",
+                    "Action sheet",
+                    "Copy",
+                    "Show Prompt",
+                    "Prompt",
+                    "Dismissed",
+                    "Session started",
+                    "Installed"
+                ],
+                rows.Select(row => row.Title).ToArray());
+            Assert.Equal([1, 2, 3, 4, 2, 3, 4, 0, 0], rows.Select(row => row.Depth).ToArray());
         }
     }
 }

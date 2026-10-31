@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Input;
+using MauiLab.Usage;
 
 namespace MauiLab.MenuButton.Controls;
 
@@ -114,6 +115,9 @@ public partial class MenuItem : ContentView
         if (TapCommand == null) return;
         if (!TapCommand.CanExecute(TapCommandParameter)) return;
 
+        // Note the choice before the popup closes. Closing completes ShowAsync,
+        // which records Dismissed if no choice is waiting.
+        UsageServices.Current?.NoteChoice(Text);
         BeforeTap?.Invoke();
 
         // If the parameter is not set, pass the Text

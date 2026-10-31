@@ -9,7 +9,11 @@ public enum UsageEventKind
     Backgrounded,
     Foregrounded,
     PageOpened,
-    PageClosed
+    PageClosed,
+    AreaChanged,
+    ControlPressed,
+    SurfaceOpened,
+    SelectionMade
 }
 
 public static class UsageEndReason
@@ -33,7 +37,11 @@ public sealed record UsageEvent(
     TimeSpan? Elapsed,
     TimeSpan? Active,
     string? EndReason,
-    DateTimeOffset? UploadedUtc)
+    DateTimeOffset? UploadedUtc,
+    double? Width = null,
+    double? Height = null,
+    string? Mode = null,
+    Guid? ParentId = null)
 {
     public static int Compare(UsageEvent left, UsageEvent right)
     {

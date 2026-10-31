@@ -17,6 +17,10 @@ public sealed class UsageTracker
     Guid? _sessionId;
     OpenVisit? _open;
     (string? Name, string? Route)? _pending;
+    Guid? _surfaceId;
+    string? _pendingChoice;
+    double? _areaWidth;
+    double? _areaHeight;
 
     public UsageTracker(IUsageStore store, TimeProvider clock)
     {
@@ -26,8 +30,14 @@ public sealed class UsageTracker
 
     public event EventHandler? Changed;
 
-    public void Activate(string? pageName, string? route)
+    public void Activate(string? pageName, string? route, string? pageType = null)
     {
+        if (IsToolkitPopup(route, pageType))
+        {
+            pageName = null;
+            route = null;
+        }
+
         var changed = false;
         lock (_gate)
         {
@@ -117,8 +127,11 @@ public sealed class UsageTracker
             Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    public void Navigate(string? pageName, string? route)
+    public void Navigate(string? pageName, string? route, string? pageType = null)
     {
+        if (IsToolkitPopup(route, pageType))
+            return;
+
         var name = Norm(pageName);
         var path = Norm(route);
         if (name == null && path == null)
@@ -140,6 +153,107 @@ public sealed class UsageTracker
             var now = _clock.GetUtcNow();
             CloseOpenPage(now);
             OpenPage(now, name, path);
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void NoteArea(double width, double height, double screenWidth, double screenHeight, double x, double y)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            if (!_processSessionStarted || _sessionId is not Guid sessionId)
+                return;
+            if (!double.IsFinite(width) || !double.IsFinite(height) || width < 1 || height < 1)
+                return;
+            if (_areaWidth is double previousWidth &&
+                _areaHeight is double previousHeight &&
+                Math.Abs(previousWidth - width) < 1 &&
+                Math.Abs(previousHeight - height) < 1)
+                return;
+
+            _areaWidth = width;
+            _areaHeight = height;
+            Append(
+                UsageEventKind.AreaChanged,
+                _clock.GetUtcNow(),
+                sessionId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                width: width,
+                height: height,
+                mode: UsageArea.Classify(width, height, screenWidth, screenHeight, x, y));
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void BeginInteraction(string control, string surface)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            if (!_processSessionStarted || _open == null || _sessionId is not Guid sessionId)
+                return;
+
+            var now = _clock.GetUtcNow();
+            FinishInteraction(now);
+            var button = Append(
+                UsageEventKind.ControlPressed,
+                now,
+                sessionId,
+                _open.Id,
+                Norm(control) ?? "Button",
+                null,
+                null,
+                null,
+                null);
+            var opened = Append(
+                UsageEventKind.SurfaceOpened,
+                now,
+                sessionId,
+                _open.Id,
+                Norm(surface) ?? "Menu",
+                null,
+                null,
+                null,
+                null,
+                parentId: button.Id);
+            _surfaceId = opened.Id;
+            _pendingChoice = null;
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void NoteChoice(string choice)
+    {
+        lock (_gate)
+            _pendingChoice = choice;
+    }
+
+    public void CompleteInteraction()
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            if (_surfaceId == null)
+                return;
+
+            FinishInteraction(_clock.GetUtcNow());
             changed = true;
         }
 
@@ -190,6 +304,10 @@ public sealed class UsageTracker
             _open = null;
             _sessionId = null;
             _pending = null;
+            _surfaceId = null;
+            _pendingChoice = null;
+            _areaWidth = null;
+            _areaHeight = null;
             _processSessionStarted = false;
             _foreground = false;
             Append(UsageEventKind.HistoryReset, now, null, null, null, null, null, null, null);
@@ -285,6 +403,10 @@ public sealed class UsageTracker
     {
         _sessionId = Guid.NewGuid();
         _open = null;
+        _surfaceId = null;
+        _pendingChoice = null;
+        _areaWidth = null;
+        _areaHeight = null;
         _processSessionStarted = true;
         _foreground = true;
         Append(UsageEventKind.SessionStarted, now, _sessionId, null, null, null, null, null, null);
@@ -309,6 +431,7 @@ public sealed class UsageTracker
         if (_open is not OpenVisit page || _sessionId is not Guid sessionId)
             return;
 
+        FinishInteraction(asOf);
         var lifecycle = _events.Where(e => e.PageVisitId == page.Id);
         Append(
             UsageEventKind.PageClosed,
@@ -346,7 +469,27 @@ public sealed class UsageTracker
         _loaded = true;
     }
 
-    void Append(
+    void FinishInteraction(DateTimeOffset now)
+    {
+        if (_surfaceId is not Guid surface || _sessionId is not Guid sessionId)
+            return;
+
+        Append(
+            UsageEventKind.SelectionMade,
+            now,
+            sessionId,
+            _open?.Id,
+            _pendingChoice ?? "Dismissed",
+            null,
+            null,
+            null,
+            null,
+            parentId: surface);
+        _surfaceId = null;
+        _pendingChoice = null;
+    }
+
+    UsageEvent Append(
         UsageEventKind kind,
         DateTimeOffset timestamp,
         Guid? sessionId,
@@ -355,7 +498,11 @@ public sealed class UsageTracker
         string? route,
         TimeSpan? elapsed,
         TimeSpan? active,
-        string? endReason)
+        string? endReason,
+        Guid? parentId = null,
+        double? width = null,
+        double? height = null,
+        string? mode = null)
     {
         var stored = _store.Append(new UsageEvent(
             Guid.NewGuid(),
@@ -369,8 +516,20 @@ public sealed class UsageTracker
             elapsed,
             active,
             endReason,
-            UploadedUtc: null));
+            UploadedUtc: null,
+            width,
+            height,
+            mode,
+            parentId));
         _events.Add(stored);
+        return stored;
+    }
+
+    static bool IsToolkitPopup(string? route, string? pageType)
+    {
+        if (pageType != null && pageType.StartsWith("PopupPage", StringComparison.Ordinal))
+            return true;
+        return route != null && route.Contains("PopupPage", StringComparison.OrdinalIgnoreCase);
     }
 
     static string? Norm(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;

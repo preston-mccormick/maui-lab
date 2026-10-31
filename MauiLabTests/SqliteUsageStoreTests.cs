@@ -1,4 +1,5 @@
 using MauiLab.Usage;
+using SQLite;
 
 namespace MauiLabTests;
 
@@ -46,6 +47,59 @@ public class SqliteUsageStoreTests
             var row = Assert.Single(all);
             Assert.Equal(id, row.Id);
             Assert.Null(row.UploadedUtc);
+        }
+        finally
+        {
+            foreach (var suffix in new[] { "", "-wal", "-shm" })
+            {
+                var file = path + suffix;
+                if (File.Exists(file))
+                    File.Delete(file);
+            }
+        }
+    }
+
+    [Fact]
+    public void ExistingDatabase_GainsAreaColumns()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"mauilab-usage-{Guid.NewGuid():N}.db");
+        try
+        {
+            SQLitePCL.Batteries_V2.Init();
+            using (var db = new SQLiteConnection(path))
+            {
+                db.Execute("""
+                    CREATE TABLE usage_event (
+                        Id TEXT PRIMARY KEY,
+                        Sequence INTEGER NOT NULL,
+                        TimestampUtcTicks INTEGER NOT NULL,
+                        Kind TEXT NOT NULL,
+                        SessionId TEXT,
+                        PageVisitId TEXT,
+                        Name TEXT,
+                        Route TEXT,
+                        ElapsedMilliseconds INTEGER,
+                        ActiveMilliseconds INTEGER,
+                        EndReason TEXT,
+                        UploadedUtcTicks INTEGER
+                    );
+                    """);
+            }
+
+            using var store = new SqliteUsageStore(path);
+            var parent = Guid.NewGuid();
+            store.Append(UsageLab.Event(UsageLab.Start) with
+            {
+                Width = 320,
+                Height = 700,
+                ParentId = parent
+            });
+
+            var read = Assert.Single(store.GetAll());
+            Assert.Equal(320, read.Width);
+            Assert.Equal(700, read.Height);
+            Assert.Null(read.Mode);
+            Assert.Equal(parent, read.ParentId);
         }
         finally
         {

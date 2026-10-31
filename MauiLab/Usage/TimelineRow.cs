@@ -6,13 +6,14 @@ public sealed class TimelineRow : INotifyPropertyChanged
 {
     string _detail;
 
-    public TimelineRow(string id, int depth, string title, string detail, string marker)
+    public TimelineRow(string id, int depth, string title, string detail, string marker, string when)
     {
         Id = id;
         Depth = depth;
         Title = title;
         _detail = detail;
         Marker = marker;
+        When = when;
     }
 
     public string Id { get; }
@@ -23,6 +24,11 @@ public sealed class TimelineRow : INotifyPropertyChanged
 
     /// <summary>Open, Page, Activity, Session, or Root. The row template picks a dot color from this.</summary>
     public string Marker { get; }
+
+    /// <summary>Local time shown in the right-hand column. Not indented with the row.</summary>
+    public string When { get; }
+
+    public bool HasDetail => _detail.Length > 0;
 
     public Thickness Indent => new(Depth * 22, 0, 0, 0);
 

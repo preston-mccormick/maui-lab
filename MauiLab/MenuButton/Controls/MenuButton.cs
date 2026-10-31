@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using MauiLab.Usage;
 
 namespace MauiLab.MenuButton.Controls;
 
@@ -52,6 +53,15 @@ public class MenuButton : Button
             throw new InvalidOperationException("Items collection is null");
         }
 
-        await ContextMenu.ShowAsync(view, Items);
+        var usage = UsageServices.Current;
+        usage?.BeginInteraction(string.IsNullOrWhiteSpace(Text) ? "Menu button" : Text, "Menu");
+        try
+        {
+            await ContextMenu.ShowAsync(view, Items);
+        }
+        finally
+        {
+            usage?.CompleteInteraction();
+        }
     }
 }
