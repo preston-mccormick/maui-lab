@@ -116,6 +116,9 @@
 	  <Compile Update="Colors\SwatchesView.xaml.cs">
 	    <DependentUpon>SwatchesView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Dialogs\DetailPage.xaml.cs">
+	    <DependentUpon>DetailPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Dialogs\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
@@ -150,6 +153,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Geolocation\GeolocationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Dialogs\DetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Dialogs\DialogsPage.xaml">

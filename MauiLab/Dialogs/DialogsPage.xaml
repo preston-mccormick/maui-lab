@@ -8,25 +8,67 @@
     Padding="30"
     x:DataType="dialogs:DialogsPage"
     BindingContext="{Binding Source={RelativeSource Self}}">
-    <Grid ColumnDefinitions="*,*,*">
+    <Grid
+        ColumnDefinitions="*,*,*"
+        RowDefinitions="Auto,Auto,Auto"
+        RowSpacing="16">
 
         <Button
+            Grid.Row="0"
             Grid.Column="0"
             Command="{Binding ShowAlertCommand}"
             HorizontalOptions="Center"
             Text="Show Alert"
             VerticalOptions="Start" />
         <Button
+            Grid.Row="0"
             Grid.Column="1"
             Command="{Binding ShowActionSheetCommand}"
             HorizontalOptions="Center"
             Text="Show ActionSheet"
             VerticalOptions="Start" />
         <Button
+            Grid.Row="0"
             Grid.Column="2"
             Command="{Binding ShowPromptCommand}"
             HorizontalOptions="Center"
             Text="Show Prompt"
+            VerticalOptions="Start" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="0"
+            Command="{Binding ShowPopupCommand}"
+            HorizontalOptions="Center"
+            Text="Show Popup"
+            VerticalOptions="Start" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            Command="{Binding ShowSnackbarCommand}"
+            HorizontalOptions="Center"
+            Text="Show Snackbar"
+            VerticalOptions="Start" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="2"
+            Command="{Binding ShowToastCommand}"
+            HorizontalOptions="Center"
+            Text="Show Toast"
+            VerticalOptions="Start" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            Command="{Binding ShowDetailCommand}"
+            HorizontalOptions="Center"
+            Text="Show Detail"
+            VerticalOptions="Start" />
+        <Button
+            x:Name="AnchoredSnackbarButton"
+            Grid.Row="2"
+            Grid.Column="1"
+            Command="{Binding ShowAnchoredSnackbarCommand}"
+            HorizontalOptions="Center"
+            Text="Snackbar on Button"
             VerticalOptions="Start" />
     </Grid>
 
