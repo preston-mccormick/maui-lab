@@ -125,4 +125,9 @@ public partial class MenuItem : ContentView
 
         AfterTap?.Invoke();
     }
+
+    void PointerEntered(object? sender, PointerEventArgs e)
+    {
+        MenuClick.Play();
+    }
 }
