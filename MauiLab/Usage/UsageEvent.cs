@@ -13,7 +13,9 @@ public enum UsageEventKind
     AreaChanged,
     ControlPressed,
     SurfaceOpened,
-    SelectionMade
+    SelectionMade,
+    Updated,
+    PermissionRequested
 }
 
 public static class UsageEndReason

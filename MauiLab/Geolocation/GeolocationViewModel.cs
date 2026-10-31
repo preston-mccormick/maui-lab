@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiLab.Usage;
 using System.Diagnostics;
 
 namespace MauiLab.Geolocation;
@@ -48,6 +49,9 @@ public partial class GeolocationViewModel : ObservableObject
     {
         try
         {
+            if (!await EnsureLocationPermission())
+                return;
+
             LastLocation = await _service.GetLastKnownLocationAsync();
 
             if (_service.IsListeningForeground) return;
@@ -104,6 +108,9 @@ public partial class GeolocationViewModel : ObservableObject
     {
         try
         {
+            if (!await EnsureLocationPermission())
+                return;
+
             var location = await _service.GetLocationAsync();
             location ??= await _service.GetLastKnownLocationAsync();
 
@@ -113,6 +120,25 @@ public partial class GeolocationViewModel : ObservableObject
         {
             Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
             await AppShell.Current.DisplayAlertAsync(ex.GetType().Name, ex.Message, "Close");
+        }
+    }
+
+    static async Task<bool> EnsureLocationPermission()
+    {
+        try
+        {
+            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            if (status == PermissionStatus.Granted)
+                return true;
+
+            status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            UsageServices.Current?.RecordPermission("Location", status.ToString());
+            return status == PermissionStatus.Granted;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Usage tracking: {ex}");
+            return true;
         }
     }
 }

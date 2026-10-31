@@ -182,7 +182,7 @@ public sealed class UsageTracker
                 UsageEventKind.AreaChanged,
                 _clock.GetUtcNow(),
                 sessionId,
-                null,
+                _open?.Id,
                 null,
                 null,
                 null,
@@ -254,6 +254,83 @@ public sealed class UsageTracker
                 return;
 
             FinishInteraction(_clock.GetUtcNow());
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void NoteRelease(string version, DateTimeOffset? firstInstall, DateTimeOffset? lastUpdate)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            var name = Norm(version);
+            if (_events.Count == 0)
+            {
+                Append(
+                    UsageEventKind.Installed,
+                    firstInstall ?? _clock.GetUtcNow(),
+                    null,
+                    null,
+                    name,
+                    null,
+                    null,
+                    null,
+                    null);
+                changed = true;
+            }
+
+            if (lastUpdate is DateTimeOffset updated &&
+                firstInstall is DateTimeOffset installed &&
+                updated > installed.AddMinutes(1) &&
+                !_events.Any(e => e.Kind == UsageEventKind.Updated && e.Timestamp == updated))
+            {
+                Append(UsageEventKind.Updated, updated, null, null, name, null, null, null, null);
+                changed = true;
+            }
+
+            var recorded = _events
+                .Where(e => (e.Kind == UsageEventKind.Installed || e.Kind == UsageEventKind.Updated) && e.Name != null)
+                .OrderByDescending(e => e.Timestamp)
+                .ThenByDescending(e => e.Sequence)
+                .Select(e => e.Name)
+                .FirstOrDefault();
+            var versionChanged = recorded != null && recorded != name;
+            var unnamedInstall = recorded == null && _events.Any(e => e.Kind == UsageEventKind.Installed);
+            if (name != null && (versionChanged || unnamedInstall) &&
+                !_events.Any(e => e.Kind == UsageEventKind.Updated && e.Name == name))
+            {
+                Append(UsageEventKind.Updated, _clock.GetUtcNow(), null, null, name, null, null, null, null);
+                changed = true;
+            }
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RecordPermission(string name, string result)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            if (!_processSessionStarted || _sessionId is not Guid sessionId)
+                return;
+
+            Append(
+                UsageEventKind.PermissionRequested,
+                _clock.GetUtcNow(),
+                sessionId,
+                _open?.Id,
+                Norm(name) ?? "Permission",
+                Norm(result) ?? "Unknown",
+                null,
+                null,
+                null);
             changed = true;
         }
 

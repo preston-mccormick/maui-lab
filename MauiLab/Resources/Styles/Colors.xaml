@@ -22,6 +22,17 @@
     <Color x:Key="Tertiary">#B8DC95</Color>
     <Color x:Key="DarkTertiary">#6FA738</Color>
 
+    <Color x:Key="UsageNavigation">#1D4ED8</Color>
+    <Color x:Key="UsageNavigationOnDark">#93C5FD</Color>
+    <Color x:Key="UsageScreen">#3F7D1F</Color>
+    <Color x:Key="UsageScreenOnDark">#B8DC95</Color>
+    <Color x:Key="UsageLifecycle">#C026D3</Color>
+    <Color x:Key="UsageLifecycleOnDark">#F5A8FF</Color>
+    <Color x:Key="UsageAction">#C2410C</Color>
+    <Color x:Key="UsageActionOnDark">#FDBA74</Color>
+    <Color x:Key="UsagePermission">#6D28D9</Color>
+    <Color x:Key="UsagePermissionOnDark">#C4B5FD</Color>
+
     <Color x:Key="White">#FFFFFF</Color>
     <Color x:Key="LighterGray">#CCCCCC</Color>
     <Color x:Key="LightGray">#AAAAAA</Color>

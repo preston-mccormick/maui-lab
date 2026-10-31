@@ -37,3 +37,15 @@
 ## 7. Timestamp column
 
 - [x] 7.1 Show each row's local time in a right-aligned column that is not indented, and keep that time out of activity, open-session, and root detail
+
+## 8. Time order and graph
+
+- [x] 8.1 Include seconds in event timestamps
+- [x] 8.2 Place later activity above the page navigation it follows, and attach a resize to the page that was open, with the mode as the title and the size as the detail
+- [x] 8.3 Draw one connected graph: no gap between rows, a curve into a shallower column, and a continuing spine when the next row is deeper
+- [x] 8.4 Color the node and title by category: navigation blue, screen green, lifecycle pink, actions amber, permissions violet
+
+## 9. Metadata
+
+- [x] 9.1 Record Android first-install and last-update times when the package manager provides them, and record Updated when the running version changes. Do not invent an install or update time on iOS or Mac Catalyst
+- [x] 9.2 Record a location permission request and its result from the Geolocation page, and skip the row when access is already granted

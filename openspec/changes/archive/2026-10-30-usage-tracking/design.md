@@ -41,7 +41,7 @@ A JSON file rewritten after every event was rejected because a long history woul
 
 Row fields: id, sequence, kind, UTC timestamp, session id, page-visit id, parent id, name, route, elapsed milliseconds, active milliseconds, end reason, width, height, mode, uploaded UTC ticks.
 
-Kinds: Installed, HistoryReset, SessionStarted, SessionEnded, Backgrounded, Foregrounded, PageOpened, PageClosed, AreaChanged, ControlPressed, SurfaceOpened, SelectionMade. End reasons: Clean, Terminated.
+Kinds: Installed, HistoryReset, SessionStarted, SessionEnded, Backgrounded, Foregrounded, PageOpened, PageClosed, AreaChanged, ControlPressed, SurfaceOpened, SelectionMade, Updated, PermissionRequested. End reasons: Clean, Terminated. A permission result is stored in `Route`. An update stores the version in `Name`.
 
 `CreateTable` does not add columns to a database that already exists. After creating the table, the store adds `Width`, `Height`, `Mode`, and `ParentId` with `ALTER TABLE` when `GetTableInfo` does not already list them.
 
@@ -77,7 +77,7 @@ Alternatives considered: ending the session on every background (rejects the sle
 
 ### Window area
 
-`NoteArea` stores width and height from `Window` in device-independent points. It runs after activation and on `SizeChanged`. A size below 1 point is ignored. A later record is written only when width or height differs by at least 1 point. Each new session forgets the previous size so the same rectangle is recorded again.
+`NoteArea` stores width and height from `Window` in device-independent points, on the page visit that is open. It runs after activation and on `SizeChanged`. A size below 1 point is ignored. A later record is written only when width or height differs by at least 1 point. Each new session forgets the previous size so the same rectangle is recorded again. The timeline title is the mode, or Screen when the mode is unset. The detail is the rounded size, such as `1180 × 820`.
 
 The screen comparison uses `DeviceDisplay.MainDisplayInfo` width and height divided by density. There is no MAUI or UIKit value for Slide Over. `UsageArea.Classify` returns:
 
@@ -103,15 +103,19 @@ Controls resolve `UsageTracker` from `IPlatformApplication.Current.Services` and
 
 `Project(events, now)` orders events by timestamp then sequence. The root is the latest Installed or HistoryReset. Only that root and events at or after it are shown.
 
-Sessions are newest first. Inside a session, visits and area rows sort by close time or area time, except an open visit sorts at `now` so it stays the top row. Under each visit, background, foreground, and button rows for that visit are newest first. Under a button, its surface rows are newest first, and under each surface its selections are newest first. The session row is appended after its visits, so it sits under them. The root row is last.
+Each session is one block, placed by its newest event so later sessions stay above older ones. Inside a session every visible event is sorted newest first by timestamp, then sequence. `PageClosed` and `SessionEnded` are not rows; their durations stay on the page and session rows. Because a later event sorts first, activity sits above the page navigation that started it, and a selection sits above its menu and button. A newer page is back at depth 1, so the graph outdents and then indents for that page's later events. `Updated` rows are their own blocks on the spine, ordered by their timestamp among sessions. The root row is last.
 
 Closed visits use the durations stored on PageClosed. Open visits recompute from PageOpened, the lifecycle events, and `now`.
 
-Depths: session and root 0, visit and area 1, lifecycle and button 2, surface 3, selection 4. `TimelineRow.Indent` is `Thickness(Depth * 22, 0, 0, 0)` and applies only to the rail, marker, and title. Stable ids: page-visit id, event id, session id, root event id. Marker is `Open`, `Page`, `Activity`, `Session`, or `Root`. Area, button, surface, and selection rows use `Activity`.
+Depths: session, update, and root 0; page 1; lifecycle, screen, permission, and button 2; surface 3; selection 4. A screen or permission event with no page stays at depth 1. The title's left margin is `30 + depth * 22`, which puts it just to the right of its node. The timestamp is a separate column and is not indented. Stable ids: page-visit id, event id, session id, root event id.
 
-Duration text is whole seconds: `8h 5m`, `8h`, `5m`, `1m 1s`, `30s`, `0s`. Hour scale drops seconds. A page title is `Navigated to {name} page`. Page detail is `in progress · open {elapsed} · active {active}` or `open {elapsed} · active {active}`. An area title is the rounded width, a multiplication sign, and the rounded height, such as `1024 × 768`. Its detail is the mode, or empty when the mode was not set. Activity, button, surface, and selection details are empty.
+Duration text is whole seconds: `8h 5m`, `8h`, `5m`, `1m 1s`, `30s`, `0s`. Hour scale drops seconds. A page title is `Navigated to {name} page`. Page detail is `in progress · open {elapsed} · active {active}` or `open {elapsed} · active {active}`. A screen title is the mode, or `Screen`. Its detail is the size. Activity, button, surface, and selection details are empty. A permission title is the permission name and its detail is the status. An update title is `Updated` and its detail is the version.
 
-Every row has a `When` string. Page rows use the open time. Other event rows use their event time. An open session detail is empty and `When` is the start time. An ended session detail is `open` and `active`, prefixed with `terminated · ` when the reason is Terminated, and does not repeat the start time. The root detail is empty and `When` is `MMM d` or `MMM d, yyyy`. The time format is local `h:mm tt`, or `MMM d, h:mm tt` in the same year, or `MMM d, yyyy, h:mm tt`.
+Every row has a `When` string with seconds: local `h:mm:ss tt`, or `MMM d, h:mm:ss tt` in the same year, or `MMM d, yyyy, h:mm:ss tt`. Page rows use the open time. Other event rows use their event time. An open session detail is empty and `When` is the start time. An ended session detail is `open` and `active`, prefixed with `terminated · ` when the reason is Terminated. The root `When` is `MMM d` or `MMM d, yyyy`.
+
+`TimelineRail.Compute` decides, for each depth, whether the node column continues to the next row, curves down into a shallower column, or lets a deeper next row start a branch. Ancestor columns that still have a node above and below draw a straight pass-through. `UsageRailView` paints those segments in the row's real height, so the lines meet. The curve is a quadratic path, not a bitmap, because a page row with a detail line is taller than a one-line event. Row padding is 0.
+
+Category colors live in `Colors.xaml` and are shared by the title triggers and the node. Navigation `#1D4ED8` / `#93C5FD`. Screen `#3F7D1F` / `#B8DC95`. Lifecycle `#C026D3` / `#F5A8FF`. Action `#C2410C` / `#FDBA74`. Permission `#6D28D9` / `#C4B5FD`. The first value is the light theme and the second is the dark theme. The graph line uses Gray / LighterGray.
 
 A custom `CollectionView` was chosen over a commercial timeline. Those controls are linear event lists and do not model nested session and page spans or the two clocks.
 
@@ -131,16 +135,7 @@ Header row, two columns:
 
 List row: `CollectionView`, `ItemsSource` bound to `Rows`, `SelectionMode="None"`, `ItemsUpdatingScrollMode="KeepScrollOffset"`.
 
-Item template, compiled binding to `TimelineRow`. An outer grid, columns `*,Auto`, `MinimumHeightRequest="44"`. Column 1 is the timestamp: font size 13, DarkGray / LighterGray, end aligned, bound to `When`, not indented. Column 0 is an inner grid with `Margin="{Binding Indent}"`, padding `0,4`, columns `28,*`:
-
-- `BoxView` width 2, horizontal center, vertical fill. Color Gray / LighterGray. This is the rail for that row's indent.
-- `Border` 12 by 12, `StrokeThickness="0"`, `StrokeShape="RoundRectangle 6"`, centered on the rail. Default background DarkGray / Gray, overridden by `DataTrigger` on `Marker`:
-  - `Open`: Primary / LightPrimary
-  - `Page`: DarkGray / LighterGray
-  - `Activity`: Gray / LightGray
-  - `Session`: DarkPrimary / Primary
-  - `Root`: DarkTertiary / Tertiary
-- Inner column 1: bold title, font size 16, default label color. Detail label, font size 13, DarkGray / LighterGray, bound to `Detail`, hidden when `HasDetail` is false.
+Item template, compiled binding to `TimelineRow`. A grid, columns `*,Auto`, padding 0, `MinimumHeightRequest="44"`. `UsageRailView` spans both columns, bound to `Rail`, and fills the row so each segment meets the next row. The title stack uses `Margin="{Binding TextIndent}"`. The title is bold, font size 16, and its color is a `DataTrigger` on `Category`. The detail label is font size 13, DarkGray / LighterGray, hidden when `HasDetail` is false. Column 1 is the timestamp: font size 13, the same gray, end aligned, bound to `When`.
 
 `UsagePageModel` holds an `ObservableCollection<TimelineRow>` and subscribes to `UsageTracker.Changed`. `StartClock` stops any previous timer, refreshes, then starts a repeating one-second `IDispatcherTimer`. `Changed` marshals to that dispatcher when required. `Refresh` calls `Project`. If the row ids are unchanged, it copies `Detail` onto the existing rows so the binding updates in place and the collection is not rebuilt. Otherwise it clears and re-adds. The timer tick is not an event.
 
@@ -167,6 +162,12 @@ Services, registered in `MauiProgram`: `TimeProvider.System`, `IUsageStore` as `
 
 Opening an existing `usage.db` adds `Width`, `Height`, `Mode`, and `ParentId` when those columns are missing. Older rows read back with empty area and parent fields. No upload is added.
 
+### Release and permission metadata
+
+`PlatformInstall.Read` returns Android `PackageInfo` first-install and last-update times. On iOS and Mac Catalyst it returns nothing; those platforms have no public install or update time. `App.OnActive` calls `NoteRelease` with `AppInfo` version and build before `Activate`. An empty log writes Installed at the system install time when there is one, otherwise at now, and stores the version. A system update time more than a minute after install is written once. A later version string writes `Updated` at now.
+
+`RecordPermission` writes `PermissionRequested` on the open page. `GeolocationViewModel` checks location when in use, and calls `RequestAsync` only when it is not already granted, then records the status. The Mac Catalyst and iOS plists include `NSLocationWhenInUseUsageDescription`. There is no camera page, so camera is not requested.
+
 ## Open Questions
 
-None.
+None. The graph uses drawn curves rather than bitmap tiles so the line still meets when a row is one line tall and the next is two.

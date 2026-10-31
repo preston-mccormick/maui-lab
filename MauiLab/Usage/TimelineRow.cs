@@ -6,7 +6,7 @@ public sealed class TimelineRow : INotifyPropertyChanged
 {
     string _detail;
 
-    public TimelineRow(string id, int depth, string title, string detail, string marker, string when)
+    public TimelineRow(string id, int depth, string title, string detail, string marker, string when, string category)
     {
         Id = id;
         Depth = depth;
@@ -14,6 +14,8 @@ public sealed class TimelineRow : INotifyPropertyChanged
         _detail = detail;
         Marker = marker;
         When = when;
+        Category = category;
+        Rail = new TimelineRail(depth, category, false, false, null, []);
     }
 
     public string Id { get; }
@@ -28,9 +30,15 @@ public sealed class TimelineRow : INotifyPropertyChanged
     /// <summary>Local time shown in the right-hand column. Not indented with the row.</summary>
     public string When { get; }
 
+    public string Category { get; }
+
+    public TimelineRail Rail { get; set; }
+
     public bool HasDetail => _detail.Length > 0;
 
-    public Thickness Indent => new(Depth * 22, 0, 0, 0);
+    public Thickness TextIndent => new(30 + Depth * 22, 0, 0, 0);
+
+    public Thickness Indent => TextIndent;
 
     public string Detail
     {

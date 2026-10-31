@@ -42,6 +42,11 @@ public partial class App : Application
 
     void OnActive(Window window)
     {
+        var times = PlatformInstall.Read();
+        _usage.NoteRelease(
+            $"{AppInfo.Current.VersionString} ({AppInfo.Current.BuildString})",
+            times.FirstInstall,
+            times.LastUpdate);
         var page = PageOf(window);
         _usage.Activate(page.Name, page.Route, page.TypeName);
         RecordArea(window);

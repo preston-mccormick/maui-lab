@@ -141,6 +141,35 @@ Reset SHALL delete every stored event, record a History reset event, and start a
 - **WHEN** history is reset while a page is open
 - **THEN** the oldest event is History reset, Installed is absent, and the only page visit is the current page
 
+### Requirement: Screen changes belong to the open page
+A window size record SHALL be attached to the page visit that is open when the size is measured. The recorded mode is the event title and the width and height are the detail.
+
+#### Scenario: Resize while a page is open
+- **WHEN** the window size changes during an open page visit
+- **THEN** that size record references the open page visit
+
+### Requirement: Install and update metadata
+Android SHALL supply package first-install time and last-update time. When the log is empty, Installed SHALL use the first-install time if Android provides one. A last-update time later than the install SHALL be stored once as Updated. iOS and Mac Catalyst provide neither time. On every platform, a changed app version SHALL record Updated with that version.
+
+#### Scenario: Android package times
+- **WHEN** the log is empty and Android reports a first-install time and a later last-update time
+- **THEN** Installed uses the first-install time and one Updated event uses the last-update time
+
+#### Scenario: Version change without a system time
+- **WHEN** the recorded version differs from the running version and the platform has no update time
+- **THEN** the log gains one Updated event for the running version
+
+### Requirement: Permission requests
+A system permission request SHALL record the permission name and the status returned. The Geolocation page SHALL request location this way. A permission that is already granted MUST NOT add a row.
+
+#### Scenario: Location request
+- **WHEN** location access is requested and the system returns a status
+- **THEN** the log gains a Location row whose detail is that status
+
+#### Scenario: Already granted
+- **WHEN** location access is already granted
+- **THEN** no new permission row is recorded
+
 ### Requirement: A recording failure does not stop the app
 A failure while recording a window or navigation signal MUST NOT take down the app.
 

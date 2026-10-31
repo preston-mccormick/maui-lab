@@ -15,8 +15,9 @@ public class UsageTrackerTests
             tracker.Background();
             clock.Advance(TimeSpan.FromHours(8));
 
-            var asleep = tracker.Project().First();
-            Assert.Equal("Navigated to Home page", asleep.Title);
+            var asleepRows = tracker.Project();
+            Assert.Equal("Backgrounded", asleepRows[0].Title);
+            var asleep = asleepRows.Single(row => row.Title == "Navigated to Home page");
             Assert.Contains("in progress", asleep.Detail);
             Assert.Contains("open 8h 2m", asleep.Detail);
             Assert.Contains("active 2m", asleep.Detail);
@@ -24,8 +25,7 @@ public class UsageTrackerTests
             tracker.Activate("Home", "//home");
             clock.Advance(TimeSpan.FromMinutes(3));
 
-            var awake = tracker.Project().First();
-            Assert.Equal("Navigated to Home page", awake.Title);
+            var awake = tracker.Project().Single(row => row.Title == "Navigated to Home page");
             Assert.Contains("in progress", awake.Detail);
             Assert.Contains("open 8h 5m", awake.Detail);
             Assert.Contains("active 5m", awake.Detail);
@@ -245,23 +245,28 @@ public class UsageTrackerTests
             Assert.Equal(
                 [
                     "Navigated to Usage page",
-                    "Navigated to Colors page",
                     "Foregrounded",
                     "Backgrounded",
+                    "Navigated to Colors page",
                     "Navigated to Home page",
                     "Session started",
                     "Installed"
                 ],
                 rows.Select(r => r.Title).ToArray());
-            Assert.Equal([1, 1, 2, 2, 1, 0, 0], rows.Select(r => r.Depth).ToArray());
+            Assert.Equal([1, 2, 2, 1, 1, 0, 0], rows.Select(r => r.Depth).ToArray());
             Assert.Contains("in progress", rows[0].Detail);
-            Assert.Equal("open 8h 5m · active 5m", rows[1].Detail);
+            Assert.Equal("open 8h 5m · active 5m", rows[3].Detail);
             Assert.Equal("open 30s · active 30s", rows[4].Detail);
-            Assert.Equal("", rows[2].Detail);
+            Assert.Equal("", rows[1].Detail);
             Assert.Equal("", rows[5].Detail);
             Assert.Equal("", rows[^1].Detail);
+            Assert.Equal(UsageCategory.Navigation, rows[0].Category);
+            Assert.Equal(UsageCategory.Lifecycle, rows[1].Category);
             Assert.Equal(UsageTimeline.FormatWhen(UsageLab.Start, clock.UtcNow), rows[5].When);
-            Assert.Equal(UsageTimeline.FormatWhen(UsageLab.Start.AddSeconds(30).AddMinutes(2).AddHours(8), clock.UtcNow), rows[2].When);
+            Assert.Equal(UsageTimeline.FormatWhen(UsageLab.Start.AddSeconds(30).AddMinutes(2).AddHours(8), clock.UtcNow), rows[1].When);
+            Assert.Matches(@"\d:\d\d:\d\d", rows[1].When);
+            Assert.False(rows[1].Rail.LineFromTop);
+            Assert.True(rows[2].Rail.CurveToLane == 1);
             Assert.False(string.IsNullOrEmpty(rows[0].When));
             Assert.False(string.IsNullOrEmpty(rows[^1].When));
             Assert.Equal("Installed", rows[^1].Title);
@@ -304,12 +309,17 @@ public class UsageTrackerTests
             Assert.Equal("Windowed", areas[1].Mode);
 
             var rows = tracker.Project();
-            Assert.Equal("Navigated to Home page", rows[0].Title);
-            Assert.Equal("1250 × 750", rows[1].Title);
-            Assert.Equal("Windowed", rows[1].Detail);
-            Assert.Equal(1, rows[1].Depth);
-            Assert.Equal("1024 × 768", rows[2].Title);
-            Assert.Equal("Full screen", rows[2].Detail);
+            Assert.Equal("Windowed", rows[0].Title);
+            Assert.Equal("1250 × 750", rows[0].Detail);
+            Assert.Equal(2, rows[0].Depth);
+            Assert.Equal(UsageCategory.Screen, rows[0].Category);
+            Assert.Equal("Full screen", rows[1].Title);
+            Assert.Equal("1024 × 768", rows[1].Detail);
+            Assert.Equal("Navigated to Home page", rows[2].Title);
+            var pageId = store.GetAll().Single(e => e.Kind == UsageEventKind.PageOpened).PageVisitId;
+            Assert.All(
+                store.GetAll().Where(e => e.Kind == UsageEventKind.AreaChanged),
+                areaEvent => Assert.Equal(pageId, areaEvent.PageVisitId));
         }
     }
 
@@ -326,7 +336,10 @@ public class UsageTrackerTests
             Assert.Equal(341, area.Width);
             Assert.Equal(800, area.Height);
             Assert.Null(area.Mode);
-            Assert.Equal("", tracker.Project().Single(row => row.Title == "341 × 800").Detail);
+            Assert.Equal(area.PageVisitId, store.GetAll().Single(e => e.Kind == UsageEventKind.PageOpened).PageVisitId);
+            var row = tracker.Project().Single(item => item.Title == "Screen");
+            Assert.Equal("341 × 800", row.Detail);
+            Assert.Equal(2, row.Depth);
         }
     }
 
@@ -343,10 +356,11 @@ public class UsageTrackerTests
 
             var rows = tracker.Project();
             Assert.Equal(
-                ["Navigated to Menu Button page", "Top Left", "Menu", "Mine", "Session started", "Installed"],
+                ["Mine", "Menu", "Top Left", "Navigated to Menu Button page", "Session started", "Installed"],
                 rows.Select(row => row.Title).ToArray());
-            Assert.Equal([1, 2, 3, 4, 0, 0], rows.Select(row => row.Depth).ToArray());
-            Assert.All(rows.Skip(1).Take(3), row => Assert.Equal("", row.Detail));
+            Assert.Equal([4, 3, 2, 1, 0, 0], rows.Select(row => row.Depth).ToArray());
+            Assert.Equal(UsageCategory.Action, rows[0].Category);
+            Assert.All(rows.Take(3), row => Assert.Equal("", row.Detail));
         }
     }
 
@@ -366,18 +380,67 @@ public class UsageTrackerTests
             var rows = tracker.Project();
             Assert.Equal(
                 [
-                    "Navigated to Dialogs page",
-                    "Show ActionSheet",
-                    "Action sheet",
                     "Copy",
-                    "Show Prompt",
-                    "Prompt",
+                    "Action sheet",
+                    "Show ActionSheet",
                     "Dismissed",
+                    "Prompt",
+                    "Show Prompt",
+                    "Navigated to Dialogs page",
                     "Session started",
                     "Installed"
                 ],
                 rows.Select(row => row.Title).ToArray());
-            Assert.Equal([1, 2, 3, 4, 2, 3, 4, 0, 0], rows.Select(row => row.Depth).ToArray());
+            Assert.Equal([4, 3, 2, 4, 3, 2, 1, 0, 0], rows.Select(row => row.Depth).ToArray());
+        }
+    }
+
+    [Fact]
+    public void Permission_NestsAboveTheOpenPage()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Geolocation", "//geolocation");
+            tracker.RecordPermission("Location", "Denied");
+
+            var rows = tracker.Project();
+            Assert.Equal("Location", rows[0].Title);
+            Assert.Equal("Denied", rows[0].Detail);
+            Assert.Equal(2, rows[0].Depth);
+            Assert.Equal(UsageCategory.Permission, rows[0].Category);
+            Assert.Equal("Navigated to Geolocation page", rows[1].Title);
+        }
+    }
+
+    [Fact]
+    public void NoteRelease_RecordsInstallTimeAndVersionChange()
+    {
+        var (tracker, clock, store) = UsageLab.Open();
+        using (store)
+        {
+            var installed = UsageLab.Start.AddDays(-10);
+            var updated = UsageLab.Start.AddDays(-2);
+            tracker.NoteRelease("1.0 (1)", installed, updated);
+            tracker.Activate("Home", "//home");
+            tracker.NoteRelease("1.0 (1)", installed, updated);
+            clock.Advance(TimeSpan.FromMinutes(1));
+            tracker.NoteRelease("1.1 (2)", null, null);
+
+            var events = store.GetAll();
+            var install = Assert.Single(events, e => e.Kind == UsageEventKind.Installed);
+            Assert.Equal(installed, install.Timestamp);
+            Assert.Equal("1.0 (1)", install.Name);
+            var updates = events.Where(e => e.Kind == UsageEventKind.Updated).ToList();
+            Assert.Equal(2, updates.Count);
+            Assert.Equal(updated, updates[0].Timestamp);
+            Assert.Equal("1.1 (2)", updates[1].Name);
+
+            var rows = tracker.Project();
+            Assert.Equal("Updated", rows[0].Title);
+            Assert.Equal("1.1 (2)", rows[0].Detail);
+            Assert.Equal("Installed", rows[^1].Title);
+            Assert.Equal("1.0 (1)", rows[^1].Detail);
         }
     }
 }

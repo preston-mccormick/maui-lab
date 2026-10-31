@@ -19,62 +19,52 @@ public static class UsageTimeline
             ? ordered
             : ordered.Where(e => UsageEvent.Compare(e, root) >= 0).ToList();
 
-        var rows = new List<TimelineRow>();
+        var blocks = new List<(DateTimeOffset Sort, long Sequence, List<TimelineRow> Rows)>();
         var sessions = relevant
             .Where(e => e.Kind == UsageEventKind.SessionStarted && e.SessionId is Guid)
-            .OrderByDescending(e => e.Timestamp)
-            .ThenByDescending(e => e.Sequence)
             .ToList();
-
         foreach (var session in sessions)
         {
-            var sessionId = session.SessionId!.Value;
-            var inSession = relevant.Where(e => e.SessionId == sessionId).ToList();
-            var ended = inSession.FirstOrDefault(e => e.Kind == UsageEventKind.SessionEnded);
-            var blocks = new List<(DateTimeOffset Sort, long Sequence, List<TimelineRow> Rows)>();
-
-            foreach (var open in inSession.Where(e => e.Kind == UsageEventKind.PageOpened && e.PageVisitId is Guid))
-            {
-                var close = inSession.FirstOrDefault(e =>
-                    e.Kind == UsageEventKind.PageClosed && e.PageVisitId == open.PageVisitId);
-                blocks.Add((
-                    close?.Timestamp ?? now,
-                    close?.Sequence ?? long.MaxValue,
-                    PageRows(open, close, inSession, now)));
-            }
-
-            foreach (var area in inSession.Where(e => e.Kind == UsageEventKind.AreaChanged))
-            {
-                blocks.Add((
-                    area.Timestamp,
-                    area.Sequence,
-                    [AreaRow(area, now)]));
-            }
-
-            foreach (var block in blocks.OrderByDescending(block => block.Sort).ThenByDescending(block => block.Sequence))
-                rows.AddRange(block.Rows);
-
-            rows.Add(new TimelineRow(
-                session.SessionId.Value.ToString("D"),
-                depth: 0,
-                title: "Session started",
-                detail: SessionDetail(session, ended),
-                marker: "Session",
-                when: FormatWhen(session.Timestamp, now)));
+            var inSession = relevant.Where(e => e.SessionId == session.SessionId).ToList();
+            var rows = SessionRows(session, inSession, now);
+            var newest = inSession
+                .OrderByDescending(e => e.Timestamp)
+                .ThenByDescending(e => e.Sequence)
+                .First();
+            blocks.Add((newest.Timestamp, newest.Sequence, rows));
         }
+
+        foreach (var updated in relevant.Where(e => e.Kind == UsageEventKind.Updated))
+        {
+            blocks.Add((
+                updated.Timestamp,
+                updated.Sequence,
+                [EventRow(updated, depth: 0, title: "Updated", detail: updated.Name ?? "", UsageCategory.Lifecycle, now)]));
+        }
+
+        var projected = new List<TimelineRow>();
+        foreach (var block in blocks.OrderByDescending(block => block.Sort).ThenByDescending(block => block.Sequence))
+            projected.AddRange(block.Rows);
 
         if (root != null)
         {
-            rows.Add(new TimelineRow(
+            projected.Add(new TimelineRow(
                 root.Id.ToString("D"),
                 depth: 0,
                 title: root.Kind == UsageEventKind.HistoryReset ? "History reset" : "Installed",
-                detail: "",
+                detail: root.Name ?? "",
                 marker: "Root",
-                when: FormatDate(root.Timestamp, now)));
+                when: FormatDate(root.Timestamp, now),
+                category: UsageCategory.Lifecycle));
         }
 
-        return rows;
+        var rails = TimelineRail.Compute(
+            projected.Select(row => row.Depth).ToArray(),
+            projected.Select(row => row.Category).ToArray());
+        for (var i = 0; i < projected.Count; i++)
+            projected[i].Rail = rails[i];
+
+        return projected;
     }
 
     public static string FormatDuration(TimeSpan span)
@@ -99,10 +89,10 @@ public static class UsageTimeline
         var local = timestamp.ToLocalTime();
         var today = now.ToLocalTime().Date;
         if (local.Date == today)
-            return local.ToString("h:mm tt", CultureInfo.CurrentCulture);
+            return local.ToString("h:mm:ss tt", CultureInfo.CurrentCulture);
         if (local.Year == today.Year)
-            return local.ToString("MMM d, h:mm tt", CultureInfo.CurrentCulture);
-        return local.ToString("MMM d, yyyy, h:mm tt", CultureInfo.CurrentCulture);
+            return local.ToString("MMM d, h:mm:ss tt", CultureInfo.CurrentCulture);
+        return local.ToString("MMM d, yyyy, h:mm:ss tt", CultureInfo.CurrentCulture);
     }
 
     public static string PageTitle(string? name, string? route)
@@ -113,91 +103,107 @@ public static class UsageTimeline
             : $"Navigated to {label} page";
     }
 
-    static List<TimelineRow> PageRows(
-        UsageEvent open,
-        UsageEvent? close,
-        List<UsageEvent> inSession,
-        DateTimeOffset now)
+    static List<TimelineRow> SessionRows(UsageEvent session, List<UsageEvent> inSession, DateTimeOffset now)
     {
-        var asOf = close?.Timestamp ?? now;
-        var lifecycle = inSession.Where(e => e.PageVisitId == open.PageVisitId);
-        var elapsed = close?.Elapsed ?? UsageMath.Elapsed(open.Timestamp, asOf);
-        var active = close?.Active ?? UsageMath.ActiveTime(open.Timestamp, asOf, lifecycle);
-        var stillOpen = close == null;
-        var rows = new List<TimelineRow>
+        var ended = inSession.FirstOrDefault(e => e.Kind == UsageEventKind.SessionEnded);
+        var rows = new List<TimelineRow>();
+        foreach (var entry in inSession
+                     .Where(e => e.Kind is not (UsageEventKind.PageClosed or UsageEventKind.SessionEnded))
+                     .OrderByDescending(e => e.Timestamp)
+                     .ThenByDescending(e => e.Sequence))
         {
-            new(
-                open.PageVisitId!.Value.ToString("D"),
-                depth: 1,
-                title: PageTitle(open.Name, open.Route),
-                detail: PageDetail(stillOpen, elapsed, active),
-                marker: stillOpen ? "Open" : "Page",
-                when: FormatWhen(open.Timestamp, now))
-        };
-
-        var children = lifecycle
-            .Where(e => e.Kind is UsageEventKind.Backgrounded or UsageEventKind.Foregrounded or UsageEventKind.ControlPressed)
-            .OrderByDescending(e => e.Timestamp)
-            .ThenByDescending(e => e.Sequence);
-        foreach (var child in children)
-        {
-            if (child.Kind == UsageEventKind.ControlPressed)
-                rows.AddRange(ControlRows(child, inSession, now));
-            else
+            switch (entry.Kind)
             {
-                rows.Add(new TimelineRow(
-                    child.Id.ToString("D"),
-                    depth: 2,
-                    title: child.Kind == UsageEventKind.Foregrounded ? "Foregrounded" : "Backgrounded",
-                    detail: "",
-                    marker: "Activity",
-                    when: FormatWhen(child.Timestamp, now)));
+                case UsageEventKind.PageOpened:
+                    var close = inSession.FirstOrDefault(e =>
+                        e.Kind == UsageEventKind.PageClosed && e.PageVisitId == entry.PageVisitId);
+                    var asOf = close?.Timestamp ?? now;
+                    var lifecycle = inSession.Where(e => e.PageVisitId == entry.PageVisitId);
+                    var elapsed = close?.Elapsed ?? UsageMath.Elapsed(entry.Timestamp, asOf);
+                    var active = close?.Active ?? UsageMath.ActiveTime(entry.Timestamp, asOf, lifecycle);
+                    rows.Add(new TimelineRow(
+                        entry.PageVisitId!.Value.ToString("D"),
+                        depth: 1,
+                        title: PageTitle(entry.Name, entry.Route),
+                        detail: PageDetail(close == null, elapsed, active),
+                        marker: close == null ? "Open" : "Page",
+                        when: FormatWhen(entry.Timestamp, now),
+                        category: UsageCategory.Navigation));
+                    break;
+                case UsageEventKind.Backgrounded:
+                case UsageEventKind.Foregrounded:
+                    rows.Add(EventRow(
+                        entry,
+                        depth: 2,
+                        title: entry.Kind == UsageEventKind.Foregrounded ? "Foregrounded" : "Backgrounded",
+                        detail: "",
+                        UsageCategory.Lifecycle,
+                        now));
+                    break;
+                case UsageEventKind.AreaChanged:
+                    rows.Add(EventRow(
+                        entry,
+                        depth: entry.PageVisitId == null ? 1 : 2,
+                        title: string.IsNullOrWhiteSpace(entry.Mode) ? "Screen" : entry.Mode,
+                        detail: SizeText(entry),
+                        UsageCategory.Screen,
+                        now));
+                    break;
+                case UsageEventKind.ControlPressed:
+                    rows.Add(EventRow(entry, 2, entry.Name ?? "Button", "", UsageCategory.Action, now));
+                    break;
+                case UsageEventKind.SurfaceOpened:
+                    rows.Add(EventRow(entry, 3, entry.Name ?? "Menu", "", UsageCategory.Action, now));
+                    break;
+                case UsageEventKind.SelectionMade:
+                    rows.Add(EventRow(entry, 4, entry.Name ?? "Dismissed", "", UsageCategory.Action, now));
+                    break;
+                case UsageEventKind.PermissionRequested:
+                    rows.Add(EventRow(
+                        entry,
+                        depth: entry.PageVisitId == null ? 1 : 2,
+                        title: entry.Name ?? "Permission",
+                        detail: entry.Route ?? "",
+                        UsageCategory.Permission,
+                        now));
+                    break;
+                case UsageEventKind.SessionStarted:
+                    rows.Add(new TimelineRow(
+                        session.SessionId!.Value.ToString("D"),
+                        depth: 0,
+                        title: "Session started",
+                        detail: SessionDetail(session, ended),
+                        marker: "Session",
+                        when: FormatWhen(session.Timestamp, now),
+                        category: UsageCategory.Lifecycle));
+                    break;
             }
         }
 
         return rows;
     }
 
-    static List<TimelineRow> ControlRows(UsageEvent control, List<UsageEvent> inSession, DateTimeOffset now)
-    {
-        var rows = new List<TimelineRow>
-        {
-            EventRow(control, depth: 2, title: control.Name ?? "Button", now)
-        };
-
-        var surfaces = inSession
-            .Where(e => e.Kind == UsageEventKind.SurfaceOpened && e.ParentId == control.Id)
-            .OrderByDescending(e => e.Timestamp)
-            .ThenByDescending(e => e.Sequence);
-        foreach (var surface in surfaces)
-        {
-            rows.Add(EventRow(surface, depth: 3, title: surface.Name ?? "Menu", now));
-            var choices = inSession
-                .Where(e => e.Kind == UsageEventKind.SelectionMade && e.ParentId == surface.Id)
-                .OrderByDescending(e => e.Timestamp)
-                .ThenByDescending(e => e.Sequence);
-            foreach (var choice in choices)
-                rows.Add(EventRow(choice, depth: 4, title: choice.Name ?? "Dismissed", now));
-        }
-
-        return rows;
-    }
-
-    static TimelineRow AreaRow(UsageEvent area, DateTimeOffset now) => new(
-        area.Id.ToString("D"),
-        depth: 1,
-        title: $"{Math.Round(area.Width ?? 0).ToString("0", CultureInfo.InvariantCulture)} × {Math.Round(area.Height ?? 0).ToString("0", CultureInfo.InvariantCulture)}",
-        detail: area.Mode ?? "",
-        marker: "Activity",
-        when: FormatWhen(area.Timestamp, now));
-
-    static TimelineRow EventRow(UsageEvent usageEvent, int depth, string title, DateTimeOffset now) => new(
-        usageEvent.Id.ToString("D"),
+    static TimelineRow EventRow(
+        UsageEvent entry,
+        int depth,
+        string title,
+        string detail,
+        string category,
+        DateTimeOffset now) => new(
+        entry.Id.ToString("D"),
         depth,
         title,
-        detail: "",
+        detail,
         marker: "Activity",
-        when: FormatWhen(usageEvent.Timestamp, now));
+        when: FormatWhen(entry.Timestamp, now),
+        category);
+
+    static string SizeText(UsageEvent area)
+    {
+        var width = Math.Round(area.Width ?? 0).ToString("0", CultureInfo.InvariantCulture);
+        var height = Math.Round(area.Height ?? 0).ToString("0", CultureInfo.InvariantCulture);
+        return $"{width} × {height}";
+    }
 
     static string PageDetail(bool stillOpen, TimeSpan elapsed, TimeSpan active)
     {

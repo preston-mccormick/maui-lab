@@ -29,48 +29,38 @@
             SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="usage:TimelineRow">
-                    <Grid Padding="0,4" ColumnDefinitions="*,Auto" MinimumHeightRequest="44">
-                        <Grid Margin="{Binding Indent}" ColumnDefinitions="28,*">
-                            <BoxView
-                                WidthRequest="2"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Fill"
-                                Color="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LighterGray}}" />
-                            <Border
-                                BackgroundColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource Gray}}"
-                                HeightRequest="12"
-                                HorizontalOptions="Center"
-                                StrokeShape="RoundRectangle 6"
-                                StrokeThickness="0"
-                                VerticalOptions="Center"
-                                WidthRequest="12">
-                                <Border.Triggers>
-                                    <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Open">
-                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Primary}, Dark={StaticResource LightPrimary}}" />
+                    <Grid Padding="0" ColumnDefinitions="*,Auto" MinimumHeightRequest="44">
+                        <usage:UsageRailView
+                            Grid.ColumnSpan="2"
+                            HorizontalOptions="Fill"
+                            Rail="{Binding Rail}"
+                            VerticalOptions="Fill" />
+                        <VerticalStackLayout Margin="{Binding TextIndent}" Spacing="1" VerticalOptions="Center">
+                            <Label FontAttributes="Bold" FontSize="16" Text="{Binding Title}">
+                                <Label.Triggers>
+                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Navigation">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageNavigation}, Dark={StaticResource UsageNavigationOnDark}}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Page">
-                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Screen">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageScreen}, Dark={StaticResource UsageScreenOnDark}}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Activity">
-                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LightGray}}" />
+                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Lifecycle">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageLifecycle}, Dark={StaticResource UsageLifecycleOnDark}}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Session">
-                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkPrimary}, Dark={StaticResource Primary}}" />
+                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Action">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsageAction}, Dark={StaticResource UsageActionOnDark}}" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Marker}" TargetType="Border" Value="Root">
-                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Default={StaticResource DarkTertiary}, Dark={StaticResource Tertiary}}" />
+                                    <DataTrigger Binding="{Binding Category}" TargetType="Label" Value="Permission">
+                                        <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource UsagePermission}, Dark={StaticResource UsagePermissionOnDark}}" />
                                     </DataTrigger>
-                                </Border.Triggers>
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label FontAttributes="Bold" FontSize="16" Text="{Binding Title}" />
-                                <Label
-                                    FontSize="13"
-                                    IsVisible="{Binding HasDetail}"
-                                    Text="{Binding Detail}"
-                                    TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
-                            </VerticalStackLayout>
-                        </Grid>
+                                </Label.Triggers>
+                            </Label>
+                            <Label
+                                FontSize="13"
+                                IsVisible="{Binding HasDetail}"
+                                Text="{Binding Detail}"
+                                TextColor="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LighterGray}}" />
+                        </VerticalStackLayout>
                         <Label
                             Grid.Column="1"
                             Margin="12,0,0,0"
