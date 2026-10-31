@@ -122,8 +122,8 @@
 	  <Compile Update="Dialogs\DialogsPage.xaml.cs">
 	    <DependentUpon>DialogsPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Layouts\DialogLayoutPage.xaml.cs">
-	    <DependentUpon>DialogLayoutPage.xaml</DependentUpon>
+	  <Compile Update="Layouts\GridLayoutPage.xaml.cs">
+	    <DependentUpon>GridLayoutPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Layouts\ScrollingLayoutPage.xaml.cs">
 	    <DependentUpon>ScrollingLayoutPage.xaml</DependentUpon>
@@ -161,7 +161,7 @@
 	  <MauiXaml Update="Dialogs\DialogsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Layouts\DialogLayoutPage.xaml">
+	  <MauiXaml Update="Layouts\GridLayoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Layouts\LayoutLevers.xaml">

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.GridLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    Title="Grid Layout"
+    x:DataType="layouts:GridLayoutPageModel">
+    <ContentPage.Resources>
+        <Style x:Key="CompactButton" TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="MinimumHeightRequest" Value="36" />
+            <Setter Property="MinimumWidthRequest" Value="36" />
+            <Setter Property="HeightRequest" Value="36" />
+            <Setter Property="WidthRequest" Value="36" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid x:Name="LayoutGrid" />
+
+        <ScrollView
+            HorizontalOptions="Start"
+            MaximumHeightRequest="480"
+            VerticalOptions="Start">
+            <Border
+                MinimumWidthRequest="300"
+                Style="{StaticResource floating-card}"
+                VerticalOptions="Start">
+                <Grid Padding="4,2" RowDefinitions="Auto,Auto" RowSpacing="8">
+                    <Grid Padding="0,4">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Label
+                            HorizontalOptions="Start"
+                            Style="{StaticResource Small}"
+                            Text="{Binding ExpandGlyph}"
+                            TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
+                                                        Dark={StaticResource Tertiary}}"
+                            VerticalOptions="Center" />
+                        <Label
+                            HorizontalOptions="Center"
+                            Style="{StaticResource Small}"
+                            Text="Grid"
+                            TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
+                                                        Dark={StaticResource Tertiary}}"
+                            VerticalOptions="Center" />
+                    </Grid>
+
+                    <VerticalStackLayout
+                        Grid.Row="1"
+                        IsVisible="{Binding IsExpanded}"
+                        Spacing="10">
+                        <Grid
+                            ColumnDefinitions="Auto,*"
+                            ColumnSpacing="12"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="6">
+                            <Label Text="Column spacing" VerticalOptions="Center" />
+                            <Entry
+                                Grid.Column="1"
+                                Text="{Binding ColumnSpacing}"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Text="Row spacing"
+                                VerticalOptions="Center" />
+                            <Entry
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding RowSpacing}"
+                                VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label
+                                Style="{StaticResource Small}"
+                                Text="Columns"
+                                VerticalOptions="Center" />
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding AddColumnCommand}"
+                                Style="{StaticResource CompactButton}"
+                                Text="+" />
+                        </Grid>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Columns}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="layouts:GridTrack">
+                                    <Grid ColumnDefinitions="28,*,72,36" ColumnSpacing="6">
+                                        <BoxView
+                                            Color="{Binding Color}"
+                                            CornerRadius="3"
+                                            HeightRequest="22"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            WidthRequest="22" />
+                                        <Picker
+                                            Grid.Column="1"
+                                            ItemsSource="{x:Static layouts:GridTrack.Units}"
+                                            SelectedItem="{Binding Unit}"
+                                            VerticalOptions="Center" />
+                                        <Entry
+                                            Grid.Column="2"
+                                            IsVisible="{Binding IsValueVisible}"
+                                            Text="{Binding Value}"
+                                            VerticalOptions="Center" />
+                                        <Button
+                                            Grid.Column="3"
+                                            Command="{Binding BindingContext.RemoveColumnCommand, Source={RelativeSource AncestorType={x:Type layouts:GridLayoutPage}}}"
+                                            CommandParameter="{Binding .}"
+                                            Style="{StaticResource CompactButton}"
+                                            Text="−"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label
+                                Style="{StaticResource Small}"
+                                Text="Rows"
+                                VerticalOptions="Center" />
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding AddRowCommand}"
+                                Style="{StaticResource CompactButton}"
+                                Text="+" />
+                        </Grid>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="layouts:GridTrack">
+                                    <Grid ColumnDefinitions="28,*,72,36" ColumnSpacing="6">
+                                        <BoxView
+                                            Color="{Binding Color}"
+                                            CornerRadius="3"
+                                            HeightRequest="22"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            WidthRequest="22" />
+                                        <Picker
+                                            Grid.Column="1"
+                                            ItemsSource="{x:Static layouts:GridTrack.Units}"
+                                            SelectedItem="{Binding Unit}"
+                                            VerticalOptions="Center" />
+                                        <Entry
+                                            Grid.Column="2"
+                                            IsVisible="{Binding IsValueVisible}"
+                                            Text="{Binding Value}"
+                                            VerticalOptions="Center" />
+                                        <Button
+                                            Grid.Column="3"
+                                            Command="{Binding BindingContext.RemoveRowCommand, Source={RelativeSource AncestorType={x:Type layouts:GridLayoutPage}}}"
+                                            CommandParameter="{Binding .}"
+                                            Style="{StaticResource CompactButton}"
+                                            Text="−"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </ScrollView>
+    </Grid>
+</ContentPage>

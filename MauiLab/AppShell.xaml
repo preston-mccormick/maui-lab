@@ -18,7 +18,7 @@
         <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
         <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
         <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
-        <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
+        <ShellContent Title="Grid Layout" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
     </FlyoutItem>
     <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
     <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />
