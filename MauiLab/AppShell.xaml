@@ -15,10 +15,10 @@
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
     <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
     <FlyoutItem Title="Experiments" Route="experiments">
-        <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
-        <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
         <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
         <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
+        <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
+        <ShellContent Title="Dialog Layout" ContentTemplate="{DataTemplate layouts:DialogLayoutPage}" />
     </FlyoutItem>
     <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
     <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />
