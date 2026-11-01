@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.FormControls.FormControlsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:forms="using:MauiLab.FormControls"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Form Controls"
+    x:DataType="forms:FormGallery">
+    <ContentPage.Resources>
+        <Style x:Key="Caption" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource DarkGray}, Dark={StaticResource LightGray}}" />
+            <Setter Property="LineBreakMode" Value="WordWrap" />
+        </Style>
+        <Style x:Key="GroupHeading" TargetType="Label" BasedOn="{StaticResource Medium}">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+        <Style x:Key="Group" TargetType="Border" BasedOn="{StaticResource panel}">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="12" />
+        </Style>
+        <Style x:Key="Variant" TargetType="VerticalStackLayout">
+            <Setter Property="Spacing" Value="4" />
+            <Setter Property="Padding" Value="6" />
+        </Style>
+        <Style x:Key="BarButton" TargetType="Button">
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="MinimumWidthRequest" Value="44" />
+            <Setter Property="HeightRequest" Value="36" />
+        </Style>
+
+        <!--  Validation. An explicit style replaces the implicit Entry style, so these repeat its sizing.  -->
+        <Color x:Key="ErrorColor">#B00020</Color>
+        <Style x:Key="ValidEntry" TargetType="Entry">
+            <Setter Property="TextColor" Value="{AppThemeBinding Default={StaticResource DarkText}, Dark={StaticResource LightText}}" />
+            <Setter Property="FontFamily" Value="OpenSansRegular" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="MinimumHeightRequest" Value="44" />
+        </Style>
+        <Style x:Key="InvalidEntry" TargetType="Entry">
+            <Setter Property="TextColor" Value="{StaticResource ErrorColor}" />
+            <Setter Property="FontFamily" Value="OpenSansRegular" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="MinimumHeightRequest" Value="44" />
+        </Style>
+        <Style x:Key="ErrorText" TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{StaticResource ErrorColor}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  Sample bar. Outside the ScrollView so it stays on screen.  -->
+        <Grid
+            Padding="12,8"
+            ColumnDefinitions="Auto,*,Auto"
+            ColumnSpacing="12">
+            <Button
+                Command="{Binding PreviousCommand}"
+                Style="{StaticResource BarButton}"
+                Text="‹ Prev" />
+            <Label
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                Style="{StaticResource Medium}"
+                Text="{Binding Position}"
+                VerticalOptions="Center" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding NextCommand}"
+                Style="{StaticResource BarButton}"
+                Text="Next ›" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <!--  The form. Its BindingContext is the current sample, so swapping Current rebinds everything below.  -->
+            <VerticalStackLayout
+                x:Name="Form"
+                Padding="12,0,12,24"
+                x:DataType="forms:FormControlsViewModel"
+                BindingContext="{Binding Current, Source={RelativeSource AncestorType={x:Type forms:FormGallery}}}"
+                Spacing="12">
+
+                <!--  Entry. An Expander, open by default. Expanded state lives on the gallery.  -->
+                <Border Style="{StaticResource Group}">
+                    <toolkit:Expander IsExpanded="{Binding IsEntryExpanded, Mode=TwoWay, Source={RelativeSource AncestorType={x:Type forms:FormGallery}}, x:DataType=forms:FormGallery}">
+                        <toolkit:Expander.Header>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Style="{StaticResource GroupHeading}" Text="Entry" />
+                                <Label
+                                    Grid.Column="1"
+                                    Style="{StaticResource GroupHeading}"
+                                    Text="{Binding EntryGlyph, Source={RelativeSource AncestorType={x:Type forms:FormGallery}}, x:DataType=forms:FormGallery}" />
+                            </Grid>
+                        </toolkit:Expander.Header>
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Placeholder. Plain text, default keyboard." />
+                                <Entry Placeholder="Full name" Text="{Binding FullName}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Password. Masked, clear button while editing." />
+                                <Entry
+                                    ClearButtonVisibility="WhileEditing"
+                                    IsPassword="True"
+                                    Placeholder="Password"
+                                    Text="{Binding Password}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Read-only. Shows text, ignores edits." />
+                                <Entry IsReadOnly="True" Text="{Binding ReadOnlyText}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Dimmed, no input." />
+                                <Entry IsEnabled="False" Text="{Binding DisabledText}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Required. TextValidationBehavior, minimum length 1, trimmed." />
+                                <Entry Placeholder="Required" Text="{Binding Required}">
+                                    <Entry.Behaviors>
+                                        <toolkit:TextValidationBehavior
+                                            x:Name="RequiredValidator"
+                                            DecorationFlags="Trim"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            MinimumLength="1"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference RequiredValidator}, x:DataType=toolkit:TextValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Required" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Email. EmailValidationBehavior, email keyboard." />
+                                <Entry
+                                    Keyboard="Email"
+                                    Placeholder="name@example.com"
+                                    Text="{Binding Email}">
+                                    <Entry.Behaviors>
+                                        <toolkit:EmailValidationBehavior
+                                            x:Name="EmailValidator"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference EmailValidator}, x:DataType=toolkit:EmailValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Enter a valid email address" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Number. NumericValidationBehavior 1–10, numeric keyboard." />
+                                <Entry
+                                    Keyboard="Numeric"
+                                    Placeholder="1 to 10"
+                                    Text="{Binding Number}">
+                                    <Entry.Behaviors>
+                                        <toolkit:NumericValidationBehavior
+                                            x:Name="NumberValidator"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            MaximumDecimalPlaces="0"
+                                            MaximumValue="10"
+                                            MinimumValue="1"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference NumberValidator}, x:DataType=toolkit:NumericValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Enter a number from 1 to 10" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Exact text. RequiredStringValidationBehavior, must equal yes." />
+                                <Entry Placeholder="yes" Text="{Binding Exact}">
+                                    <Entry.Behaviors>
+                                        <toolkit:RequiredStringValidationBehavior
+                                            x:Name="ExactValidator"
+                                            ExactMatch="True"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            RequiredString="yes"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference ExactValidator}, x:DataType=toolkit:RequiredStringValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Enter yes" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Digit. CharactersValidationBehavior, at least one digit." />
+                                <Entry Placeholder="Include a digit" Text="{Binding Digit}">
+                                    <Entry.Behaviors>
+                                        <toolkit:CharactersValidationBehavior
+                                            x:Name="DigitValidator"
+                                            CharacterType="Digit"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            MinimumCharacterTypeCount="1"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference DigitValidator}, x:DataType=toolkit:CharactersValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Include a digit" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="URL. UriValidationBehavior, absolute URI, URL keyboard." />
+                                <Entry
+                                    Keyboard="Url"
+                                    Placeholder="https://"
+                                    Text="{Binding Url}">
+                                    <Entry.Behaviors>
+                                        <toolkit:UriValidationBehavior
+                                            x:Name="UrlValidator"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            UriKind="Absolute"
+                                            ValidStyle="{StaticResource ValidEntry}" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Label
+                                    IsVisible="{Binding IsNotValid, Source={x:Reference UrlValidator}, x:DataType=toolkit:UriValidationBehavior}"
+                                    Style="{StaticResource ErrorText}"
+                                    Text="Enter a URL" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Combined. MultiValidationBehavior: required, and letters only." />
+                                <Entry Placeholder="Letters" Text="{Binding Letters}">
+                                    <Entry.Behaviors>
+                                        <toolkit:MultiValidationBehavior
+                                            x:Name="LettersValidator"
+                                            Flags="ValidateOnAttaching,ValidateOnValueChanged"
+                                            InvalidStyle="{StaticResource InvalidEntry}"
+                                            ValidStyle="{StaticResource ValidEntry}">
+                                            <toolkit:TextValidationBehavior toolkit:MultiValidationBehavior.Error="Required" MinimumLength="1" />
+                                            <toolkit:TextValidationBehavior toolkit:MultiValidationBehavior.Error="Letters only" RegexPattern="^[A-Za-z]*$" />
+                                        </toolkit:MultiValidationBehavior>
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Errors, Source={x:Reference LettersValidator}, x:DataType=toolkit:MultiValidationBehavior}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <Label Style="{StaticResource ErrorText}" Text="{Binding .}" />
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Phone. MaskedBehavior (XXX) XXX-XXXX, telephone keyboard." />
+                                <Entry
+                                    Keyboard="Telephone"
+                                    Placeholder="(555) 123-4567"
+                                    Text="{Binding Phone}">
+                                    <Entry.Behaviors>
+                                        <toolkit:MaskedBehavior Mask="(XXX) XXX-XXXX" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </toolkit:Expander>
+                </Border>
+
+                <!--  Editor. An Expander, closed by default.  -->
+                <Border Style="{StaticResource Group}">
+                    <toolkit:Expander IsExpanded="{Binding IsEditorExpanded, Mode=TwoWay, Source={RelativeSource AncestorType={x:Type forms:FormGallery}}, x:DataType=forms:FormGallery}">
+                        <toolkit:Expander.Header>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Style="{StaticResource GroupHeading}" Text="Editor" />
+                                <Label
+                                    Grid.Column="1"
+                                    Style="{StaticResource GroupHeading}"
+                                    Text="{Binding EditorGlyph, Source={RelativeSource AncestorType={x:Type forms:FormGallery}}, x:DataType=forms:FormGallery}" />
+                            </Grid>
+                        </toolkit:Expander.Header>
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Multiline. Fixed height, placeholder." />
+                                <Editor
+                                    HeightRequest="100"
+                                    Placeholder="Notes"
+                                    Text="{Binding Notes}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="AutoSize TextChanges. Grows with the text." />
+                                <Editor
+                                    AutoSize="TextChanges"
+                                    Placeholder="Grows as you type"
+                                    Text="{Binding GrowingNotes}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. No input." />
+                                <Editor
+                                    HeightRequest="100"
+                                    IsEnabled="False"
+                                    Text="{Binding DisabledNotes}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </toolkit:Expander>
+                </Border>
+
+                <!--  SearchBar  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="SearchBar" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Query. Placeholder, search key, cancel button." />
+                                <SearchBar Placeholder="Search" Text="{Binding Search}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled." />
+                                <SearchBar
+                                    IsEnabled="False"
+                                    Placeholder="Search"
+                                    Text="{Binding DisabledSearch}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Picker  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="Picker" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Title. Shows Choose one until a choice is made." />
+                                <Picker
+                                    ItemsSource="{x:Static forms:FormControlsViewModel.Choices}"
+                                    SelectedItem="{Binding Choice}"
+                                    Title="Choose one" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Selected. Bound to a chosen value." />
+                                <Picker
+                                    ItemsSource="{x:Static forms:FormControlsViewModel.Choices}"
+                                    SelectedItem="{Binding SelectedChoice}"
+                                    Title="Choose one" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Does not open." />
+                                <Picker
+                                    IsEnabled="False"
+                                    ItemsSource="{x:Static forms:FormControlsViewModel.Choices}"
+                                    SelectedItem="{Binding DisabledChoice}"
+                                    Title="Choose one" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  DatePicker  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="DatePicker" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Short date format (d). Nullable in MAUI 11." />
+                                <DatePicker Date="{Binding Date}" Format="d" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="MaximumDate today. Cannot pick a future date." />
+                                <DatePicker
+                                    Date="{Binding ConstrainedDate}"
+                                    Format="d"
+                                    MaximumDate="{Binding Today}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Does not open." />
+                                <DatePicker
+                                    Date="{Binding DisabledDate}"
+                                    Format="d"
+                                    IsEnabled="False" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  TimePicker  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="TimePicker" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="12-hour (h:mm tt)." />
+                                <TimePicker Format="h:mm tt" Time="{Binding Time12}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="24-hour (HH:mm)." />
+                                <TimePicker Format="HH:mm" Time="{Binding Time24}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Does not open." />
+                                <TimePicker
+                                    Format="HH:mm"
+                                    IsEnabled="False"
+                                    Time="{Binding DisabledTime}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  CheckBox  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="CheckBox" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Bound. Toggles the first flag." />
+                                <CheckBox HorizontalOptions="Start" IsChecked="{Binding Box1}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Bound. Toggles the second flag." />
+                                <CheckBox HorizontalOptions="Start" IsChecked="{Binding Box2}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Shows a state, does not toggle." />
+                                <CheckBox
+                                    HorizontalOptions="Start"
+                                    IsChecked="{Binding DisabledBox}"
+                                    IsEnabled="False" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Switch  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="Switch" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Bound. Toggles the first flag." />
+                                <Switch HorizontalOptions="Start" IsToggled="{Binding Switch1}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Bound. Toggles the second flag." />
+                                <Switch HorizontalOptions="Start" IsToggled="{Binding Switch2}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Shows a state, does not toggle." />
+                                <Switch
+                                    HorizontalOptions="Start"
+                                    IsEnabled="False"
+                                    IsToggled="{Binding DisabledSwitch}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  RadioButton. One group is one variant.  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="RadioButton" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Shared GroupName. SelectedValue bound two-way; the third is disabled." />
+                                <HorizontalStackLayout
+                                    RadioButtonGroup.GroupName="FormRadios"
+                                    RadioButtonGroup.SelectedValue="{Binding RadioChoice, Mode=TwoWay}"
+                                    Spacing="12">
+                                    <RadioButton Content="One" Value="{x:Static forms:FormControlsViewModel.RadioOne}" />
+                                    <RadioButton Content="Two" Value="{x:Static forms:FormControlsViewModel.RadioTwo}" />
+                                    <RadioButton
+                                        Content="Three"
+                                        IsEnabled="False"
+                                        Value="{x:Static forms:FormControlsViewModel.RadioThree}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Slider  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="Slider" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding SliderValue, StringFormat='0 to 100. Value {0:F0}'}" />
+                                <Slider
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Value="{Binding SliderValue}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding DisabledSliderValue, StringFormat='Disabled. Value {0:F0}'}" />
+                                <Slider
+                                    IsEnabled="False"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Value="{Binding DisabledSliderValue}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Stepper. No implicit style in the app, so this is the platform look.  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="Stepper" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding StepperValue, StringFormat='0 to 10, increment 1. Value {0:F0}'}" />
+                                <Stepper
+                                    HorizontalOptions="Start"
+                                    Increment="1"
+                                    Maximum="10"
+                                    Minimum="0"
+                                    Value="{Binding StepperValue}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding DisabledStepperValue, StringFormat='Disabled. Value {0:F0}'}" />
+                                <Stepper
+                                    HorizontalOptions="Start"
+                                    Increment="1"
+                                    IsEnabled="False"
+                                    Maximum="10"
+                                    Minimum="0"
+                                    Value="{Binding DisabledStepperValue}" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Button  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="Button" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding PressCount, StringFormat='Text. Bound Command. {0} presses'}" />
+                                <Button
+                                    Command="{Binding PressCommand}"
+                                    HorizontalOptions="Start"
+                                    Text="Press" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="Disabled. Does not activate." />
+                                <Button
+                                    HorizontalOptions="Start"
+                                    IsEnabled="False"
+                                    Text="Press" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="ImageButton. Same Command, image source." />
+                                <ImageButton
+                                    Command="{Binding PressCommand}"
+                                    HeightRequest="44"
+                                    HorizontalOptions="Start"
+                                    Source="chemistry_flask.png"
+                                    WidthRequest="44" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  RatingView (toolkit)  -->
+                <Border Style="{StaticResource Group}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Style="{StaticResource GroupHeading}" Text="RatingView" />
+                        <forms:FormColumnsLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding Stars, StringFormat='Star shape, 5 maximum. Rating {0:F0}'}" />
+                                <toolkit:RatingView
+                                    EmptyShapeColor="{StaticResource Gray}"
+                                    FillColor="{StaticResource Primary}"
+                                    HorizontalOptions="Start"
+                                    MaximumRating="5"
+                                    Rating="{Binding Stars, Mode=TwoWay}"
+                                    Shape="Star" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding Hearts, StringFormat='Heart shape, 5 maximum. Rating {0:F0}'}" />
+                                <toolkit:RatingView
+                                    EmptyShapeColor="{StaticResource Gray}"
+                                    FillColor="{StaticResource Primary}"
+                                    HorizontalOptions="Start"
+                                    MaximumRating="5"
+                                    Rating="{Binding Hearts, Mode=TwoWay}"
+                                    Shape="Heart" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Style="{StaticResource Variant}">
+                                <Label Style="{StaticResource Caption}" Text="{Binding ReadOnlyRating, StringFormat='Read-only. Rating {0:F0}'}" />
+                                <toolkit:RatingView
+                                    EmptyShapeColor="{StaticResource Gray}"
+                                    FillColor="{StaticResource Primary}"
+                                    HorizontalOptions="Start"
+                                    IsReadOnly="True"
+                                    MaximumRating="5"
+                                    Rating="{Binding ReadOnlyRating}"
+                                    Shape="Star" />
+                            </VerticalStackLayout>
+                        </forms:FormColumnsLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
