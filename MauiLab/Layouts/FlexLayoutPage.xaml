@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.FlexLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    Title="Flex Layout"
+    x:DataType="layouts:FlexLayoutPageModel">
+
+    <layouts:LayoutPlayground Title="Flex">
+        <layouts:LayoutPlayground.Canvas>
+            <FlexLayout
+                AlignContent="{Binding AlignContent}"
+                AlignItems="{Binding AlignItems}"
+                BindableLayout.ItemsSource="{Binding Items}"
+                Direction="{Binding Direction}"
+                HorizontalOptions="Fill"
+                JustifyContent="{Binding JustifyContent}"
+                Padding="{Binding LayoutPadding}"
+                VerticalOptions="Fill"
+                Wrap="{Binding Wrap}">
+                <FlexLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCanvasTapped" />
+                </FlexLayout.GestureRecognizers>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="layouts:LayoutItem">
+                        <layouts:LayoutItemView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Direction" VerticalOptions="Center" />
+                                <Picker x:Name="DirectionPicker" Grid.Column="1" SelectedIndexChanged="OnDirectionChanged" />
+                                <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="2" Text="Wrap" VerticalOptions="Center" />
+                                <Picker x:Name="WrapPicker" Grid.Row="2" Grid.Column="1" SelectedIndexChanged="OnWrapChanged" />
+                                <layouts:InfoControl Grid.Row="2" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Wrap sends items that do not fit onto the next line." Title="Wrap" />
+                                <layouts:SettingSeparator Grid.Row="3" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="4" Text="Justify" VerticalOptions="Center" />
+                                <Picker x:Name="JustifyPicker" Grid.Row="4" Grid.Column="1" SelectedIndexChanged="OnJustifyChanged" />
+                                <layouts:InfoControl Grid.Row="4" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Justify spreads items along the direction. Align items places them across it. Align content places the wrapped lines." Title="Justify" />
+                                <layouts:SettingSeparator Grid.Row="5" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="6" Text="Align items" VerticalOptions="Center" />
+                                <Picker x:Name="AlignItemsPicker" Grid.Row="6" Grid.Column="1" SelectedIndexChanged="OnAlignItemsChanged" />
+                                <layouts:SettingSeparator Grid.Row="7" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="8" Text="Align content" VerticalOptions="Center" />
+                                <Picker x:Name="AlignContentPicker" Grid.Row="8" Grid.Column="1" SelectedIndexChanged="OnAlignContentChanged" />
+                                <layouts:SettingSeparator Grid.Row="9" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="10" Text="Padding" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Row="10" Grid.Column="1" Committed="OnPaddingCommitted" Maximum="64" Minimum="0" Value="{Binding Padding}" />
+                                <layouts:InfoControl Grid.Row="10" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Flex has no spacing property. Padding insets the whole layout; margin on each item is the gap between items." Title="Padding" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Clicked="OnAddOne" Text="Add one" />
+                                <Button Clicked="OnAddSet" Text="Add set" />
+                                <Button Clicked="OnAddMixed" Text="Mixed" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <layouts:LeversSection Title="Item">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <Label Text="{Binding EditTarget.Name}" VerticalOptions="Center" />
+                                <layouts:InfoControl Grid.Column="1" InfoTapped="OnInfoTapped" Text="With nothing selected these values apply to every item. Tap an item to edit just that one." Title="All items" />
+                                <Button Grid.Column="2" Clicked="OnRemove" IsVisible="{Binding HasSelection}" Text="Remove" />
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Grow" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Column="1" Committed="OnGrowCommitted" Editing="OnItemEdit" Maximum="5" Minimum="0" Value="{Binding EditTarget.Grow}" />
+                                <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="Grow takes leftover space on the line. Shrink gives space back when the line is too full. Basis is the size before grow and shrink." Title="Grow" />
+                                <layouts:SettingSeparator Grid.Row="2" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="3" Text="Shrink" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Row="3" Grid.Column="1" Committed="OnShrinkCommitted" Editing="OnItemEdit" Maximum="5" Minimum="0" Value="{Binding EditTarget.Shrink}" />
+                                <layouts:SettingSeparator Grid.Row="5" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="6" Text="Basis" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Row="6" Grid.Column="1" Committed="OnBasisCommitted" Editing="OnItemEdit" Maximum="400" Minimum="0" Value="{Binding EditTarget.Basis}" />
+                                <layouts:SettingSeparator Grid.Row="8" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="9" Text="Basis %" VerticalOptions="Center" />
+                                <Switch Grid.Row="9" Grid.Column="1" HorizontalOptions="Start" IsToggled="{Binding EditTarget.BasisIsPercent, Mode=OneWay}" Toggled="OnBasisPercentToggled" />
+                                <layouts:SettingSeparator Grid.Row="10" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="11" Text="Order" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Row="11" Grid.Column="1" Committed="OnOrderCommitted" Editing="OnItemEdit" Maximum="8" Minimum="-8" Value="{Binding EditTarget.Order}" />
+                                <layouts:SettingSeparator Grid.Row="13" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="14" Text="Margin" VerticalOptions="Center" />
+                                <layouts:NumberLever Grid.Row="14" Grid.Column="1" Committed="OnMarginCommitted" Editing="OnItemEdit" Maximum="64" Minimum="0" Value="{Binding EditTarget.ItemMargin}" />
+                                <layouts:InfoControl Grid.Row="14" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Margin is how flex items get space between them. It applies on all four sides here." Title="Margin" />
+                                <layouts:SettingSeparator Grid.Row="16" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="17" Text="Align self" VerticalOptions="Center" />
+                                <Picker x:Name="AlignSelfPicker" Grid.Row="17" Grid.Column="1" SelectedIndexChanged="OnAlignSelfChanged" />
+                            </Grid>
+                            <layouts:LayoutLevers x:Name="ItemLevers" IsVisible="{Binding HasSelection}" />
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

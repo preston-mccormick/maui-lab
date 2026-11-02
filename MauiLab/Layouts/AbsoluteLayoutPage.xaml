@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.AbsoluteLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    Title="Absolute Layout"
+    x:DataType="layouts:AbsoluteLayoutPageModel">
+    <ContentPage.Resources>
+        <layouts:NullVisibleConverter x:Key="NullVisible" />
+        <layouts:NotNullVisibleConverter x:Key="NotNullVisible" />
+        <layouts:EnumMatchConverter x:Key="EnumMatch" />
+    </ContentPage.Resources>
+
+    <layouts:LayoutPlayground Title="Absolute">
+        <layouts:LayoutPlayground.Canvas>
+            <Grid SizeChanged="OnCanvasSize">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCanvasTapped" />
+                </Grid.GestureRecognizers>
+                <BoxView Color="LightSteelBlue" IsVisible="{Binding Background, Converter={StaticResource EnumMatch}, ConverterParameter=Solid}" />
+                <BoxView IsVisible="{Binding Background, Converter={StaticResource EnumMatch}, ConverterParameter=Gradient}">
+                    <BoxView.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Offset="0" Color="#6FA8DC" />
+                            <GradientStop Offset="1" Color="#F6E7C1" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+                <Image Aspect="AspectFill" IsVisible="{Binding Background, Converter={StaticResource EnumMatch}, ConverterParameter=Image}" Source="rose.png" />
+                <AbsoluteLayout
+                    x:Name="Canvas"
+                    BindableLayout.ItemsSource="{Binding Items}"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="layouts:LayoutItem">
+                            <layouts:LayoutItemView CanDrag="True" Dragged="OnDrag" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </AbsoluteLayout>
+                <!--  One resize handle, a sibling of the items, so its drag never competes with an item's drag.  -->
+                <AbsoluteLayout CascadeInputTransparent="False" InputTransparent="True">
+                    <Border
+                        AbsoluteLayout.LayoutBounds="{Binding HandleBounds}"
+                        BackgroundColor="Black"
+                        IsVisible="{Binding HasSelection}"
+                        Stroke="White"
+                        StrokeThickness="2">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="4" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnResize" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </AbsoluteLayout>
+            </Grid>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Background" VerticalOptions="Center" />
+                                <Picker x:Name="BackgroundPicker" Grid.Column="1" SelectedIndexChanged="OnBackgroundChanged" />
+                                <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="The background is drawn behind the layout. Changing it does not move any item." Title="Background" />
+                                <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="2" Text="Add" VerticalOptions="Center" />
+                                <Picker x:Name="KindPicker" Grid.Row="2" Grid.Column="1" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                                <Button Clicked="OnAdd" Text="Add" />
+                                <Button Grid.Column="1" Clicked="OnAddRandom" Text="Random" />
+                                <layouts:InfoControl Grid.Column="3" InfoTapped="OnInfoTapped" Text="Random adds a random illustration at a random spot inside the canvas. Press and hold an item, then drag, to move it. Drag the black corner of the selected item to resize it." Title="Moving" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <layouts:LeversSection Title="Item">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="8">
+                            <Label IsVisible="{Binding Selected, Converter={StaticResource NullVisible}}" Text="None selected" />
+                            <VerticalStackLayout IsVisible="{Binding Selected, Converter={StaticResource NotNullVisible}}" Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Label Text="{Binding Selected.Name}" VerticalOptions="Center" />
+                                    <Button Grid.Column="1" Clicked="OnRemove" Text="Remove" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                    <Label Text="X" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Column="1" Committed="OnPositionCommitted" Editing="OnItemEdit" Maximum="800" Minimum="-200" SliderSpan="2" Value="{Binding Selected.X}" />
+                                    <Label Grid.Column="2" Text="Y" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Column="3" Committed="OnPositionCommitted" Editing="OnItemEdit" Maximum="800" Minimum="-200" SliderSpan="2" Value="{Binding Selected.Y}" />
+                                    <layouts:SettingSeparator Grid.Row="2" Grid.ColumnSpan="4" />
+                                    <Label Grid.Row="3" Text="W" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Row="3" Grid.Column="1" Committed="OnSizeCommitted" Editing="OnItemEdit" Maximum="800" Minimum="0" SliderSpan="2" Value="{Binding Selected.Width}" />
+                                    <Label Grid.Row="3" Grid.Column="2" Text="H" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Row="3" Grid.Column="3" Committed="OnSizeCommitted" Editing="OnItemEdit" Maximum="800" Minimum="0" SliderSpan="2" Value="{Binding Selected.Height}" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                    <Label Text="Flags" VerticalOptions="Center" />
+                                    <Picker x:Name="FlagPicker" Grid.Column="1" SelectedIndexChanged="OnFlagsChanged" />
+                                    <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="Flags choose whether x, y, width, and height are points or a fraction of the canvas, from 0 to 1." Title="Flags" />
+                                    <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                    <Label Grid.Row="2" Text="Rotation" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Row="2" Grid.Column="1" Committed="OnRotationCommitted" Editing="OnItemEdit" Maximum="180" Minimum="-180" Value="{Binding Selected.Rotation}" />
+                                    <layouts:InfoControl Grid.Row="2" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Rotation, opacity, and clip change how the item is drawn. They do not change the rectangle the layout reserved, which is what the selection frame shows." Title="Rotation" />
+                                    <layouts:SettingSeparator Grid.Row="4" Grid.ColumnSpan="3" />
+                                    <Label Grid.Row="5" Text="Opacity" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Row="5" Grid.Column="1" Committed="OnOpacityCommitted" Editing="OnItemEdit" Maximum="1" Minimum="0" Value="{Binding Selected.Opacity}" />
+                                    <layouts:SettingSeparator Grid.Row="7" Grid.ColumnSpan="3" />
+                                    <Label Grid.Row="8" Text="Z" VerticalOptions="Center" />
+                                    <layouts:NumberLever Grid.Row="8" Grid.Column="1" Committed="OnZCommitted" Editing="OnItemEdit" Maximum="20" Minimum="0" Value="{Binding Selected.ZIndex}" />
+                                    <layouts:SettingSeparator Grid.Row="10" Grid.ColumnSpan="3" />
+                                    <Label Grid.Row="11" Text="Clip" VerticalOptions="Center" />
+                                    <Switch Grid.Row="11" Grid.Column="1" HorizontalOptions="Start" IsToggled="{Binding Selected.IsClipped, Mode=OneWay}" Toggled="OnClipToggled" />
+                                </Grid>
+                                <layouts:LayoutLevers x:Name="ItemLevers" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

@@ -16,11 +16,21 @@
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
     <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
     <ShellContent Title="Form Controls" ContentTemplate="{DataTemplate forms:FormControlsPage}" />
+    <FlyoutItem Title="Layouts" Route="layouts">
+        <Tab Title="Layouts">
+            <ShellContent Title="Grid Layout" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
+            <ShellContent Title="Stack Layout" ContentTemplate="{DataTemplate layouts:StackLayoutPage}" />
+            <ShellContent Title="Absolute Layout" ContentTemplate="{DataTemplate layouts:AbsoluteLayoutPage}" />
+            <ShellContent Title="Flex Layout" ContentTemplate="{DataTemplate layouts:FlexLayoutPage}" />
+            <ShellContent Title="Composite Layout" ContentTemplate="{DataTemplate layouts:CompositeLayoutPage}" />
+            <ShellContent Title="Dock Layout" ContentTemplate="{DataTemplate layouts:DockLayoutPage}" />
+            <ShellContent Title="Radial Layout" ContentTemplate="{DataTemplate layouts:RadialLayoutPage}" />
+        </Tab>
+    </FlyoutItem>
     <FlyoutItem Title="Experiments" Route="experiments">
         <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
         <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
         <ShellContent Title="Scrolling Layout" ContentTemplate="{DataTemplate layouts:ScrollingLayoutPage}" />
-        <ShellContent Title="Grid Layout" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
     </FlyoutItem>
     <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
     <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />

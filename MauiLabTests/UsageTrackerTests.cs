@@ -443,4 +443,33 @@ public class UsageTrackerTests
             Assert.Equal("1.0 (1)", rows[^1].Detail);
         }
     }
+
+    [Fact]
+    public void LayoutAction_IsOneRowOnTheOpenVisit()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Grid Layout", "//layouts/grid");
+            tracker.RecordAction("Added row", "4 rows");
+
+            var events = store.GetAll();
+            var action = Assert.Single(events, e => e.Kind == UsageEventKind.ActionTaken);
+            Assert.Equal("Added row", action.Name);
+            Assert.Equal("4 rows", action.Detail);
+            Assert.Equal(events.Single(e => e.Kind == UsageEventKind.PageOpened).PageVisitId, action.PageVisitId);
+            Assert.DoesNotContain(events, e => e.Kind is UsageEventKind.ControlPressed or UsageEventKind.SurfaceOpened or UsageEventKind.SelectionMade);
+        }
+    }
+
+    [Fact]
+    public void LayoutAction_WithNoVisit_IsIgnored()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.RecordAction("Added row", "4 rows");
+            Assert.Empty(store.GetAll());
+        }
+    }
 }

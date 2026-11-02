@@ -150,4 +150,29 @@ public class UsageTimelineTests
         clock.Advance(TimeSpan.FromSeconds(90));
         return (store.GetAll(), clock.GetUtcNow());
     }
+
+    [Fact]
+    public void LayoutAction_SitsUnderThePage()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("Grid Layout", "//layouts/grid");
+            tracker.RecordAction("Added row", "4 rows");
+            tracker.RecordAction("Viewed Cross axis", null);
+
+            var rows = tracker.Project();
+            var page = rows.Single(row => row.Title == "Navigated to Grid Layout page");
+            var added = rows.Single(row => row.Title == "Added row");
+            var viewed = rows.Single(row => row.Title == "Viewed Cross axis");
+
+            Assert.Equal(page.Depth + 1, added.Depth);
+            Assert.Equal(2, added.Depth);
+            Assert.Equal("4 rows", added.Detail);
+            Assert.Equal(UsageCategory.Action, added.Category);
+            Assert.Equal("", viewed.Detail);
+            Assert.True(rows.ToList().IndexOf(viewed) < rows.ToList().IndexOf(added));
+            Assert.True(rows.ToList().IndexOf(added) < rows.ToList().IndexOf(page));
+        }
+    }
 }

@@ -102,6 +102,7 @@ public sealed class SqliteUsageStore : IUsageStore, IDisposable
         Add("Height", "REAL");
         Add("Mode", "TEXT");
         Add("ParentId", "TEXT");
+        Add("Detail", "TEXT");
     }
 
     static void EnsureBatteries()
@@ -156,6 +157,8 @@ public sealed class UsageEventRow
 
     public string? ParentId { get; set; }
 
+    public string? Detail { get; set; }
+
     public static UsageEventRow From(UsageEvent usageEvent) => new()
     {
         Id = usageEvent.Id.ToString("D"),
@@ -173,7 +176,8 @@ public sealed class UsageEventRow
         Width = usageEvent.Width,
         Height = usageEvent.Height,
         Mode = usageEvent.Mode,
-        ParentId = usageEvent.ParentId?.ToString("D")
+        ParentId = usageEvent.ParentId?.ToString("D"),
+        Detail = usageEvent.Detail
     };
 
     public UsageEvent ToEvent() => new(
@@ -192,7 +196,8 @@ public sealed class UsageEventRow
         Width,
         Height,
         Mode,
-        ParentId is null ? null : Guid.Parse(ParentId));
+        ParentId is null ? null : Guid.Parse(ParentId),
+        Detail);
 
     static long? Milliseconds(TimeSpan? span) =>
         span is TimeSpan value ? value.Ticks / TimeSpan.TicksPerMillisecond : null;

@@ -312,6 +312,33 @@ public sealed class UsageTracker
             Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    public void RecordAction(string name, string? detail)
+    {
+        var changed = false;
+        lock (_gate)
+        {
+            EnsureLoaded();
+            if (!_processSessionStarted || _open == null || _sessionId is not Guid sessionId)
+                return;
+
+            Append(
+                UsageEventKind.ActionTaken,
+                _clock.GetUtcNow(),
+                sessionId,
+                _open.Id,
+                Norm(name) ?? "Action",
+                null,
+                null,
+                null,
+                null,
+                detail: Norm(detail));
+            changed = true;
+        }
+
+        if (changed)
+            Changed?.Invoke(this, EventArgs.Empty);
+    }
+
     public void RecordPermission(string name, string result)
     {
         var changed = false;
@@ -585,7 +612,8 @@ public sealed class UsageTracker
         Guid? parentId = null,
         double? width = null,
         double? height = null,
-        string? mode = null)
+        string? mode = null,
+        string? detail = null)
     {
         var stored = _store.Append(new UsageEvent(
             Guid.NewGuid(),
@@ -603,7 +631,8 @@ public sealed class UsageTracker
             width,
             height,
             mode,
-            parentId));
+            parentId,
+            detail));
         _events.Add(stored);
         return stored;
     }

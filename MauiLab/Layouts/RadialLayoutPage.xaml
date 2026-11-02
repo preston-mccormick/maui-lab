@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.RadialLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    Title="Radial Layout"
+    x:DataType="layouts:RadialLayoutPageModel">
+    <ContentPage.Resources>
+        <layouts:NullVisibleConverter x:Key="NullVisible" />
+        <layouts:NotNullVisibleConverter x:Key="NotNullVisible" />
+    </ContentPage.Resources>
+
+    <layouts:LayoutPlayground Title="Radial">
+        <layouts:LayoutPlayground.Canvas>
+            <layouts:RadialLayout
+                BindableLayout.ItemsSource="{Binding Items}"
+                HorizontalOptions="Fill"
+                Radius="{Binding Radius}"
+                StartAngle="{Binding StartAngle}"
+                Sweep="{Binding Sweep}"
+                VerticalOptions="Fill">
+                <layouts:RadialLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCanvasTapped" />
+                </layouts:RadialLayout.GestureRecognizers>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="layouts:LayoutItem">
+                        <layouts:LayoutItemView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </layouts:RadialLayout>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Start" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Column="1"
+                                    Committed="OnStartCommitted"
+                                    Maximum="360"
+                                    Minimum="0"
+                                    Value="{Binding StartAngle}" />
+                                <layouts:SettingSeparator Grid.Row="2" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="3" Text="Sweep" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Committed="OnSweepCommitted"
+                                    Maximum="360"
+                                    Minimum="0"
+                                    Value="{Binding Sweep}" />
+                                <layouts:InfoControl Grid.Row="3" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Items are spaced evenly across the sweep, in degrees clockwise from the top. A wider sweep keeps the start angle. Radius 0 fits the arc to the canvas." Title="Sweep" />
+                                <layouts:SettingSeparator Grid.Row="5" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="6" Text="Radius" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Committed="OnRadiusCommitted"
+                                    Maximum="400"
+                                    Minimum="0"
+                                    Value="{Binding Radius}" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Button Clicked="OnAdd" HorizontalOptions="Start" Text="Add item" />
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <layouts:LeversSection Title="Item">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="8">
+                            <Label IsVisible="{Binding Selected, Converter={StaticResource NullVisible}}" Text="None selected" />
+                            <VerticalStackLayout IsVisible="{Binding Selected, Converter={StaticResource NotNullVisible}}" Spacing="8">
+                                <Label Text="{Binding Selected.Name}" />
+                                <layouts:SettingSeparator />
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto" RowSpacing="4">
+                                    <Label Text="Angle" VerticalOptions="Center" />
+                                    <layouts:NumberLever
+                                        x:Name="AngleEntry"
+                                        Grid.Column="1"
+                                        Committed="OnAngleCommitted"
+                                        HasUnset="True"
+                                        Maximum="360"
+                                        Minimum="0"
+                                        Placeholder="even"
+                                        UnsetValue="NaN"
+                                        Value="{Binding AngleValue}" />
+                                    <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="An angle override pins this item at that angle. The other items keep dividing the sweep. Clear it to rejoin the even spacing." Title="Angle override" />
+                                </Grid>
+                                <Button Clicked="OnRemove" Text="Remove" />
+                                <layouts:LayoutLevers x:Name="ItemLevers" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

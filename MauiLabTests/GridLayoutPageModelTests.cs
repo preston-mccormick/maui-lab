@@ -84,4 +84,50 @@ public class GridLayoutPageModelTests
         Assert.False(auto.IsValueVisible);
         Assert.True(star.IsValueVisible);
     }
+
+    [Fact]
+    public void PlaceChild_RecordsTheCell()
+    {
+        var usage = new ListLayoutUsage();
+        var model = new GridLayoutPageModel(usage);
+        model.AddChildCommand.Execute(null);
+        var child = model.Children[0];
+
+        model.Place(child, 1, 2, 1, 2);
+
+        Assert.Equal(1, child.Row);
+        Assert.Equal(2, child.Column);
+        Assert.Equal(2, child.ColumnSpan);
+        Assert.Equal(("Placed child", "row 1, column 2, span 1 by 2"), usage.Actions[^1]);
+    }
+
+    [Fact]
+    public void RemoveLastColumn_RecordsNothing()
+    {
+        var usage = new ListLayoutUsage();
+        var model = new GridLayoutPageModel(usage);
+
+        while (model.Columns.Count > 1)
+            model.RemoveColumnCommand.Execute(model.Columns[0]);
+
+        var before = usage.Actions.Count;
+        Assert.False(model.RemoveColumnCommand.CanExecute(model.Columns[0]));
+        model.RemoveColumnCommand.Execute(model.Columns[0]);
+
+        Assert.Single(model.Columns);
+        Assert.Equal(before, usage.Actions.Count);
+    }
+
+    [Fact]
+    public void NonNumericSpacing_BecomesZero()
+    {
+        var model = new GridLayoutPageModel();
+
+        model.ColumnSpacing = double.NaN;
+        model.RowSpacing = -4;
+
+        Assert.Equal(0, model.ColumnSpacing);
+        Assert.Equal(0, model.RowSpacing);
+        Assert.Equal(GridLength.Auto, new GridTrack(GridUnitType.Auto, double.NaN, Colors.Red).ToGridLength());
+    }
 }

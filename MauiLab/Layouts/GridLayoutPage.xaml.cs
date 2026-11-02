@@ -1,155 +1,121 @@
-using System.Collections.Specialized;
 using System.ComponentModel;
-using GraphicsColors = Microsoft.Maui.Graphics.Colors;
+using System.Globalization;
 
 namespace MauiLab.Layouts;
 
 public partial class GridLayoutPage : ContentPage
 {
     const double WashOpacity = 0.25;
-
-    readonly List<GridTrack> _tracks = [];
     bool _gridMeasureQueued;
 
     public GridLayoutPage()
     {
         InitializeComponent();
-        var model = new GridLayoutPageModel();
-        Attach(model);
-        BindingContext = model;
-        RebuildGrid();
-    }
-
-    void Attach(GridLayoutPageModel model)
-    {
+        var model = new GridLayoutPageModel(new TrackerLayoutUsage());
         model.PropertyChanged += OnModelPropertyChanged;
-        model.Columns.CollectionChanged += OnTracksChanged;
-        model.Rows.CollectionChanged += OnTracksChanged;
-        WatchTracks(model);
+        BindingContext = model;
+        RebuildWashes();
     }
 
     void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(GridLayoutPageModel.ColumnSpacing)
+        if (e.PropertyName is nameof(GridLayoutPageModel.ColumnDefinitions)
+            or nameof(GridLayoutPageModel.RowDefinitions)
+            or nameof(GridLayoutPageModel.ColumnSpacing)
             or nameof(GridLayoutPageModel.RowSpacing))
         {
-            RebuildGrid();
+            RebuildWashes();
             QueueGridMeasure();
         }
     }
 
-    void OnTracksChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (BindingContext is GridLayoutPageModel model)
-            WatchTracks(model);
-
-        RebuildGrid();
-        QueueGridMeasure();
-    }
-
-    void OnTrackPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(GridTrack.Unit)
-            or nameof(GridTrack.Value)
-            or nameof(GridTrack.Color))
-        {
-            RebuildGrid();
-            QueueGridMeasure();
-        }
-    }
-
-    void WatchTracks(GridLayoutPageModel model)
-    {
-        foreach (var track in _tracks)
-            track.PropertyChanged -= OnTrackPropertyChanged;
-
-        _tracks.Clear();
-        _tracks.AddRange(model.Columns);
-        _tracks.AddRange(model.Rows);
-
-        foreach (var track in _tracks)
-            track.PropertyChanged += OnTrackPropertyChanged;
-    }
-
-    void RebuildGrid()
+    void RebuildWashes()
     {
         if (BindingContext is not GridLayoutPageModel model)
             return;
 
-        var columns = model.Columns;
-        var rows = model.Rows;
-        if (columns.Count == 0 || rows.Count == 0)
-            return;
-
-        LayoutGrid.ColumnSpacing = FiniteOrZero(model.ColumnSpacing);
-        LayoutGrid.RowSpacing = FiniteOrZero(model.RowSpacing);
-
-        var columnDefinitions = new ColumnDefinitionCollection();
-        foreach (var column in columns)
-            columnDefinitions.Add(new ColumnDefinition(column.ToGridLength()));
-
-        var rowDefinitions = new RowDefinitionCollection();
-        foreach (var row in rows)
-            rowDefinitions.Add(new RowDefinition(row.ToGridLength()));
-
-        LayoutGrid.ColumnDefinitions = columnDefinitions;
-        LayoutGrid.RowDefinitions = rowDefinitions;
-
-        LayoutGrid.Children.Clear();
-
-        // Rows first, then columns, so each cell is the pair of washes.
-        for (var row = 0; row < rows.Count; row++)
+        Washes.Children.Clear();
+        for (var row = 0; row < model.Rows.Count; row++)
         {
-            var wash = new CellWash
-            {
-                Color = rows[row].Color,
-                Opacity = WashOpacity,
-            };
+            var wash = new CellWash { Color = model.Rows[row].Color, Opacity = WashOpacity };
             Grid.SetRow(wash, row);
-            Grid.SetColumnSpan(wash, columns.Count);
-            LayoutGrid.Children.Add(wash);
+            Grid.SetColumnSpan(wash, model.Columns.Count);
+            Washes.Children.Add(wash);
         }
 
-        for (var column = 0; column < columns.Count; column++)
+        for (var column = 0; column < model.Columns.Count; column++)
         {
-            var wash = new CellWash
-            {
-                Color = columns[column].Color,
-                Opacity = WashOpacity,
-            };
+            var wash = new CellWash { Color = model.Columns[column].Color, Opacity = WashOpacity };
             Grid.SetColumn(wash, column);
-            Grid.SetRowSpan(wash, rows.Count);
-            LayoutGrid.Children.Add(wash);
-        }
-
-        // CellWash measures to zero, so the label is what an Auto track sizes to.
-        for (var row = 0; row < rows.Count; row++)
-        {
-            for (var column = 0; column < columns.Count; column++)
-            {
-                var label = new Label
-                {
-                    Text = $"{row},{column}",
-                    FontSize = 14,
-                    BackgroundColor = GraphicsColors.Transparent,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalTextAlignment = TextAlignment.Center,
-                    VerticalTextAlignment = TextAlignment.Center,
-                    InputTransparent = true,
-                };
-                Grid.SetRow(label, row);
-                Grid.SetColumn(label, column);
-                LayoutGrid.Children.Add(label);
-            }
+            Grid.SetRowSpan(wash, model.Rows.Count);
+            Washes.Children.Add(wash);
         }
     }
 
-    static double FiniteOrZero(double value) =>
-        double.IsFinite(value) ? Math.Max(0, value) : 0;
+    void OnCanvasTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not Element canvas || BindingContext is not GridLayoutPageModel model || LayoutCanvas.HitsItem(e, canvas))
+            return;
 
-    // The grid fills the page, so an Auto track can change size without the
-    // grid's own bounds changing. Measure and arrange it here.
+        model.ClearSelection();
+        ItemLevers.BindingContext = null;
+    }
+
+    void OnChildTapped(object? sender, TappedEventArgs e)
+    {
+        if (sender is not View view || view.BindingContext is not LayoutItem item || BindingContext is not GridLayoutPageModel model)
+            return;
+
+        foreach (var other in model.Children)
+            other.IsSelected = other == item;
+        model.Selected = item;
+        ItemLevers.BindingContext = view;
+    }
+
+    void OnColumnSpacingCommitted(object? sender, EventArgs e) =>
+        (BindingContext as GridLayoutPageModel)?.CommitColumnSpacing();
+
+    void OnRowSpacingCommitted(object? sender, EventArgs e) =>
+        (BindingContext as GridLayoutPageModel)?.CommitRowSpacing();
+
+    void OnTrackValueCommitted(object? sender, EventArgs e)
+    {
+        if (sender is not BindableObject { BindingContext: GridTrack track } || BindingContext is not GridLayoutPageModel model)
+            return;
+
+        model.CommitTrack(track, model.Columns.Contains(track));
+    }
+
+    string? _placeSnapshot;
+
+    void OnPlaceFocused(object? sender, FocusEventArgs e)
+    {
+        if (BindingContext is GridLayoutPageModel { Selected: LayoutItem item })
+            _placeSnapshot = PlaceDetail(item);
+    }
+
+    void OnPlaceCommitted(object? sender, EventArgs e)
+    {
+        if (BindingContext is not GridLayoutPageModel { Selected: LayoutItem item } model)
+            return;
+
+        var detail = PlaceDetail(item);
+        if (detail == _placeSnapshot)
+            return;
+
+        _placeSnapshot = detail;
+        model.Place(item, item.Row, item.Column, item.RowSpan, item.ColumnSpan);
+    }
+
+    static string PlaceDetail(LayoutItem item) =>
+        $"row {item.Row}, column {item.Column}, span {item.RowSpan} by {item.ColumnSpan}";
+
+    void OnInfoTapped(object? sender, EventArgs e)
+    {
+        if (sender is InfoControl info && BindingContext is GridLayoutPageModel model)
+            model.ViewInfo(info.Title);
+    }
+
     void QueueGridMeasure()
     {
         if (_gridMeasureQueued)
@@ -159,7 +125,6 @@ public partial class GridLayoutPage : ContentPage
         Dispatcher.Dispatch(() =>
         {
             _gridMeasureQueued = false;
-
             var bounds = LayoutGrid.Bounds;
             if (bounds.Width <= 0 || bounds.Height <= 0)
             {
@@ -171,4 +136,20 @@ public partial class GridLayoutPage : ContentPage
             ((IView)LayoutGrid).Arrange(bounds);
         });
     }
+}
+
+public sealed class NullVisibleConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is null;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+public sealed class NotNullVisibleConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not null;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
 }

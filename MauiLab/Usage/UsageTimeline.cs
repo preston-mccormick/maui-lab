@@ -192,6 +192,9 @@ public static class UsageTimeline
                         UsageCategory.Screen,
                         now));
                     break;
+                case UsageEventKind.ActionTaken:
+                    rows.Add(EventRow(entry, 2, entry.Name ?? "Action", entry.Detail ?? "", UsageCategory.Action, now));
+                    break;
                 case UsageEventKind.ControlPressed:
                     rows.Add(EventRow(entry, 2, entry.Name ?? "Button", "", UsageCategory.Action, now));
                     break;

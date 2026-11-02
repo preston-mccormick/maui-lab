@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Layouts.NumberLever"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root"
+    Loaded="OnLoaded">
+    <Grid x:Name="Host" ColumnSpacing="8" RowDefinitions="Auto,Auto">
+        <Entry
+            x:Name="ValueEntry"
+            HorizontalOptions="End"
+            HorizontalTextAlignment="End"
+            MaximumWidthRequest="80"
+            WidthRequest="80"
+            Completed="OnEntryCompleted"
+            Focused="OnEntryFocused"
+            TextChanged="OnEntryTextChanged"
+            Unfocused="OnEntryUnfocused" />
+        <Slider
+            x:Name="ValueSlider"
+            Grid.Row="1"
+            DragCompleted="OnDragCompleted"
+            DragStarted="OnDragStarted"
+            Maximum="100"
+            Minimum="0"
+            ValueChanged="OnSliderChanged" />
+    </Grid>
+</ContentView>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.DockLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Dock Layout"
+    x:DataType="layouts:DockLayoutPageModel">
+    <ContentPage.Resources>
+        <layouts:NullVisibleConverter x:Key="NullVisible" />
+        <layouts:NotNullVisibleConverter x:Key="NotNullVisible" />
+    </ContentPage.Resources>
+
+    <layouts:LayoutPlayground Title="Dock">
+        <layouts:LayoutPlayground.Canvas>
+            <toolkit:DockLayout
+                BindableLayout.ItemsSource="{Binding Items}"
+                HorizontalSpacing="{Binding HorizontalSpacing}"
+                ShouldExpandLastChild="{Binding ExpandLast}"
+                VerticalSpacing="{Binding VerticalSpacing}">
+                <toolkit:DockLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCanvasTapped" />
+                </toolkit:DockLayout.GestureRecognizers>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="layouts:LayoutItem">
+                        <layouts:LayoutItemView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </toolkit:DockLayout>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Expand last" VerticalOptions="Center" />
+                                <Switch Grid.Column="1" HorizontalOptions="Start" IsToggled="{Binding ExpandLast, Mode=OneWay}" Toggled="OnExpandLastToggled" />
+                                <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="The last item in the collection fills the space that is left when expand last is on. Turn it off and that item docks to its own edge." Title="Expand last" />
+                                <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="2" Text="Horizontal spacing" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Committed="OnHorizontalCommitted"
+                                    Maximum="64"
+                                    Minimum="0"
+                                    Value="{Binding HorizontalSpacing}" />
+                                <layouts:SettingSeparator Grid.Row="4" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="5" Text="Vertical spacing" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Committed="OnVerticalCommitted"
+                                    Maximum="64"
+                                    Minimum="0"
+                                    Value="{Binding VerticalSpacing}" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Button Clicked="OnAdd" HorizontalOptions="Start" Text="Add item" />
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <layouts:LeversSection Title="Item">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="8">
+                            <Label IsVisible="{Binding Selected, Converter={StaticResource NullVisible}}" Text="None selected" />
+                            <VerticalStackLayout IsVisible="{Binding Selected, Converter={StaticResource NotNullVisible}}" Spacing="8">
+                                <Label Text="{Binding Selected.Name}" />
+                                <layouts:SettingSeparator />
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                    <Label Text="Edge" VerticalOptions="Center" />
+                                    <Picker x:Name="EdgePicker" Grid.Column="1" ItemsSource="{Binding Edges}" SelectedIndexChanged="OnEdgeChanged" />
+                                    <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="An item docks to an edge and takes its own size along it. None arranges like Top and still takes only its own height." Title="Edges" />
+                                </Grid>
+                                <Button Clicked="OnRemove" Text="Remove" />
+                                <layouts:LayoutLevers x:Name="ItemLevers" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

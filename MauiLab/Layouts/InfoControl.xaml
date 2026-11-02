@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Layouts.InfoControl"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Margin="0,4,0,0"
+    HorizontalOptions="Start"
+    VerticalOptions="Start">
+    <Button
+        Padding="0"
+        BackgroundColor="#0A84FF"
+        Clicked="OnClicked"
+        CornerRadius="12"
+        FontAttributes="Bold"
+        FontFamily="OpenSansSemibold"
+        FontSize="14"
+        HeightRequest="24"
+        MinimumHeightRequest="24"
+        MinimumWidthRequest="24"
+        Text="i"
+        TextColor="White"
+        WidthRequest="24" />
+</ContentView>

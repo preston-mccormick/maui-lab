@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:layouts="clr-namespace:MauiLab.Layouts"
-    x:Name="This"
     x:DataType="View">
     <ContentView.Resources>
         <Style TargetType="Entry">
@@ -22,117 +21,102 @@
         <layouts:LayoutOptionsToStringConverter x:Key="LayoutOptionsConverter" />
     </ContentView.Resources>
 
-    <Border
-        HorizontalOptions="Start"
-        MinimumWidthRequest="200"
-        Style="{StaticResource floating-card}"
-        VerticalOptions="Start">
-        <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
-            <Grid
-                Grid.Row="0"
-                Padding="0,4"
-                Margin="0,0,0,6">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnHeaderTapped" />
-                </Grid.GestureRecognizers>
-                <Label
-                    HorizontalOptions="Start"
-                    Style="{StaticResource Small}"
-                    Text="{Binding Source={x:Reference This}, Path=ExpandGlyph, x:DataType=layouts:LayoutLevers}"
-                    TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
-                                                Dark={StaticResource Tertiary}}" />
-                <Label
-                    HorizontalOptions="Center"
-                    Style="{StaticResource Small}"
-                    Text="{Binding Source={x:Reference This}, Path=Title, x:DataType=layouts:LayoutLevers}"
-                    TextColor="{AppThemeBinding Default={StaticResource DarkTertiary},
-                                                Dark={StaticResource Tertiary}}" />
-            </Grid>
-
-            <Grid
-                Grid.Row="1"
-                ColumnDefinitions="Auto,*"
-                ColumnSpacing="12"
-                IsVisible="{Binding Source={x:Reference This}, Path=IsExpanded, x:DataType=layouts:LayoutLevers}"
-                RowDefinitions="44,44,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                RowSpacing="6">
-
-                <Label Grid.Row="0" Text="Height" />
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Text="{Binding Height, StringFormat='{0:N2}'}" />
-
-                <Label Grid.Row="1" Text="Width" />
-                <Label
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Text="{Binding Width, StringFormat='{0:N2}'}" />
-
-                <Label Grid.Row="2" Text="WidthRequest" />
-                <Entry
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Text="{Binding WidthRequest}" />
-
-                <Label Grid.Row="3" Text="MinimumWidthRequest" />
-                <Entry
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Text="{Binding MinimumWidthRequest}" />
-
-                <Label Grid.Row="4" Text="MaximumWidthRequest" />
-                <Entry
-                    Grid.Row="4"
-                    Grid.Column="1"
-                    Text="{Binding MaximumWidthRequest}" />
-
-                <Label Grid.Row="5" Text="HeightRequest" />
-                <Entry
-                    Grid.Row="5"
-                    Grid.Column="1"
-                    Text="{Binding HeightRequest}" />
-
-                <Label Grid.Row="6" Text="HorizontalOptions" />
-                <Picker
-                    Grid.Row="6"
-                    Grid.Column="1"
-                    SelectedItem="{Binding HorizontalOptions, Converter={StaticResource LayoutOptionsConverter}}">
-                    <Picker.Items>
-                        <x:String>Start</x:String>
-                        <x:String>Center</x:String>
-                        <x:String>End</x:String>
-                        <x:String>Fill</x:String>
-                        <x:String>StartAndExpand</x:String>
-                        <x:String>CenterAndExpand</x:String>
-                        <x:String>EndAndExpand</x:String>
-                        <x:String>FillAndExpand</x:String>
-                    </Picker.Items>
-                </Picker>
-
-                <Label Grid.Row="7" Text="VerticalOptions" />
-                <Picker
-                    Grid.Row="7"
-                    Grid.Column="1"
-                    SelectedItem="{Binding VerticalOptions, Converter={StaticResource LayoutOptionsConverter}}">
-                    <Picker.Items>
-                        <x:String>Start</x:String>
-                        <x:String>Center</x:String>
-                        <x:String>End</x:String>
-                        <x:String>Fill</x:String>
-                        <x:String>StartAndExpand</x:String>
-                        <x:String>CenterAndExpand</x:String>
-                        <x:String>EndAndExpand</x:String>
-                        <x:String>FillAndExpand</x:String>
-                    </Picker.Items>
-                </Picker>
-
-                <Label Grid.Row="8" Text="IsVisible" />
-                <Switch
-                    Grid.Row="8"
-                    Grid.Column="1"
-                    IsToggled="{Binding IsVisible}" />
-            </Grid>
+    <VerticalStackLayout Spacing="0">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Label Text="Height" />
+            <Label
+                Grid.Column="1"
+                LineBreakMode="NoWrap"
+                Text="{Binding Height, StringFormat='{0:N2}'}" />
         </Grid>
-    </Border>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Label Text="Width" />
+            <Label
+                Grid.Column="1"
+                LineBreakMode="NoWrap"
+                Text="{Binding Width, StringFormat='{0:N2}'}" />
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="4">
+            <Label Text="WidthRequest" />
+            <layouts:NumberLever
+                Grid.Column="1"
+                HasUnset="True"
+                Maximum="480"
+                Minimum="0"
+                Value="{Binding WidthRequest}" />
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="4">
+            <Label Text="MinimumWidthRequest" />
+            <layouts:NumberLever
+                Grid.Column="1"
+                HasUnset="True"
+                Maximum="480"
+                Minimum="0"
+                Value="{Binding MinimumWidthRequest}" />
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="4">
+            <Label Text="MaximumWidthRequest" />
+            <layouts:NumberLever
+                Grid.Column="1"
+                HasUnbounded="True"
+                Maximum="480"
+                Minimum="0"
+                Value="{Binding MaximumWidthRequest}" />
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="4">
+            <Label Text="HeightRequest" />
+            <layouts:NumberLever
+                Grid.Column="1"
+                HasUnset="True"
+                Maximum="480"
+                Minimum="0"
+                Value="{Binding HeightRequest}" />
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Label Text="HorizontalOptions" />
+            <Picker
+                Grid.Column="1"
+                SelectedItem="{Binding HorizontalOptions, Converter={StaticResource LayoutOptionsConverter}}">
+                <Picker.Items>
+                    <x:String>Start</x:String>
+                    <x:String>Center</x:String>
+                    <x:String>End</x:String>
+                    <x:String>Fill</x:String>
+                    <x:String>StartAndExpand</x:String>
+                    <x:String>CenterAndExpand</x:String>
+                    <x:String>EndAndExpand</x:String>
+                    <x:String>FillAndExpand</x:String>
+                </Picker.Items>
+            </Picker>
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Label Text="VerticalOptions" />
+            <Picker
+                Grid.Column="1"
+                SelectedItem="{Binding VerticalOptions, Converter={StaticResource LayoutOptionsConverter}}">
+                <Picker.Items>
+                    <x:String>Start</x:String>
+                    <x:String>Center</x:String>
+                    <x:String>End</x:String>
+                    <x:String>Fill</x:String>
+                    <x:String>StartAndExpand</x:String>
+                    <x:String>CenterAndExpand</x:String>
+                    <x:String>EndAndExpand</x:String>
+                    <x:String>FillAndExpand</x:String>
+                </Picker.Items>
+            </Picker>
+        </Grid>
+        <layouts:SettingSeparator />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Label Text="IsVisible" />
+            <Switch Grid.Column="1" HorizontalOptions="End" IsToggled="{Binding IsVisible}" />
+        </Grid>
+    </VerticalStackLayout>
 </ContentView>

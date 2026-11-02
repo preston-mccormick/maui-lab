@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.StackLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    Title="Stack Layout"
+    x:DataType="layouts:StackLayoutPageModel">
+    <ContentPage.Resources>
+        <layouts:NullVisibleConverter x:Key="NullVisible" />
+        <layouts:NotNullVisibleConverter x:Key="NotNullVisible" />
+    </ContentPage.Resources>
+
+    <layouts:LayoutPlayground Title="Stack">
+        <layouts:LayoutPlayground.Canvas>
+            <Grid Padding="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCanvasTapped" />
+                </Grid.GestureRecognizers>
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding Items}"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding IsVertical}"
+                    Spacing="{Binding Spacing}"
+                    VerticalOptions="Fill">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="layouts:LayoutItem">
+                            <layouts:LayoutItemView />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <HorizontalStackLayout
+                    BindableLayout.ItemsSource="{Binding Items}"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding IsHorizontal}"
+                    Spacing="{Binding Spacing}"
+                    VerticalOptions="Fill">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="layouts:LayoutItem">
+                            <layouts:LayoutItemView />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </Grid>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Orientation" VerticalOptions="Center" />
+                                <Picker x:Name="ModePicker" Grid.Column="1" SelectedIndexChanged="OnModeChanged" />
+                                <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="An item's alignment applies across the stack only. Along the stack each item takes its own size; the stack does not hand out leftover space." Title="Cross axis" />
+                                <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="2" Text="Spacing" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Committed="OnSpacingCommitted"
+                                    Maximum="64"
+                                    Minimum="0"
+                                    Value="{Binding Spacing}" />
+                                <layouts:InfoControl Grid.Row="2" Grid.Column="2" InfoTapped="OnInfoTapped" Text="Spacing is the gap between items along the stack." Title="Spacing" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="8">
+                                <Button Clicked="OnAddOne" Text="Add one" />
+                                <Button Grid.Column="1" Clicked="OnAddSet" Text="Add set" />
+                                <Button Grid.Column="2" Clicked="OnAddStack" Text="Add stack" />
+                                <layouts:InfoControl Grid.Column="4" InfoTapped="OnInfoTapped" Text="A nested stack runs across its parent. Select a stack first and new items go inside it." Title="Nesting" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <layouts:LeversSection Title="Item">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="8">
+                            <Label IsVisible="{Binding Selected, Converter={StaticResource NullVisible}}" Text="None selected" />
+                            <VerticalStackLayout IsVisible="{Binding Selected, Converter={StaticResource NotNullVisible}}" Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Label Text="{Binding Selected.Name}" VerticalOptions="Center" />
+                                    <Button Grid.Column="1" Clicked="OnRemove" Text="Remove" />
+                                </Grid>
+                                <Grid
+                                    ColumnDefinitions="Auto,*"
+                                    ColumnSpacing="12"
+                                    IsVisible="{Binding SelectedIsStack}"
+                                    RowDefinitions="Auto,Auto,Auto,Auto"
+                                    RowSpacing="4">
+                                    <Label Text="Orientation" VerticalOptions="Center" />
+                                    <Picker x:Name="StackModePicker" Grid.Column="1" SelectedIndexChanged="OnStackModeChanged" />
+                                    <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="2" />
+                                    <Label Grid.Row="2" Text="Spacing" VerticalOptions="Center" />
+                                    <layouts:NumberLever
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Committed="OnStackSpacingCommitted"
+                                        Editing="OnStackEdit"
+                                        Maximum="64"
+                                        Minimum="0"
+                                        Value="{Binding Selected.Spacing}" />
+                                </Grid>
+                                <layouts:LayoutLevers x:Name="ItemLevers" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

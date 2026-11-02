@@ -30,6 +30,12 @@ public partial class GridTrack : ObservableObject
 
     public bool IsValueVisible => Unit != GridUnitType.Auto;
 
+    partial void OnValueChanged(double value)
+    {
+        if (!double.IsFinite(value) || value < 0)
+            Value = 0;
+    }
+
     public GridLength ToGridLength()
     {
         if (Unit == GridUnitType.Auto)

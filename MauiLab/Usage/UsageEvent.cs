@@ -15,7 +15,8 @@ public enum UsageEventKind
     SurfaceOpened,
     SelectionMade,
     Updated,
-    PermissionRequested
+    PermissionRequested,
+    ActionTaken
 }
 
 public static class UsageEndReason
@@ -43,7 +44,8 @@ public sealed record UsageEvent(
     double? Width = null,
     double? Height = null,
     string? Mode = null,
-    Guid? ParentId = null)
+    Guid? ParentId = null,
+    string? Detail = null)
 {
     public static int Compare(UsageEvent left, UsageEvent right)
     {

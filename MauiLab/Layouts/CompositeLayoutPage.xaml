@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Layouts.CompositeLayoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:forms="clr-namespace:MauiLab.FormControls"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Composite Layout"
+    x:DataType="layouts:CompositeLayoutPageModel">
+
+    <layouts:LayoutPlayground Title="Composite">
+        <layouts:LayoutPlayground.Canvas>
+            <ScrollView>
+                <Border
+                    Margin="16"
+                    HorizontalOptions="Start"
+                    Padding="8"
+                    StrokeThickness="1"
+                    VerticalOptions="Start"
+                    WidthRequest="{Binding Width}">
+                    <Grid>
+                        <FlexLayout
+                            AlignItems="Start"
+                            Direction="Row"
+                            IsVisible="{Binding IsFlex}"
+                            Wrap="Wrap">
+                            <Label Text="Name" VerticalOptions="Center" WidthRequest="120" />
+                            <Entry FlexLayout.Grow="1" MinimumWidthRequest="160" Placeholder="Value" />
+                            <Label
+                                FlexLayout.Basis="100%"
+                                IsVisible="{Binding ShowDescription}"
+                                Text="A short description of the field." />
+                            <Label
+                                FlexLayout.Basis="100%"
+                                IsVisible="{Binding ShowValidation}"
+                                Text="This value is required. The message is taller than the label so a shared cell has to grow, or squeeze it."
+                                TextColor="Red" />
+                        </FlexLayout>
+                        <toolkit:UniformItemsLayout IsVisible="{Binding IsUniform}">
+                            <Label Text="Name" VerticalOptions="Center" WidthRequest="120" />
+                            <Entry MinimumWidthRequest="160" Placeholder="Value" />
+                            <Label IsVisible="{Binding ShowDescription}" Text="A short description of the field." />
+                            <Label
+                                IsVisible="{Binding ShowValidation}"
+                                Text="This value is required. The message is taller than the label so a shared cell has to grow, or squeeze it."
+                                TextColor="Red" />
+                        </toolkit:UniformItemsLayout>
+                        <forms:FormColumnsLayout IsVisible="{Binding IsColumns}">
+                            <Label Text="Name" VerticalOptions="Center" WidthRequest="120" />
+                            <Entry MinimumWidthRequest="160" Placeholder="Value" />
+                            <Label IsVisible="{Binding ShowDescription}" Text="A short description of the field." />
+                            <Label
+                                IsVisible="{Binding ShowValidation}"
+                                Text="This value is required. The message is taller than the label so a shared cell has to grow, or squeeze it."
+                                TextColor="Red" />
+                        </forms:FormColumnsLayout>
+                    </Grid>
+                </Border>
+            </ScrollView>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <layouts:LeversSection Title="Layout">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="4">
+                                <Label Text="Layout" VerticalOptions="Center" />
+                                <Picker x:Name="LayoutPicker" Grid.Column="1" SelectedIndexChanged="OnLayoutChanged" />
+                                <layouts:InfoControl Grid.Column="2" InfoTapped="OnInfoTapped" Text="Uniform sizes every cell from the first child, so a taller validation message does not make its cell taller. Columns grows each row to its tallest part and switches to 2 columns at 640 and 3 at 960 of the field's width." Title="Equal cells" />
+                                <layouts:SettingSeparator Grid.Row="1" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="2" Text="Width" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Committed="OnWidthCommitted"
+                                    Maximum="960"
+                                    Minimum="160"
+                                    Value="{Binding Width}" />
+                                <layouts:InfoControl Grid.Row="2" Grid.Column="2" InfoTapped="OnInfoTapped" Text="The same field is a label, an entry, and an optional description and validation. The width is the space the field is given, not the window." Title="Parts" />
+                                <layouts:SettingSeparator Grid.Row="4" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="5" Text="Description" VerticalOptions="Center" />
+                                <Switch Grid.Row="5" Grid.Column="1" HorizontalOptions="Start" IsToggled="{Binding ShowDescription, Mode=OneWay}" Toggled="OnDescriptionToggled" />
+                                <layouts:SettingSeparator Grid.Row="6" Grid.ColumnSpan="3" />
+                                <Label Grid.Row="7" Text="Validation" VerticalOptions="Center" />
+                                <Switch Grid.Row="7" Grid.Column="1" HorizontalOptions="Start" IsToggled="{Binding ShowValidation, Mode=OneWay}" Toggled="OnValidationToggled" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>
