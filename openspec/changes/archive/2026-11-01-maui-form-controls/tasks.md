@@ -27,4 +27,4 @@
 
 ## 6. Integration
 
-- [ ] 6.1 Build for Mac Catalyst and run the app. Verify the bar stays visible while scrolling, cycling through all five samples updates every group, and `dotnet test MauiLabTests/MauiLabTests.csproj` passes.
+- [x] 6.1 Build for Mac Catalyst and run the app (verified on the iPadOS 27 simulator through Device Hub; the Mac Catalyst build also succeeds). Verify the bar stays visible while scrolling, cycling through all five samples updates every group, and `dotnet test MauiLabTests/MauiLabTests.csproj` passes.
