@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Collections.FlexItemsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:local="clr-namespace:MauiLab.Collections"
+    Title="FlexView"
+    x:DataType="local:FlexItemsPageModel">
+    <layouts:LayoutPlayground
+        Title="Playground"
+        AboutText="{Binding KindSummary}"
+        AboutTitle="{Binding KindTitle}"
+        AboutTapped="OnAboutTapped">
+        <layouts:LayoutPlayground.Canvas>
+            <Grid BackgroundColor="{Binding CanvasColor}">
+                <ScrollView x:Name="ItemsScroll" SizeChanged="OnCanvasSizeChanged">
+                    <FlexLayout
+                        AlignContent="{Binding AlignContent}"
+                        AlignItems="{Binding AlignItems}"
+                        BindableLayout.ItemsSource="{Binding Items}"
+                        Direction="{Binding Direction}"
+                        JustifyContent="{Binding JustifyContent}"
+                        Padding="{Binding LayoutPadding}"
+                        Wrap="{Binding Wrap}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="local:SwatchItem">
+                                <local:SwatchView />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </ScrollView>
+                <local:TimingNotice />
+            </Grid>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Toolbar>
+            <local:CollectionToolbar />
+        </layouts:LayoutPlayground.Toolbar>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <local:CollectionDataSection />
+                <layouts:LeversSection Title="FlexView">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Load in batches" VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    IsToggled="{Binding LoadsInBatches, Mode=OneWay}"
+                                    Toggled="OnBatchesToggled" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="On adds a long list 40 items at a time and lets the page draw between groups. Off replaces the list in one step. On usually takes longer. Either way the items are created on the UI thread, so a few thousand of them stall the whole app."
+                                    Title="Batches" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Direction" VerticalOptions="Center" />
+                                <Picker x:Name="DirectionPicker" Grid.Column="1" SelectedIndexChanged="OnDirectionChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Wrap" VerticalOptions="Center" />
+                                <Picker x:Name="WrapPicker" Grid.Column="1" SelectedIndexChanged="OnWrapChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Justify" VerticalOptions="Center" />
+                                <Picker x:Name="JustifyPicker" Grid.Column="1" SelectedIndexChanged="OnJustifyChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Align items" VerticalOptions="Center" />
+                                <Picker x:Name="AlignItemsPicker" Grid.Column="1" SelectedIndexChanged="OnAlignItemsChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Align content" VerticalOptions="Center" />
+                                <Picker x:Name="AlignContentPicker" Grid.Column="1" SelectedIndexChanged="OnAlignContentChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" RowDefinitions="Auto,Auto">
+                                <Label Text="Padding" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Column="1"
+                                    Committed="OnPaddingCommitted"
+                                    Maximum="64"
+                                    Minimum="0"
+                                    Value="{Binding Padding}" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="Flex has no spacing property. Padding insets the layout. Margin on the item is the gap."
+                                    Title="Gap" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <local:CollectionItemSection />
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

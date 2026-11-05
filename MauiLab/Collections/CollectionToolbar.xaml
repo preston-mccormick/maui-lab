@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Collections.CollectionToolbar"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:local="clr-namespace:MauiLab.Collections"
+    x:DataType="local:CollectionPageModel">
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+        <Button
+            Clicked="OnResetClicked"
+            HorizontalOptions="Start"
+            Text="Reset" />
+        <HorizontalStackLayout
+            Grid.Column="1"
+            Spacing="8"
+            VerticalOptions="Center">
+            <Label Text="Timings" VerticalOptions="Center" />
+            <Switch
+                HorizontalOptions="End"
+                IsToggled="{Binding ShowTimings, Mode=OneWay}"
+                Toggled="OnTimingsToggled"
+                VerticalOptions="Center" />
+            <layouts:InfoControl
+                InfoTapped="OnTimingsInfo"
+                Text="Times a catalog swap, a sort, an arrangement change, a font change, and reset, then shows the name and the duration at the top of the canvas. The switch is shared by every Collections page."
+                Title="Timings"
+                VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentView>

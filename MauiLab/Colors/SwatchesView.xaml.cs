@@ -60,7 +60,6 @@ public partial class SwatchesView : ContentView
         if (CardMargin != margin)
             CardMargin = margin;
 
-        SwatchesScroll.Padding = metrics.ContentPadding;
         ApplyPlatformLayout(metrics);
         // Span updates replace the native layout. Reapply after that turn so the inset wins.
         Dispatcher.Dispatch(() =>

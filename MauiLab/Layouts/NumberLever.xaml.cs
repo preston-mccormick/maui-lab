@@ -132,6 +132,8 @@ public partial class NumberLever : ContentView
         var position = scale.ToSlider(Value);
         if (Math.Abs(ValueSlider.Value - position) > 0.001)
             ValueSlider.Value = position;
+        if (TickLayer != null && (TickLayer.Drawable is not TickMarks marks || !marks.Scale.Equals(scale)))
+            TickLayer.Drawable = new TickMarks(scale);
         _syncing = false;
     }
 
@@ -207,14 +209,15 @@ public partial class NumberLever : ContentView
         Host.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Star)));
         Host.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
         ValueEntry.VerticalOptions = LayoutOptions.Center;
-        Grid.SetRow(ValueSlider, 0);
-        Grid.SetColumn(ValueSlider, 0);
+        Grid.SetRow(SliderHost, 0);
+        Grid.SetColumn(SliderHost, 0);
         Grid.SetColumn(ValueEntry, 1);
+        ApplyEnabled();
     }
 
     void PlaceSlider()
     {
-        if (ValueSlider.Parent is not Layout host || Parent is not Grid grid || grid.ColumnDefinitions.Count == 0)
+        if (SliderHost.Parent is not Layout host || Parent is not Grid grid || grid.ColumnDefinitions.Count == 0)
             return;
 
         var row = Grid.GetRow(this);
@@ -233,16 +236,58 @@ public partial class NumberLever : ContentView
             span = columns;
         }
 
-        host.Children.Remove(ValueSlider);
-        grid.Children.Add(ValueSlider);
-        Grid.SetRow(ValueSlider, row + 1);
-        Grid.SetColumn(ValueSlider, start);
-        Grid.SetColumnSpan(ValueSlider, span);
-        Grid.SetRowSpan(ValueSlider, 1);
+        host.Children.Remove(SliderHost);
+        grid.Children.Add(SliderHost);
+        Grid.SetRow(SliderHost, row + 1);
+        Grid.SetColumn(SliderHost, start);
+        Grid.SetColumnSpan(SliderHost, span);
+        Grid.SetRowSpan(SliderHost, 1);
+        ApplyEnabled();
     }
+
+    protected override void OnPropertyChanged(string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+        if (propertyName == nameof(IsEnabled))
+            ApplyEnabled();
+    }
+
+    void ApplyEnabled()
+    {
+        if (SliderHost != null)
+            SliderHost.IsEnabled = IsEnabled;
+    }
+
+    void OnTickSizeChanged(object? sender, EventArgs e) => TickLayer.Invalidate();
 
     static bool Same(double left, double right) =>
         double.IsNaN(left) ? double.IsNaN(right)
         : double.IsPositiveInfinity(left) ? double.IsPositiveInfinity(right)
         : left == right;
+
+    sealed class TickMarks : IDrawable
+    {
+        readonly NumberScale _scale;
+
+        public TickMarks(NumberScale scale) => _scale = scale;
+
+        public NumberScale Scale => _scale;
+
+        public void Draw(ICanvas canvas, RectF dirty)
+        {
+            var ticks = _scale.TickValues();
+            if (ticks.Count == 0 || dirty.Width <= 1)
+                return;
+
+            var inset = Math.Min(16f, dirty.Width / 4);
+            var usable = dirty.Width - inset * 2;
+            canvas.StrokeColor = Color.FromArgb("#8E8E93");
+            canvas.StrokeSize = 1;
+            foreach (var value in ticks)
+            {
+                var x = inset + (float)(_scale.ToSlider(value) / NumberScale.SliderEnd) * usable;
+                canvas.DrawLine(x, 0, x, dirty.Height);
+            }
+        }
+    }
 }

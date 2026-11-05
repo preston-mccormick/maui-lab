@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Collections.LinearCollectionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:local="clr-namespace:MauiLab.Collections"
+    Title="CollectionView Linear Layout"
+    x:DataType="local:LinearCollectionPageModel">
+    <layouts:LayoutPlayground
+        Title="Playground"
+        AboutText="{Binding KindSummary}"
+        AboutTitle="{Binding KindTitle}"
+        AboutTapped="OnAboutTapped">
+        <layouts:LayoutPlayground.Canvas>
+            <Grid BackgroundColor="{Binding CanvasColor}">
+                <CollectionView
+                    x:Name="ItemsView"
+                    BackgroundColor="Transparent"
+                    ItemSizingStrategy="{Binding Sizing}"
+                    ItemsUpdatingScrollMode="{Binding ScrollMode}"
+                    SelectionMode="None" />
+                <local:TimingNotice />
+            </Grid>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Toolbar>
+            <local:CollectionToolbar />
+        </layouts:LayoutPlayground.Toolbar>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <local:CollectionDataSection />
+                <layouts:LeversSection Title="CollectionView">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Orientation" VerticalOptions="Center" />
+                                <Picker x:Name="OrientationPicker" Grid.Column="1" SelectedIndexChanged="OnOrientationChanged" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" RowDefinitions="Auto,Auto">
+                                <Label Text="Spacing" VerticalOptions="Center" />
+                                <layouts:NumberLever
+                                    Grid.Column="1"
+                                    Committed="OnSpacingCommitted"
+                                    Maximum="64"
+                                    Minimum="0"
+                                    Value="{Binding Spacing}" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Sizing" VerticalOptions="Center" />
+                                <Picker x:Name="SizingPicker" Grid.Column="1" SelectedIndexChanged="OnSizingChanged" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="Measure first uses the first item's size for every item. Measure all keeps each item's own size, and the correction can animate while the page is appearing."
+                                    Title="Sizing" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Scroll" VerticalOptions="Center" />
+                                <Picker x:Name="ScrollPicker" Grid.Column="1" SelectedIndexChanged="OnScrollChanged" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="Where the list stays when the items are replaced, such as a sort or a catalog change. Keep offset keeps the scroll position. Keep item keeps the first visible item on screen. Keep last keeps the last item in view."
+                                    Title="Scroll" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Pin" VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    IsToggled="{Binding OfferPin, Mode=OneWay}"
+                                    Toggled="OnPinToggled" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="Pin and Copy are on the left. Delete is on the right. A horizontal list keeps that split: swipe down for Pin and Copy, swipe up for Delete. A mouse drag on Mac Catalyst uses the same edges. A right-click or Control-click lists them too. Delete is destructive."
+                                    Title="Swipe" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Copy" VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    IsToggled="{Binding OfferCopy, Mode=OneWay}"
+                                    Toggled="OnCopyToggled" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label Text="Delete" VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    IsToggled="{Binding OfferDelete, Mode=OneWay}"
+                                    Toggled="OnDeleteToggled" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <local:CollectionItemSection />
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Collections.UniformItemsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:layouts="clr-namespace:MauiLab.Layouts"
+    xmlns:local="clr-namespace:MauiLab.Collections"
+    Title="UniformItemsView"
+    x:DataType="local:UniformItemsPageModel">
+    <layouts:LayoutPlayground
+        Title="Playground"
+        AboutText="{Binding KindSummary}"
+        AboutTitle="{Binding KindTitle}"
+        AboutTapped="OnAboutTapped">
+        <layouts:LayoutPlayground.Canvas>
+            <Grid BackgroundColor="{Binding CanvasColor}">
+                <ContentView x:Name="LayoutHost" />
+                <local:TimingNotice />
+            </Grid>
+        </layouts:LayoutPlayground.Canvas>
+        <layouts:LayoutPlayground.Toolbar>
+            <local:CollectionToolbar />
+        </layouts:LayoutPlayground.Toolbar>
+        <layouts:LayoutPlayground.Panel>
+            <VerticalStackLayout Spacing="12">
+                <local:CollectionDataSection />
+                <layouts:LeversSection Title="UniformItemsView">
+                    <layouts:LeversSection.Body>
+                        <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Load in batches" VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    IsToggled="{Binding LoadsInBatches, Mode=OneWay}"
+                                    Toggled="OnBatchesToggled" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="On adds a long list 40 items at a time and lets the page draw between groups. Off replaces the list in one step. On usually takes longer. Either way the items are created on the UI thread, so a few thousand of them stall the whole app."
+                                    Title="Batches" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Max columns" VerticalOptions="Center" />
+                                <Picker x:Name="ColumnsPicker" Grid.Column="1" SelectedIndexChanged="OnColumnsChanged" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="The first item is measured once and that size is kept. A later item does not change the cell. Changing the card rebuilds the layout so the new first size is read."
+                                    Title="First cell" />
+                            </Grid>
+                            <layouts:SettingSeparator />
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Label Text="Max rows" VerticalOptions="Center" />
+                                <Picker x:Name="RowsPicker" Grid.Column="1" SelectedIndexChanged="OnRowsChanged" />
+                                <layouts:InfoControl
+                                    Grid.Column="2"
+                                    InfoTapped="OnInfoTapped"
+                                    Text="Rows stop at this maximum. Items that do not fit are not arranged."
+                                    Title="Max rows" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </layouts:LeversSection.Body>
+                </layouts:LeversSection>
+                <local:CollectionItemSection />
+            </VerticalStackLayout>
+        </layouts:LayoutPlayground.Panel>
+    </layouts:LayoutPlayground>
+</ContentPage>

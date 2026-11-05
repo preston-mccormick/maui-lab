@@ -12,36 +12,75 @@
             <Border
                 x:Name="PanelBorder"
                 Padding="8"
-                Style="{StaticResource floating-card}"
+                BackgroundColor="{AppThemeBinding Light=#F2F2F7, Dark=#1C1C1E}"
+                StrokeThickness="0"
                 toolkit:DockLayout.DockPosition="Bottom">
-                <Grid RowDefinitions="Auto,*">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
                     <Grid
-                        ColumnDefinitions="Auto,*"
-                        ColumnSpacing="8"
-                        Padding="0,4">
+                        x:Name="SplitGrip"
+                        HeightRequest="0"
+                        IsVisible="False">
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnHeaderTapped" />
+                            <PanGestureRecognizer PanUpdated="OnSplitPan" />
+                            <PointerGestureRecognizer PointerEntered="OnSplitEntered" PointerExited="OnSplitExited" />
                         </Grid.GestureRecognizers>
-                        <Label
-                            FontAttributes="Bold"
-                            FontSize="22"
+                        <Border
+                            BackgroundColor="#8E8E93"
+                            HeightRequest="5"
                             HorizontalOptions="Center"
-                            Text="{Binding Source={x:Reference This}, Path=ExpandGlyph, x:DataType=layouts:LayoutPlayground}"
+                            InputTransparent="True"
+                            StrokeThickness="0"
                             VerticalOptions="Center"
-                            WidthRequest="24" />
-                        <Label
+                            WidthRequest="48">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="2" />
+                            </Border.StrokeShape>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="0,4">
+                        <Grid ColumnSpacing="8">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnHeaderTapped" />
+                            </Grid.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="22"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Source={x:Reference This}, Path=ExpandGlyph, x:DataType=layouts:LayoutPlayground}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="24" />
+                                <Label
+                                    Grid.Column="1"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    IsVisible="{Binding Source={x:Reference This}, Path=ShowTitle, x:DataType=layouts:LayoutPlayground}"
+                                    LineBreakMode="NoWrap"
+                                    Text="{Binding Source={x:Reference This}, Path=Title, x:DataType=layouts:LayoutPlayground}"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </Grid>
+                        <!--  24 matches the info buttons in the cards: 12 scrollbar, 4 card margin, 8 card padding.  -->
+                        <layouts:InfoControl
                             Grid.Column="1"
-                            FontAttributes="Bold"
-                            FontSize="18"
-                            IsVisible="{Binding Source={x:Reference This}, Path=ShowTitle, x:DataType=layouts:LayoutPlayground}"
-                            LineBreakMode="NoWrap"
-                            Text="{Binding Source={x:Reference This}, Path=Title, x:DataType=layouts:LayoutPlayground}"
+                            Margin="0,0,24,0"
+                            HorizontalOptions="End"
+                            InfoTapped="OnAboutTapped"
+                            IsVisible="{Binding Source={x:Reference This}, Path=ShowAbout, x:DataType=layouts:LayoutPlayground}"
+                            Text="{Binding Source={x:Reference This}, Path=AboutText, x:DataType=layouts:LayoutPlayground}"
+                            Title="{Binding Source={x:Reference This}, Path=AboutTitle, x:DataType=layouts:LayoutPlayground}"
                             VerticalOptions="Center" />
                     </Grid>
+                    <ContentView
+                        x:Name="ToolbarHost"
+                        Grid.Row="2"
+                        Margin="0,0,24,8"
+                        IsVisible="{Binding Source={x:Reference This}, Path=ShowToolbar, x:DataType=layouts:LayoutPlayground}" />
                     <ScrollView
-                        Grid.Row="1"
+                        Grid.Row="3"
                         IsVisible="{Binding Source={x:Reference This}, Path=IsExpanded, x:DataType=layouts:LayoutPlayground}">
-                        <ContentView x:Name="PanelHost" />
+                        <!--  Right margin keeps info buttons and add buttons clear of the overlay scrollbar, which still takes taps when it is hidden.  -->
+                        <ContentView x:Name="PanelHost" Margin="0,0,12,0" />
                     </ScrollView>
                 </Grid>
             </Border>

@@ -1,0 +1,15 @@
+---
+description: Record project lessons in a LESSONS.md next to the code they concern
+alwaysApply: true
+---
+
+# Lessons
+
+When work in this repo teaches something about a control, a platform, or how cost in one place shows up in the rest of the app, record it in a `LESSONS.md` beside that code.
+
+- Collection lessons go in `MauiLab/Collections/LESSONS.md`.
+- Layout lessons go in `MauiLab/Layouts/LESSONS.md`.
+- Use the same pattern for other feature folders. Create the file if it is missing.
+- Add a short heading and a few sentences. Update an existing note when the same lesson changes.
+- Keep it to behavior that would surprise the next change: what broke, why, and what to do instead.
+- Do not record secrets, task checklists, or a diary of the edit.

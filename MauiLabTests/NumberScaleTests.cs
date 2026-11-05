@@ -72,4 +72,23 @@ public class NumberScaleTests
         Assert.Equal(0, scale.ToSlider(double.NaN));
         Assert.True(double.IsNaN(scale.FromSlider(0)));
     }
+
+    [Fact]
+    public void ShortRangeTicksEveryStep()
+    {
+        var scale = new NumberScale(1, 8, 1, false, -1, false);
+
+        Assert.Equal([1d, 2, 3, 4, 5, 6, 7, 8], scale.TickValues());
+    }
+
+    [Fact]
+    public void WideRangeUsesFewerTicks()
+    {
+        var scale = new NumberScale(40, 400, 1, false, -1, false);
+        var ticks = scale.TickValues();
+
+        Assert.Equal(40, ticks[0]);
+        Assert.Equal(400, ticks[^1]);
+        Assert.InRange(ticks.Count, 4, 9);
+    }
 }

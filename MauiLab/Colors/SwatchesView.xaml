@@ -54,28 +54,12 @@
         </DataTemplate>
     </ContentView.Resources>
     <Grid>
-        <ScrollView
-            x:Name="SwatchesScroll"
-            BackgroundColor="Transparent"
-            HorizontalOptions="Fill"
-            IsVisible="{Binding UseFlexLayout}"
-            VerticalOptions="Fill">
-            <FlexLayout
-                AlignContent="Start"
-                AlignItems="Start"
-                BindableLayout.ItemsSource="{Binding FlexSwatches}"
-                BindableLayout.ItemTemplate="{StaticResource SwatchTemplate}"
-                Direction="Row"
-                HorizontalOptions="Fill"
-                Wrap="Wrap" />
-        </ScrollView>
         <CollectionView
             x:Name="SwatchesCollection"
             BackgroundColor="Transparent"
             HorizontalOptions="Fill"
-            IsVisible="{Binding UseCollectionView}"
             ItemTemplate="{StaticResource SwatchTemplate}"
-            ItemsSource="{Binding VirtualSwatches}"
+            ItemsSource="{Binding Swatches}"
             SelectionMode="None"
             VerticalOptions="Fill">
             <CollectionView.ItemsLayout>

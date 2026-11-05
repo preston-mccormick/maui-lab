@@ -175,4 +175,28 @@ public class UsageTimelineTests
             Assert.True(rows.ToList().IndexOf(added) < rows.ToList().IndexOf(page));
         }
     }
+
+    [Fact]
+    public void CollectionAction_SitsUnderListView()
+    {
+        var (tracker, _, store) = UsageLab.Open();
+        using (store)
+        {
+            tracker.Activate("List View", "//collections/listview");
+            tracker.RecordAction("Deleted swatch", "AliceBlue");
+            tracker.RecordAction("Viewed Swipe", null);
+
+            var rows = tracker.Project();
+            var page = rows.Single(row => row.Title == "Navigated to List View page");
+            var deleted = rows.Single(row => row.Title == "Deleted swatch");
+            var viewed = rows.Single(row => row.Title == "Viewed Swipe");
+
+            Assert.Equal(page.Depth + 1, deleted.Depth);
+            Assert.Equal(2, deleted.Depth);
+            Assert.Equal("AliceBlue", deleted.Detail);
+            Assert.Equal(UsageCategory.Action, deleted.Category);
+            Assert.Equal("", viewed.Detail);
+            Assert.True(rows.ToList().IndexOf(deleted) < rows.ToList().IndexOf(page));
+        }
+    }
 }

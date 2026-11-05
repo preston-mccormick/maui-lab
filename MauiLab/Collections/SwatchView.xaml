@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MauiLab.Collections.SwatchView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiLab.Collections"
+    x:DataType="local:SwatchItem"
+    HorizontalOptions="Center"
+    VerticalOptions="Start">
+    <Border
+        Padding="8"
+        BackgroundColor="{Binding Color}"
+        HeightRequest="{Binding Height}"
+        Margin="{Binding BindingContext.ItemMargin, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+        StrokeThickness="0"
+        WidthRequest="{Binding Width}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="8" />
+        </Border.StrokeShape>
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnTapped" />
+        </Border.GestureRecognizers>
+        <Grid>
+            <Label
+                FontSize="{Binding BindingContext.FontSize, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                IsVisible="{Binding BindingContext.ShowRow, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                LineBreakMode="TailTruncation"
+                Text="{Binding Name}"
+                TextColor="{Binding NameInk}"
+                VerticalOptions="Center" />
+            <Grid
+                IsVisible="{Binding BindingContext.ShowStack, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                RowDefinitions="*,*,*">
+                <Label
+                    FontSize="{Binding BindingContext.FontSize, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                    LineBreakMode="TailTruncation"
+                    Text="{Binding Name}"
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="1"
+                    FontSize="{Binding BindingContext.FontSize, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                    HorizontalOptions="Center"
+                    LineBreakMode="TailTruncation"
+                    Text="{Binding Name}"
+                    TextColor="Gray"
+                    VerticalOptions="Center" />
+                <Label
+                    Grid.Row="2"
+                    FontSize="{Binding BindingContext.FontSize, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                    HorizontalOptions="End"
+                    LineBreakMode="TailTruncation"
+                    Text="{Binding Name}"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+            </Grid>
+            <Ellipse
+                Fill="{Binding NameInk}"
+                HeightRequest="8"
+                HorizontalOptions="End"
+                IsVisible="{Binding IsPinned}"
+                VerticalOptions="Start"
+                WidthRequest="8" />
+        </Grid>
+    </Border>
+</ContentView>

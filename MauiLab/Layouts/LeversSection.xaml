@@ -5,7 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:layouts="clr-namespace:MauiLab.Layouts"
     x:Name="This">
-    <VerticalStackLayout Spacing="6">
+    <Border
+        Margin="0,0,4,0"
+        Padding="8"
+        Style="{StaticResource floating-card}">
+        <VerticalStackLayout Spacing="6">
         <Grid Padding="0,4">
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnHeaderTapped" />
@@ -26,5 +30,6 @@
                 VerticalOptions="Center" />
         </Grid>
         <ContentView x:Name="BodyHost" IsVisible="{Binding Source={x:Reference This}, Path=IsExpanded, x:DataType=layouts:LeversSection}" />
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
 </ContentView>

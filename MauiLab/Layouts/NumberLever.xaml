@@ -16,13 +16,20 @@
             Focused="OnEntryFocused"
             TextChanged="OnEntryTextChanged"
             Unfocused="OnEntryUnfocused" />
-        <Slider
-            x:Name="ValueSlider"
-            Grid.Row="1"
-            DragCompleted="OnDragCompleted"
-            DragStarted="OnDragStarted"
-            Maximum="100"
-            Minimum="0"
-            ValueChanged="OnSliderChanged" />
+        <Grid x:Name="SliderHost" Grid.Row="1" RowDefinitions="Auto,8">
+            <Slider
+                x:Name="ValueSlider"
+                DragCompleted="OnDragCompleted"
+                DragStarted="OnDragStarted"
+                Maximum="100"
+                Minimum="0"
+                ValueChanged="OnSliderChanged" />
+            <GraphicsView
+                x:Name="TickLayer"
+                Grid.Row="1"
+                HeightRequest="8"
+                InputTransparent="True"
+                SizeChanged="OnTickSizeChanged" />
+        </Grid>
     </Grid>
 </ContentView>

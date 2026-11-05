@@ -94,6 +94,47 @@ public readonly record struct NumberScale(
         return Math.Clamp(Minimum + steps * Step, Minimum, Maximum);
     }
 
+    public IReadOnlyList<double> TickValues()
+    {
+        var span = Maximum - Minimum;
+        if (!(span > 0))
+            return [Minimum];
+
+        if (Step > 0)
+        {
+            var steps = (int)Math.Round(span / Step);
+            if (steps is > 0 and <= 12)
+            {
+                var all = new double[steps + 1];
+                for (var i = 0; i <= steps; i++)
+                    all[i] = Minimum + i * Step;
+                return all;
+            }
+        }
+
+        var interval = NiceInterval(span / 4);
+        var ticks = new List<double> { Minimum };
+        var value = Math.Ceiling(Minimum / interval) * interval;
+        if (value <= Minimum + interval * 0.01)
+            value += interval;
+        while (value < Maximum - interval * 0.01)
+        {
+            ticks.Add(value);
+            value += interval;
+        }
+
+        ticks.Add(Maximum);
+        return ticks;
+    }
+
+    static double NiceInterval(double raw)
+    {
+        var magnitude = Math.Pow(10, Math.Floor(Math.Log10(Math.Max(raw, 1e-9))));
+        var normalized = raw / magnitude;
+        var factor = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+        return factor * magnitude;
+    }
+
     static string Trim(double value) =>
         Math.Abs(value - Math.Round(value)) < 0.0001
             ? Math.Round(value).ToString("0", CultureInfo.CurrentCulture)

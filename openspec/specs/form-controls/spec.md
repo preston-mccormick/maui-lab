@@ -2,16 +2,16 @@
 
 ## Purpose
 
-Shows the built-in form controls and the toolkit form pieces on one top-level page, grouped by control type, bound to one of several sample records that the user can cycle through, with live validation.
+Shows the built-in form controls and the toolkit form pieces on a page in the Forms group, grouped by control type, bound to one of several sample records that the user can cycle through, with live validation.
 
 ## Requirements
 
-### Requirement: Form Controls is a top-level page
-The app SHALL include a flyout item titled Form Controls that opens a page titled Form Controls. That item MUST sit outside the Experiments group.
+### Requirement: Form Controls is a Forms page
+The app SHALL include a flyout group titled Forms. Form Controls SHALL be a page in that group, with the page title Form Controls. Dialogs and Menu Button SHALL remain in that group.
 
 #### Scenario: Open from the flyout
-- **WHEN** the user opens the flyout
-- **THEN** Form Controls is its own item, not under Experiments, and choosing it shows a page titled Form Controls
+- **WHEN** the user opens Forms
+- **THEN** Form Controls is one of its pages, and choosing it shows a page titled Form Controls
 
 ### Requirement: Five samples in a fixed order
 The page SHALL hold five samples named Empty, Short, Long, Valid, and Invalid, in that order. The page SHALL open on Empty.

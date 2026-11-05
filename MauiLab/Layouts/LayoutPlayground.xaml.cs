@@ -9,10 +9,39 @@ public partial class LayoutPlayground : ContentView
     public const double PanelHeight = 280;
     public const double CollapsedStripWidth = 44;
 
+    public static double BottomPanelHeight { get; private set; } = PanelHeight;
+
+    static event Action? SplitChanged;
+
+    bool _watchingSplit;
+    double _panStart;
+
     public LayoutPlayground()
     {
         InitializeComponent();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
+
+    void OnLoaded(object? sender, EventArgs e)
+    {
+        if (_watchingSplit)
+            return;
+
+        _watchingSplit = true;
+        SplitChanged += ApplySharedSplit;
+    }
+
+    void OnUnloaded(object? sender, EventArgs e)
+    {
+        if (!_watchingSplit)
+            return;
+
+        _watchingSplit = false;
+        SplitChanged -= ApplySharedSplit;
+    }
+
+    void ApplySharedSplit() => ApplyDock();
 
     public string Title
     {
@@ -42,6 +71,47 @@ public partial class LayoutPlayground : ContentView
     public static readonly BindableProperty PanelProperty =
         BindableProperty.Create(nameof(Panel), typeof(View), typeof(LayoutPlayground),
             propertyChanged: (bindable, _, value) => ((LayoutPlayground)bindable).PanelHost.Content = value as View);
+
+    public View? Toolbar
+    {
+        get => (View?)GetValue(ToolbarProperty);
+        set => SetValue(ToolbarProperty, value);
+    }
+
+    public static readonly BindableProperty ToolbarProperty =
+        BindableProperty.Create(nameof(Toolbar), typeof(View), typeof(LayoutPlayground),
+            propertyChanged: (bindable, _, value) =>
+            {
+                var playground = (LayoutPlayground)bindable;
+                playground.ToolbarHost.Content = value as View;
+                playground.OnPropertyChanged(nameof(ShowToolbar));
+            });
+
+    public string AboutTitle
+    {
+        get => (string)GetValue(AboutTitleProperty);
+        set => SetValue(AboutTitleProperty, value);
+    }
+
+    public static readonly BindableProperty AboutTitleProperty =
+        BindableProperty.Create(nameof(AboutTitle), typeof(string), typeof(LayoutPlayground), "");
+
+    public string AboutText
+    {
+        get => (string)GetValue(AboutTextProperty);
+        set => SetValue(AboutTextProperty, value);
+    }
+
+    public static readonly BindableProperty AboutTextProperty =
+        BindableProperty.Create(nameof(AboutText), typeof(string), typeof(LayoutPlayground), "",
+            propertyChanged: (bindable, _, _) => ((LayoutPlayground)bindable).OnPropertyChanged(nameof(ShowAbout)));
+
+    /// <summary>Raised when the header info button is tapped, before the banner is shown.</summary>
+    public event EventHandler? AboutTapped;
+
+    public bool ShowAbout => IsExpanded && AboutText.Length > 0;
+
+    public bool ShowToolbar => IsExpanded && Toolbar != null;
 
     public bool IsExpanded
     {
@@ -80,10 +150,14 @@ public partial class LayoutPlayground : ContentView
         var playground = (LayoutPlayground)bindable;
         playground.OnPropertyChanged(nameof(ExpandGlyph));
         playground.OnPropertyChanged(nameof(ShowTitle));
+        playground.OnPropertyChanged(nameof(ShowAbout));
+        playground.OnPropertyChanged(nameof(ShowToolbar));
         playground.ApplyDock();
     }
 
     void OnHeaderTapped(object? sender, TappedEventArgs e) => IsExpanded = !IsExpanded;
+
+    void OnAboutTapped(object? sender, EventArgs e) => AboutTapped?.Invoke(this, EventArgs.Empty);
 
     void OnDismissInfo(object? sender, EventArgs e) => DismissInfo();
 
@@ -102,10 +176,64 @@ public partial class LayoutPlayground : ContentView
         {
             PanelBorder.WidthRequest = right ? CollapsedStripWidth : -1;
             PanelBorder.HeightRequest = -1;
+            SplitGrip.IsVisible = false;
+            SplitGrip.HeightRequest = 0;
             return;
         }
 
         PanelBorder.WidthRequest = right ? PanelWidth : -1;
-        PanelBorder.HeightRequest = right ? -1 : PanelHeight;
+        PanelBorder.HeightRequest = right ? -1 : BottomPanelHeight;
+        var grip = !right && IsExpanded;
+        SplitGrip.IsVisible = grip;
+        SplitGrip.HeightRequest = grip ? 28 : 0;
+    }
+
+    void OnSplitPan(object? sender, PanUpdatedEventArgs e)
+    {
+        if (!IsExpanded || LayoutPanelEdge.ForWidth(Width) != PanelEdge.Bottom)
+            return;
+
+        if (e.StatusType == GestureStatus.Started)
+        {
+            _panStart = BottomPanelHeight;
+            SetSplitCursor(grabbing: true);
+        }
+        else if (e.StatusType == GestureStatus.Running)
+        {
+            SetBottomPanelHeight(_panStart - e.TotalY);
+            SetSplitCursor(grabbing: true);
+        }
+        else if (e.StatusType is GestureStatus.Completed or GestureStatus.Canceled)
+            SetSplitCursor(grabbing: false);
+    }
+
+    void OnSplitEntered(object? sender, PointerEventArgs e) => SetSplitCursor(grabbing: false);
+
+    void OnSplitExited(object? sender, PointerEventArgs e) => SetSplitCursor(grabbing: false, clear: true);
+
+    void SetSplitCursor(bool grabbing, bool clear = false)
+    {
+#if MACCATALYST
+        if (clear)
+            AppKit.NSCursor.ArrowCursor.Set();
+        else if (grabbing)
+            AppKit.NSCursor.ClosedHandCursor.Set();
+        else
+            AppKit.NSCursor.OpenHandCursor.Set();
+#else
+        _ = grabbing;
+        _ = clear;
+#endif
+    }
+
+    void SetBottomPanelHeight(double height)
+    {
+        var max = Math.Max(160, Height - 120);
+        var next = Math.Clamp(height, 160, max);
+        if (Math.Abs(next - BottomPanelHeight) < 0.5)
+            return;
+
+        BottomPanelHeight = next;
+        SplitChanged?.Invoke();
     }
 }

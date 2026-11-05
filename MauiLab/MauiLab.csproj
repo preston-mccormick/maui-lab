@@ -128,9 +128,6 @@
 	  <Compile Update="Layouts\GridLayoutPage.xaml.cs">
 	    <DependentUpon>GridLayoutPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Layouts\ScrollingLayoutPage.xaml.cs">
-	    <DependentUpon>ScrollingLayoutPage.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="MenuButton\Controls\MenuItem.xaml.cs">
 	    <DependentUpon>MenuItem.xaml</DependentUpon>
 	  </Compile>
@@ -204,9 +201,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Layouts\LeversSection.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Layouts\ScrollingLayoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MenuButton\Controls\MenuItem.xaml">
