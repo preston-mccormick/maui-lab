@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Border
+    x:Class="MauiLab.Contacts.ContactCard"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiLab.Contacts"
+    x:Name="CardBorder"
+    Margin="12,6"
+    Padding="12"
+    BackgroundColor="{AppThemeBinding Light=White, Dark=#3A3A3C}"
+    Stroke="{AppThemeBinding Light=#D1D1D6, Dark=#48484A}"
+    StrokeThickness="1"
+    x:DataType="local:ContactItemModel">
+    <Border.Shadow>
+        <Shadow Brush="Black" Offset="0,2" Opacity="0.18" Radius="6" />
+    </Border.Shadow>
+    <Border.StrokeShape>
+        <RoundRectangle x:Name="CardShape" CornerRadius="12" />
+    </Border.StrokeShape>
+    <Grid x:Name="FaceHost">
+        <Grid
+            x:Name="ReadFace"
+            ColumnDefinitions="124,*"
+            ColumnSpacing="12"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="8">
+            <Label
+                Grid.ColumnSpan="2"
+                FontAttributes="Bold"
+                FontSize="18"
+                LineBreakMode="WordWrap"
+                Text="{Binding DisplayName}" />
+            <Border
+                x:Name="PhotoFrame"
+                Grid.Row="1"
+                Padding="0"
+                HeightRequest="148"
+                StrokeThickness="0"
+                VerticalOptions="Fill"
+                WidthRequest="124"
+                BackgroundColor="{AppThemeBinding Light=#E5E5EA, Dark=#1C1C1E}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <Image
+                    x:Name="PhotoImage"
+                    Aspect="AspectFill"
+                    HeightRequest="148"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    WidthRequest="124" />
+            </Border>
+            <VerticalStackLayout
+                x:Name="InfoBlock"
+                Grid.Row="1"
+                Grid.Column="1"
+                Spacing="4"
+                VerticalOptions="Center">
+                <Label
+                    x:Name="AddressLabel"
+                    LineBreakMode="WordWrap"
+                    Text="{Binding AddressText}"
+                    TextColor="{AppThemeBinding Light=#3A3A3C, Dark=#E5E5EA}" />
+                <Label
+                    LineBreakMode="TailTruncation"
+                    Text="{Binding Email}" />
+                <Label Text="{Binding Phone}" />
+                <Label
+                    IsVisible="{Binding HasNotes}"
+                    LineBreakMode="WordWrap"
+                    Text="{Binding Notes}" />
+                <Button
+                    Clicked="OnEdit"
+                    FontSize="17"
+                    HorizontalOptions="End"
+                    Margin="0,8,0,0"
+                    MinimumHeightRequest="48"
+                    Padding="22,10"
+                    Text="Edit" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</Border>

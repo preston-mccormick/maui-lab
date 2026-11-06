@@ -6,6 +6,8 @@ namespace MauiLab;
 public partial class App : Application
 {
     readonly UsageTracker _usage;
+    Window? _window;
+    IDispatcherTimer? _areaTimer;
 
     public App(UsageTracker usage)
     {
@@ -26,7 +28,8 @@ public partial class App : Application
         window.Deactivated += (_, _) => Safe(_usage.Background);
         window.Stopped += (_, _) => Safe(_usage.Background);
         window.Destroying += (_, _) => Safe(_usage.EndSession);
-        window.SizeChanged += (_, _) => Safe(() => RecordArea(window));
+        _window = window;
+        window.SizeChanged += (_, _) => ScheduleArea(window);
 
         if (window.Page is Shell shell)
         {
@@ -50,6 +53,22 @@ public partial class App : Application
         var page = PageOf(window);
         _usage.Activate(page.Name, page.Route, page.TypeName);
         RecordArea(window);
+    }
+
+    void ScheduleArea(Window window)
+    {
+        var timer = _areaTimer ??= window.Dispatcher.CreateTimer();
+        timer.Interval = TimeSpan.FromMilliseconds(300);
+        timer.IsRepeating = false;
+        timer.Tick -= RecordDeferredArea;
+        timer.Tick += RecordDeferredArea;
+        timer.Start();
+    }
+
+    void RecordDeferredArea(object? sender, EventArgs e)
+    {
+        if (_window != null)
+            Safe(() => RecordArea(_window));
     }
 
     void RecordArea(Window window)

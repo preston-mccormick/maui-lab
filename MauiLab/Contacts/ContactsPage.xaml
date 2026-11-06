@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MauiLab.Contacts.ContactsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:contacts="clr-namespace:MauiLab.Contacts"
+    Title="Contacts"
+    x:DataType="contacts:ContactsPageModel">
+    <Grid RowDefinitions="Auto,*">
+        <Grid
+            x:Name="ToolBar"
+            Padding="12,8"
+            ColumnDefinitions="*,*,Auto"
+            ColumnSpacing="12">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" IsEnabled="{Binding CanQuery}">
+                <Label Text="Filter" VerticalOptions="Center" />
+                <Picker
+                    x:Name="FilterPicker"
+                    Title="Filter"
+                    Grid.Column="1"
+                    HorizontalOptions="Fill"
+                    SelectedIndexChanged="OnFilterChanged"
+                    Unfocused="OnFilterClosed" />
+            </Grid>
+            <Grid
+                Grid.Column="1"
+                ColumnDefinitions="Auto,*"
+                ColumnSpacing="8"
+                IsEnabled="{Binding CanQuery}">
+                <Label Text="Sort" VerticalOptions="Center" />
+                <Picker
+                    x:Name="SortPicker"
+                    Title="Sort"
+                    Grid.Column="1"
+                    HorizontalOptions="Fill"
+                    SelectedIndexChanged="OnSortChanged"
+                    Unfocused="OnSortClosed" />
+            </Grid>
+            <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                <Button
+                    Clicked="OnNewContact"
+                    FontSize="17"
+                    IsEnabled="{Binding CanQuery}"
+                    MinimumHeightRequest="48"
+                    Padding="18,10"
+                    Text="New" />
+                <Button
+                    x:Name="TitleReset"
+                    Clicked="OnReset"
+                    FontSize="17"
+                    IsEnabled="False"
+                    MinimumHeightRequest="48"
+                    Opacity="0.5"
+                    Padding="18,10"
+                    Text="Reset" />
+            </HorizontalStackLayout>
+        </Grid>
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="{AppThemeBinding Light=#E4E4E9, Dark=#121212}">
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                IsVisible="{Binding ShowEmpty}"
+                MaximumWidthRequest="360"
+                Spacing="12"
+                VerticalOptions="Center">
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Text="Generate downloads 1,000 people and their photos." />
+                <Button
+                    Clicked="OnGenerate"
+                    FontSize="17"
+                    HorizontalOptions="Center"
+                    MinimumHeightRequest="48"
+                    Padding="22,10"
+                    Text="Generate Database" />
+            </VerticalStackLayout>
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                IsVisible="{Binding IsGenerating}"
+                Spacing="8"
+                VerticalOptions="Center"
+                WidthRequest="280">
+                <ProgressBar Progress="{Binding GenerateFraction}" />
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding GenerateStatus}" />
+            </VerticalStackLayout>
+            <CollectionView
+                x:Name="ItemsView"
+                BackgroundColor="{AppThemeBinding Light=#E4E4E9, Dark=#121212}"
+                IsVisible="{Binding CanQuery}"
+                ItemSizingStrategy="MeasureAllItems"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="contacts:ContactItemModel">
+                        <contacts:ContactCard />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

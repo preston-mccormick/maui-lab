@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:collections="using:MauiLab.Collections"
+    xmlns:contacts="using:MauiLab.Contacts"
     xmlns:colors="using:MauiLab.Colors"
     xmlns:dialogs="using:MauiLab.Dialogs"
     xmlns:forms="using:MauiLab.FormControls"
@@ -16,6 +17,7 @@
     Shell.FlyoutBehavior="Flyout">
     <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
     <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
+    <ShellContent Title="Contacts" ContentTemplate="{DataTemplate contacts:ContactsPage}" />
     <FlyoutItem Title="Layouts" Route="layouts">
         <ShellContent Title="Grid Layout" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
         <ShellContent Title="Absolute Layout" ContentTemplate="{DataTemplate layouts:AbsoluteLayoutPage}" />

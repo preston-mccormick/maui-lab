@@ -115,7 +115,13 @@ public sealed class SqliteUsageStore : IUsageStore, IDisposable
             if (_batteriesReady)
                 return;
 
+            // iOS sqlite-net installs the system libsqlite3 provider from its own static
+            // constructor. Calling Batteries_V2 here would install the bundled copy first.
+#if IOS
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
+#else
             SQLitePCL.Batteries_V2.Init();
+#endif
             _batteriesReady = true;
         }
     }

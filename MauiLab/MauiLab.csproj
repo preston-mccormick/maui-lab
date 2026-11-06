@@ -109,11 +109,38 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0-rc.3.26522.148" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="$(MauiVersion)" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
-		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.14" />
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.android" Version="2.1.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0-rc.3.26522.148" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+		<PackageReference Include="SQLitePCLRaw.core" Version="3.0.5" />
+		<PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="3.0.5" />
+		<PackageReference Include="SQLite" Version="3.53.4" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'" />
+		<!-- sqlite-net also depends on SourceGear.sqlite3, which ships the same native library. Exclude it so one e_sqlite3 is loaded. -->
+		<PackageReference Include="SourceGear.sqlite3" Version="3.53.3">
+			<ExcludeAssets>all</ExcludeAssets>
+		</PackageReference>
 	</ItemGroup>
+
+	<!-- iOS sqlite-net links /usr/lib/libsqlite3.dylib. The bundled e_sqlite3.a is a second copy and crashes when the two share a connection. -->
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+		<PackageReference Include="SQLite" Version="3.53.4">
+			<ExcludeAssets>native</ExcludeAssets>
+		</PackageReference>
+		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="3.0.3" />
+	</ItemGroup>
+
+	<Target Name="CompileIosSqliteStub" BeforeTargets="_ComputeLinkNativeExecutableInputs" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+		<PropertyGroup>
+			<_SqliteStubSdk>iphoneos</_SqliteStubSdk>
+			<_SqliteStubSdk Condition="$(RuntimeIdentifier.Contains('simulator'))">iphonesimulator</_SqliteStubSdk>
+			<_SqliteStubArch>arm64</_SqliteStubArch>
+			<_SqliteStubArch Condition="$(RuntimeIdentifier.Contains('x64'))">x86_64</_SqliteStubArch>
+		</PropertyGroup>
+		<Exec Command="xcrun -sdk $(_SqliteStubSdk) clang -arch $(_SqliteStubArch) -c &quot;$(MSBuildProjectDirectory)/Platforms/iOS/sqlite_load_extension_stub.c&quot; -o &quot;$(IntermediateOutputPath)sqlite_load_extension_stub.o&quot;" />
+		<ItemGroup>
+			<_MainLinkerFlags Include="$(IntermediateOutputPath)sqlite_load_extension_stub.o" />
+		</ItemGroup>
+	</Target>
 
 	<ItemGroup>
 	  <Compile Update="Colors\SwatchesView.xaml.cs">

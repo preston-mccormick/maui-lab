@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "name": { "first": "Ada", "last": "Lovelace" },
+      "location": {
+        "street": { "number": 12, "name": "Analytical Eng" },
+        "city": "Billings",
+        "state": "Michigan",
+        "postcode": 63104
+      },
+      "email": "ada@example.com",
+      "phone": "(272) 790-0888",
+      "picture": { "medium": "https://randomuser.me/api/portraits/med/women/75.jpg" }
+    },
+    {
+      "name": { "first": "Grace", "last": "Hopper" },
+      "location": {
+        "street": { "number": 4, "name": "Compiler Rd" },
+        "city": "Arlington",
+        "state": "Virginia",
+        "postcode": "1234"
+      },
+      "email": "grace@example.com",
+      "phone": "1 (703) 555-0199",
+      "picture": { "medium": "https://randomuser.me/api/portraits/med/women/75.jpg" }
+    }
+  ]
+}
