@@ -67,6 +67,7 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Include="Resources\Images\nav\*.svg" BaseSize="24,24" />
 		<!-- Veggie SVGs. Hyphens are not legal in a MAUI image name, so the resource name uses underscores. -->
 		<MauiImage Include="Layouts\Veggies\*.svg" BaseSize="256,256" />
 		<MauiImage Update="Layouts\Veggies\*.svg" Link="$([System.String]::Copy('%(Filename)').Replace('-', '_'))%(Extension)" />

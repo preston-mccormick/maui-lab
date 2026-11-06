@@ -428,12 +428,12 @@
         <Setter Property="Shell.ForegroundColor" Value="{OnPlatform Default={StaticResource Primary}}" />
         <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Default={StaticResource DarkText}, Dark={StaticResource Primary}}" />
         <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Default={StaticResource LighterGray}, Dark={StaticResource DarkerGray}}" />
-        <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Default={StaticResource LighterGray}, Dark={StaticResource LighterGray}}" />
+        <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LighterGray}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Default={StaticResource White}, Dark={StaticResource Black}}" />
         <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Default={StaticResource DarkSecondary}, Dark={StaticResource White}}" />
         <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Default={StaticResource DarkSecondary}, Dark={StaticResource White}}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Default={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Default={StaticResource Gray}, Dark={StaticResource LighterGray}}" />
     </Style>
 
     <Style TargetType="NavigationPage">

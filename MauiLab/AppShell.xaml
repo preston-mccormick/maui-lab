@@ -15,31 +15,31 @@
     xmlns:usage="using:MauiLab.Usage"
     Title="MAUI Lab"
     Shell.FlyoutBehavior="Flyout">
-    <ShellContent Title="Home" ContentTemplate="{DataTemplate lab:StartPage}" />
-    <ShellContent Title="Colors" ContentTemplate="{DataTemplate colors:ColorsPage}" />
-    <ShellContent Title="Contacts" ContentTemplate="{DataTemplate contacts:ContactsPage}" />
-    <FlyoutItem Title="Layouts" Route="layouts">
-        <ShellContent Title="Grid Layout" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
-        <ShellContent Title="Absolute Layout" ContentTemplate="{DataTemplate layouts:AbsoluteLayoutPage}" />
-        <ShellContent Title="Dock Layout" ContentTemplate="{DataTemplate layouts:DockLayoutPage}" />
-        <Tab Title="More Layouts">
-            <ShellContent Title="Stack Layout" ContentTemplate="{DataTemplate layouts:StackLayoutPage}" />
-            <ShellContent Title="Flex Layout" ContentTemplate="{DataTemplate layouts:FlexLayoutPage}" />
-            <ShellContent Title="Composite Layout" ContentTemplate="{DataTemplate layouts:CompositeLayoutPage}" />
-            <ShellContent Title="Radial Layout" ContentTemplate="{DataTemplate layouts:RadialLayoutPage}" />
+    <ShellContent Title="Home" FlyoutIcon="{AppThemeBinding Light=science, Dark=science_dark}" ContentTemplate="{DataTemplate lab:StartPage}" />
+    <ShellContent Title="Colors" FlyoutIcon="{AppThemeBinding Light=palette, Dark=palette_dark}" ContentTemplate="{DataTemplate colors:ColorsPage}" />
+    <ShellContent Title="Contacts" FlyoutIcon="{AppThemeBinding Light=contacts, Dark=contacts_dark}" ContentTemplate="{DataTemplate contacts:ContactsPage}" />
+    <FlyoutItem Title="Layouts" FlyoutIcon="{AppThemeBinding Light=dashboard, Dark=dashboard_dark}" Route="layouts">
+        <ShellContent Title="Grid Layout" Icon="grid_on" ContentTemplate="{DataTemplate layouts:GridLayoutPage}" />
+        <ShellContent Title="Absolute Layout" Icon="open_with" ContentTemplate="{DataTemplate layouts:AbsoluteLayoutPage}" />
+        <ShellContent Title="Dock Layout" Icon="view_sidebar" ContentTemplate="{DataTemplate layouts:DockLayoutPage}" />
+        <Tab Title="More Layouts" Icon="more_horiz">
+            <ShellContent Title="Stack Layout" Icon="view_agenda" ContentTemplate="{DataTemplate layouts:StackLayoutPage}" />
+            <ShellContent Title="Flex Layout" Icon="flex_direction" ContentTemplate="{DataTemplate layouts:FlexLayoutPage}" />
+            <ShellContent Title="Composite Layout" Icon="layers" ContentTemplate="{DataTemplate layouts:CompositeLayoutPage}" />
+            <ShellContent Title="Radial Layout" Icon="radar" ContentTemplate="{DataTemplate layouts:RadialLayoutPage}" />
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Collections" Route="collections">
-        <ShellContent Title="Grid" ContentTemplate="{DataTemplate collections:CollectionViewPage}" />
-        <ShellContent Title="Linear" ContentTemplate="{DataTemplate collections:LinearCollectionPage}" />
-        <ShellContent Title="Flex" ContentTemplate="{DataTemplate collections:FlexItemsPage}" />
-        <ShellContent Title="Uniform" ContentTemplate="{DataTemplate collections:UniformItemsPage}" />
+    <FlyoutItem Title="Collections" FlyoutIcon="{AppThemeBinding Light=dataset, Dark=dataset_dark}" Route="collections">
+        <ShellContent Title="Grid" Icon="grid_view" ContentTemplate="{DataTemplate collections:CollectionViewPage}" />
+        <ShellContent Title="Linear" Icon="view_list" ContentTemplate="{DataTemplate collections:LinearCollectionPage}" />
+        <ShellContent Title="Flex" Icon="flex_wrap" ContentTemplate="{DataTemplate collections:FlexItemsPage}" />
+        <ShellContent Title="Uniform" Icon="view_module" ContentTemplate="{DataTemplate collections:UniformItemsPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Forms" Route="forms">
-        <ShellContent Title="Form Controls" ContentTemplate="{DataTemplate forms:FormControlsPage}" />
-        <ShellContent Title="Dialogs" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
-        <ShellContent Title="Menu Button" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
+    <FlyoutItem Title="Forms" FlyoutIcon="{AppThemeBinding Light=dynamic_form, Dark=dynamic_form_dark}" Route="forms">
+        <ShellContent Title="Form Controls" Icon="edit_note" ContentTemplate="{DataTemplate forms:FormControlsPage}" />
+        <ShellContent Title="Dialogs" Icon="picture_in_picture" ContentTemplate="{DataTemplate dialogs:DialogsPage}" />
+        <ShellContent Title="Menu Button" Icon="more_vert" ContentTemplate="{DataTemplate mb:MenuButtonPage}" />
     </FlyoutItem>
-    <ShellContent Title="Geolocation" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
-    <ShellContent Title="Usage" ContentTemplate="{DataTemplate usage:UsagePage}" />
+    <ShellContent Title="Geolocation" FlyoutIcon="{AppThemeBinding Light=location_on, Dark=location_on_dark}" ContentTemplate="{DataTemplate gloc:GeolocationPage}" />
+    <ShellContent Title="Usage" FlyoutIcon="{AppThemeBinding Light=timeline, Dark=timeline_dark}" ContentTemplate="{DataTemplate usage:UsagePage}" />
 </Shell>
